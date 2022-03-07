@@ -1,0 +1,14 @@
+invertir :: (Eq a) => Path(WDiEdge a Integer) -> Path(WDiEdge a Integer)
+invertir (x:xs)
+    | xs == [] = [invertirComp x]
+    | otherwise = invertir xs ++ [invertirComp x]
+        where
+            invertirComp (E x w y) = E y w x
+
+fordFulkerson :: (Ord a) => (WeightedDiGraph a Integer) -> a -> a -> [WDiEdge a Integer]
+fordFulkerson g src dst = algFord_Fulk (weightedDiEdges g) (bftPathTo g src dst) 
+    where
+        algFord_Fulk edges Nothing = []
+        algFord_Fulk edges (Just path) = addFlows path mf (fordFulkerson (mkWeightedDiGraphEdges (vertices g) (updateEdges (invertir path) mf (updateEdges path (-mf) edges))) src dst)
+            where
+                mf = maxFlowPath path 
