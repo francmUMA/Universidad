@@ -37,10 +37,15 @@ En el main se define la lista como T_Manejador manej; (un puntero a una structur
 */
 void crear(T_Manejador* manejador){         
     T_Manejador aux = (T_Manejador) malloc(sizeof (struct T_Nodo));
-    aux -> inicio = 0;
-    aux -> fin = MAX-1;
-    aux -> sig = NULL;
-    *manejador = aux;
+    if (aux != NULL){    
+        aux -> inicio = 0;
+        aux -> fin = MAX-1;
+        aux -> sig = NULL;
+        *manejador = aux;
+    } else {
+        perror("Malloc memory fail");
+        exit(-1);
+    }
 }
 
 /* Destruye la estructura utilizada (libera todos los nodos de la lista. El par�metro manejador debe terminar apuntando a NULL 
@@ -69,11 +74,22 @@ void obtener(T_Manejador *manejador, unsigned tam, unsigned* dir, unsigned* ok){
     while (aux != NULL && ok == 0){
         if (aux -> fin - aux -> inicio > tam){
             ok = 1;
-            dir = aux -> fin - tam;
-            aux -> fin = dir - 1;
+            dir = aux -> inicio + tam;
+            aux -> inicio = dir + 1;
+        } else if (aux -> fin - aux -> inicio == tam) {
+            ok = 1;
+            *manejador = aux -> sig;
+            dir = aux -> inicio;
+            free(aux);
         } else {
-            ;
+            //hay que comprobar si el siguiente bloque es exactamente igual al tamaño requerido
+            if ((aux -> sig != NULL) && (aux -> sig -> fin - aux -> sig -> inicio == tam)){
+                ok = 1;
+                dir = aux -> sig -> inicio;
+                aux -> sig = aux -> sig -> sig;
+            }
         }
+        aux = aux -> sig;
     }
 }
 
@@ -90,5 +106,35 @@ void mostrar (T_Manejador manejador){
  * Se puede suponer que se trata de un trozo obtenido previamente.
  */
 void devolver(T_Manejador *manejador,unsigned tam,unsigned dir){
-    ;   
+    T_Manejador aux = *manejador;
+    unsigned asigned = 0;
+    
+    //Creamos el nodo
+    T_Manejador newNode = (T_Manejador) malloc(sizeof(struct T_Nodo));
+    newNode -> inicio = dir;
+    newNode -> fin = dir + tam;
+
+    //El nodo esta al inicio
+    if (aux -> inicio > dir){
+        newNode -> sig = aux;
+        *manejador = newNode;
+        asigned = 1;
+    }
+
+    while (aux -> sig != NULL && !asigned) {
+        //El bloque esta en el medio
+        if (aux -> sig -> inicio > dir){
+            asigned = 1;
+            newNode -> sig = aux -> sig;
+            aux -> sig = newNode;
+        }
+        aux = aux -> sig;
+    }
+
+    //El bloque esta al final
+    if (!asigned){
+        newNode -> sig = NULL;
+        aux -> sig = newNode;
+    }
+    compactar(manejador);
 }
