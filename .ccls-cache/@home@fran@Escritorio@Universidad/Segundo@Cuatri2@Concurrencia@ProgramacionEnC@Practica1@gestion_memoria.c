@@ -56,7 +56,7 @@ Consejo: Para saber si te estas dejando memoria por ahí, en el main crea un buc
 void destruir(T_Manejador* manejador){
     T_Manejador aux = *manejador;               
     if (aux != NULL){               
-        while (manejador != NULL){           
+        while ((*manejador) != NULL){           
             manejador = (*manejador) -> sig;   
             free(aux);                          
             aux = *manejador;                   
