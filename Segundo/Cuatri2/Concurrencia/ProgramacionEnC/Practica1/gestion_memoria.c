@@ -70,26 +70,36 @@ Si la operación se pudo llevar a cabo, es decir, existe un trozo con capacidad 
 void obtener(T_Manejador *manejador, unsigned tam, unsigned* dir, unsigned* ok){
     compactar(manejador);
     T_Manejador aux = *manejador;
-    ok = 0;
-    while (aux != NULL && ok == 0){
-        if (aux -> fin - aux -> inicio > tam){
-            ok = 1;
-            dir = aux -> inicio + tam;
-            aux -> inicio = dir + 1;
-        } else if (aux -> fin - aux -> inicio == tam) {
-            ok = 1;
-            *manejador = aux -> sig;
-            dir = aux -> inicio;
+
+    //Caso en el que el primer bloque es el que hay que modificar
+    if (aux != NULL && (aux -> fin - aux -> inicio >= tam)){
+        *dir = aux -> inicio;
+        *ok = 1;
+        if (aux -> fin - aux -> inicio == tam){
+            (*manejador) = (*manejador) -> sig;
             free(aux);
         } else {
-            //hay que comprobar si el siguiente bloque es exactamente igual al tamaño requerido
-            if ((aux -> sig != NULL) && (aux -> sig -> fin - aux -> sig -> inicio == tam)){
-                ok = 1;
-                dir = aux -> sig -> inicio;
-                aux -> sig = aux -> sig -> sig;
-            }
+            aux -> inicio = *dir + tam;
         }
-        aux = aux -> sig;
+
+    //Esta en el medio o al final
+    } else {
+        T_Manejador aux2 = aux -> sig;
+        while (aux2 != NULL && (aux2 -> fin - aux2 -> inicio < tam)){
+            aux = aux -> sig;
+            aux2 = aux2 -> sig;
+        }
+        if (aux2 != NULL){
+            *dir = aux2 -> inicio;
+            *ok = 1;
+            if (aux2 -> fin - aux2 -> inicio == tam){
+                aux -> sig = aux2 -> sig;
+            } else {
+                aux2 -> inicio = *dir + tam;
+            }
+        } else {
+            *ok = 0;
+        }
     }
 }
 
@@ -112,7 +122,7 @@ void devolver(T_Manejador *manejador,unsigned tam,unsigned dir){
     //Creamos el nodo
     T_Manejador newNode = (T_Manejador) malloc(sizeof(struct T_Nodo));
     newNode -> inicio = dir;
-    newNode -> fin = dir + tam;
+    newNode -> fin = dir + tam - 1;
 
     //El nodo esta al inicio
     if (aux -> inicio > dir){
