@@ -24,29 +24,31 @@ void Crear(T_Arbol* arbol_ptr){
 // Destruye la estructura utilizada.
 void Destruir(T_Arbol *arbol_ptr){
     T_Arbol ptr = *arbol_ptr;
-    if (ptr -> izq != NULL){
-        Destruir(ptr -> izq);
+    if (ptr != NULL){
+        if (ptr -> izq != NULL){
+            Destruir(&ptr -> izq);
+        }
+        if (ptr -> der != NULL){
+            Destruir(&ptr -> der);
+        }
+        free(ptr);
     }
-    if (ptr -> der != NULL){
-        Destruir(ptr -> der);
-    }
-    free(ptr);
 }
 
 // Inserta num en el arbol
 void Insertar(T_Arbol *arbol_ptr,unsigned num){
-	T_Arbol aux = malloc(sizeof(struct T_Nodo));
-    aux -> dato = num;
-    aux -> der = NULL;
-    aux -> izq = NULL;
-    if (*arbol_ptr == NULL){
+    if ((*arbol_ptr) == NULL){
+        T_Arbol aux = malloc(sizeof(struct T_Nodo));
+        aux -> dato = num;
+        aux -> der = NULL;
+        aux -> izq = NULL;
         *arbol_ptr = aux;
     } else {
-        if ((*arbol_ptr) -> dato != NULL){
+        if ((*arbol_ptr) != NULL){
             if (num < (*arbol_ptr) -> dato){
-                Insertar((*arbol_ptr) -> izq, num);
-            } else {
-                Insertar((*arbol_ptr) -> der, num);
+                Insertar(&(*arbol_ptr) -> izq, num);
+            } else if (num > (*arbol_ptr) -> dato) {
+                Insertar(&(*arbol_ptr) -> der, num);
             }
         }
     }	
@@ -54,12 +56,14 @@ void Insertar(T_Arbol *arbol_ptr,unsigned num){
 // Muestra el contenido del árbol en InOrden
 void Mostrar(T_Arbol arbol){
     T_Arbol ptr = arbol;
-    if (ptr -> izq != NULL){
-        Mostrar(ptr -> izq);
-    }
-    printf("%u ", ptr -> dato);
-    if (ptr -> der != NULL){
-        Mostrar(ptr -> der);
+    if (ptr != NULL){
+        if (ptr -> izq != NULL){
+            Mostrar(ptr -> izq);
+        }
+        printf("%u ", ptr -> dato);
+        if (ptr -> der != NULL){
+            Mostrar(ptr -> der);
+        }
     }
 }
 
@@ -67,11 +71,13 @@ void Mostrar(T_Arbol arbol){
 // Guarda en disco el contenido del arbol - recorrido InOrden
 void Salvar(T_Arbol arbol, FILE *fichero){
 	T_Arbol ptr = arbol;
-    if (ptr -> izq != NULL){
-        Salvar(ptr -> izq, &fichero);
-    }
-    fwrite(ptr ->dato, sizeof(unsigned), 1, &fichero);
-    if (ptr -> der != NULL){
-        Salvar(ptr -> der, &fichero);
+    if (ptr != NULL){
+        if (ptr -> izq != NULL){
+            Salvar(ptr -> izq, fichero);
+        }
+        fwrite(&ptr ->dato, sizeof(unsigned), 1, fichero);
+        if (ptr -> der != NULL){
+            Salvar(ptr -> der, fichero);
+        }
     }
 }

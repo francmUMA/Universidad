@@ -30,7 +30,7 @@ void creafichero_tam_random(char* nfichero, unsigned tam){
 		unsigned int array_rand[tam];
 		for(int i = 0; i < tam; i++){
 			unsigned int num = rand()%tam;
-			array_rand[i];
+			array_rand[i] = num;
 		}
 		fwrite(array_rand,sizeof(unsigned),tam,f);
 		fclose(f);
@@ -48,7 +48,7 @@ void muestrafichero(char* nfichero){
 		unsigned int basura;
 		while (!feof(f)){
 			fread(&basura, sizeof(unsigned), 1, f);
-			printf("%u \n", basura);
+			printf("%u ", basura);
 		}
 		fclose(f);
 	}
@@ -59,7 +59,17 @@ void muestrafichero(char* nfichero){
  */
 
 void cargaFichero(char* nfichero, T_Arbol* miarbol){
-	
+	FILE *f = fopen(nfichero, "rb");
+	if(f == NULL){
+		perror("No se ha podido abrir el fichero");
+	} else {
+		unsigned int basura;
+		while (!feof(f)){
+			fread(&basura, sizeof(unsigned), 1, f);
+			Insertar(miarbol, basura);
+		}
+		fclose(f);
+	}
 }
 
 int main(void) {
