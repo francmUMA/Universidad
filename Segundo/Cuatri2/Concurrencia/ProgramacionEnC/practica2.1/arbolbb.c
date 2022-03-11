@@ -33,6 +33,7 @@ void Destruir(T_Arbol *arbol_ptr){
         }
         free(ptr);
     }
+    *arbol_ptr = NULL;
 }
 
 // Inserta num en el arbol
