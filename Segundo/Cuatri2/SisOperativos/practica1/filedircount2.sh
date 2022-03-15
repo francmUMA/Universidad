@@ -1,5 +1,5 @@
 #!/bin/bash
-for i in `ls $1`		                # Para cada entrada "i" del directorio donde se ejecuta el script
+for i in `ls -a $1`		                # Para cada entrada "i" del directorio donde se ejecuta el script
 do 
 	if [ -d $1/$i ]	                    # Chequea si dicha entrada "$i" es un directorio
 	then		                        # En caso de serlo
