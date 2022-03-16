@@ -1,0 +1,18 @@
+tipo l,Titulo HOla mundo book, precio 25.50
+tipo l,Titulo Hi there budy, precio 15.50
+tipo r,Titulo Marca gol, precio 3.50
+tipo l,Titulo HOla mundo book, precio 25.50
+tipo l,Titulo Hi there budy, precio 15.50
+tipo r,Titulo Marca gol, precio 3.50
+tipo l,Titulo HOla mundo book, precio 25.50
+tipo l,Titulo Hi there budy, precio 15.50
+tipo r,Titulo Marca gol, precio 3.50
+tipo l,Titulo HOla mundo book, precio 25.50
+tipo l,Titulo Hi there budy, precio 15.50
+tipo r,Titulo Marca gol, precio 3.50
+tipo l,Titulo HOla mundo book, precio 25.50
+tipo l,Titulo Hi there budy, precio 15.50
+tipo r,Titulo Marca gol, precio 3.50
+tipo l,Titulo HOla mundo book, precio 25.50
+tipo l,Titulo Hi there budy, precio 15.50
+tipo r,Titulo Marca gol, precio 3.50
