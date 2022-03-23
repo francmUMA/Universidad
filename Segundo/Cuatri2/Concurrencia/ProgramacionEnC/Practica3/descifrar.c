@@ -4,15 +4,21 @@ void decrypt(unsigned * v, unsigned * k){
     const unsigned delta = 0x9e3779b9;
     unsigned sum = 0xC6EF3720;
     
-    v[0] = (v[0] << 4) + k[2];
-    v[0] += sum;
-    v[0] = (v[0] >> 5) + k[1];
+    for (int i = 0; i < 32; i++){
+        v[0] = (v[0] << 4) + k[2];
+        v[0] += sum;
+        v[0] = (v[0] >> 5) + k[1];
 
-    v[1] = (v[1] << 4) + k[0];
-    v[1] += sum;
-    v[1] = (v[1] >> 5) + k[1];
+        v[1] = v[1] - v[0];
 
-    sum -= sum - delta;
+        v[1] = (v[1] << 4) + k[0];
+        v[1] += sum;
+        v[1] = (v[1] >> 5) + k[1];
+
+        v[0] = v[0] - v[1];
+
+        sum = sum - delta;
+    }
 }
 int main(int argc, char const *argv[])
 {
@@ -39,12 +45,8 @@ int main(int argc, char const *argv[])
             exit(-1);
         }
         fread(ptr_aux, tam_fichero, 1, ptr_entrada);
-        unsigned v[2];
-        //Sacar v
-        for (size_t i = 0; i < 32; i++){
-            decrypt(v,k);
-            //actualizar v
-
+        for (size_t i = 0; i < tam_fichero_adaptado / sizeof(unsigned); i++){
+            decrypt(&ptr_aux[i],k);
         }
         free(ptr_aux);
         fclose(ptr_entrada);
