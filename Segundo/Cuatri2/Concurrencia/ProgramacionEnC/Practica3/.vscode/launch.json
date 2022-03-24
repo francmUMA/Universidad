@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
-            "args": ["${fileDirname}/imagen/crisantemoCifrado.jpg","${fileDirname}/imagen/crisantemo.jpg"],
+            "args": ["${fileDirname}/imagen/imagen2encriptada.jpg","${fileDirname}/imagen/imagen2.jpg"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

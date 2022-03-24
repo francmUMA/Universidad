@@ -3,21 +3,10 @@
 void decrypt(unsigned * v, unsigned * k){
     const unsigned delta = 0x9e3779b9;
     unsigned sum = 0xC6EF3720;
-    
     for (int i = 0; i < 32; i++){
-        v[0] = (v[0] << 4) + k[2];
-        v[0] += sum;
-        v[0] = (v[0] >> 5) + k[1];
-
-        v[1] = v[1] - v[0];
-
-        v[1] = (v[1] << 4) + k[0];
-        v[1] += sum;
-        v[1] = (v[1] >> 5) + k[1];
-
-        v[0] = v[0] - v[1];
-
-        sum = sum - delta;
+        v[1] -= (((v[0] << 4) + k[2]) ^ (v[0] + sum) ^ ((v[0] >> 5) + k[3]));
+        v[0] -= (((v[1] << 4) + k[0]) ^ (v[1] + sum) ^ ((v[1] >> 5) + k[1]));
+        sum = sum - delta; 
     }
 }
 int main(int argc, char const *argv[])
@@ -34,6 +23,11 @@ int main(int argc, char const *argv[])
         perror("No se puede leer el fichero de entrada");
         exit(-1);
     }
+    ptr_salida = fopen(argv[2],"wb");
+    if (ptr_salida == NULL){
+        perror("No se puede leer el fichero de salida");
+        exit(-1);
+    }
     unsigned tam_fichero, tam_fichero_adaptado;
     int leidos = fread(&tam_fichero, sizeof(unsigned), 1, ptr_entrada);
     if(leidos == 1){
@@ -45,9 +39,10 @@ int main(int argc, char const *argv[])
             exit(-1);
         }
         fread(ptr_aux, tam_fichero, 1, ptr_entrada);
-        for (size_t i = 0; i < tam_fichero_adaptado / sizeof(unsigned); i++){
+        for (size_t i = 0; i < tam_fichero_adaptado / sizeof(unsigned); i+=2){
             decrypt(&ptr_aux[i],k);
         }
+        fwrite(ptr_aux, 1, tam_fichero_adaptado, ptr_salida);
         free(ptr_aux);
         fclose(ptr_entrada);
         fclose(ptr_salida);
