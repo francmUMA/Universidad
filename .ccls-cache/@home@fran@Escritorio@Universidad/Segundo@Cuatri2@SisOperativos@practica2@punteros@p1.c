@@ -5,7 +5,7 @@ int main()
     int var_entera;
     int *p;
     var_entera = 10;
-    p = 0;          /* Inicializamos el puntero */
+    p = &var_entera - 10;/* Inicializamos el puntero */
 
     printf("\n");   /* Dejamos un espacio */
   

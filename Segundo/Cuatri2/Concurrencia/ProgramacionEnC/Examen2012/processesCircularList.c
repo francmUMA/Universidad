@@ -107,7 +107,8 @@ int main(){
     MostrarLista(lista);
     EjecutarProceso(&lista);
     assert(lista -> proceso == 3);
-    EjecutarProceso(&lista);
+    MostrarLista(lista);
+    AñadirProceso(&lista, 2);
     MostrarLista(lista);
     return 0;
 }
