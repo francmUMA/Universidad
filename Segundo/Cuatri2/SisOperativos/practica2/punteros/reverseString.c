@@ -6,8 +6,11 @@ int reverse(char* fuente, char** destino){
     //Guardo la direccion de memoria del primer caracter para mover el puntero hasta el final y
     //hacer que el puntero vuelva y se compare para que vuelva al inicio
     int res = strlen(fuente);
-    *destino = malloc(res * sizeof(char));
-    for (int i = )
+    char *aux = malloc(res * sizeof(char));
+    for (int i = 0; i < res; i++){
+        aux[i] = fuente[res - i - 1];
+    }
+    *destino = aux;
     return res;
 }
 
