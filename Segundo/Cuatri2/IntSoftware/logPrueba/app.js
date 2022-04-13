@@ -28,10 +28,29 @@ app.use(session({
     saveUninitialized: true
 }))
 
-console.log(__dirname);
+//8. Inicializar la conexion a la base de datos
+const connection = require('./database/db');
+
 app.get('/', (req,res) => {
-    res.send('Hola Mundo');
+    res.render('login');
 })
+
+//9. Login
+app.post("/login", async (req, res) => {
+    const user = req.body.login;
+    const password = req.body.password;
+    let passwordHashed = await bcryptjs.hash(password, 8);
+    connection.query(
+        "INSERT INTO Usuario SET ?", {email:login, password:passwordHashed},
+        async(error, results) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log("El usuario se ha logueado correctamente");
+            }
+        }
+    );
+});
 
 app.listen(3000, (req, res) => {
     console.log('El servidor está funcionando en http://localhost:3000');

@@ -48,7 +48,6 @@ int main(int argc, const char * argv[])
     addUser(&lista_de_usuarios, usuario) ;
     printUserList(lista_de_usuarios, 0) ;
 
-
     printf("Fin del programa\n") ;
 
     return 0;
