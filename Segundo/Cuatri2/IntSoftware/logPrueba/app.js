@@ -33,11 +33,52 @@ const connection = require('./database/db');
 
 //9. Establecer ruta de las plantillas
 app.get('/', (req,res) => {
-    res.render('index', {user:"Loading..."});
+    res.render('index', {user: "Loading..."});
 })
 
 app.get('/login', (req,res) => {
     res.render('login');
+})
+
+app.get('/register', (req,res) => {
+    res.render('register');
+})
+
+//10. Registro
+app.post('/register', async (req, res) => {
+    const user = req.body.user;
+    const password = req.body.password;
+    let passHashed = await bcryptjs.hash(password, 8);
+    connection.query(
+        "INSERT INTO Usuario SET ?",
+        {email:user, password:passHashed},
+        async(error, results) => {
+            if (error) {
+               console.log(error);
+            } else {
+                res.render('index', {user:user});
+            }
+        }
+    )
+});
+//618 986 446
+//11. Login
+app.post('/auth', async (req, res) => {
+    const user = req.body.user;
+    const password = req.body.password;
+    let passHashed = await bcryptjs.hash(password, 8);
+    if (user && password){
+        connection.query(
+            "SELECT * FROM Usuario WHERE email = ?", [user],
+            async (error, results) => {
+                if (results.length == 0 || !(await bcryptjs.compare(password, results[0].password))){
+                    res.send('El usuario o la contraseña introducidas no es correcta');
+                } else {
+                    console.log("Login exitoso");
+                    res.render('index', {user: user});
+                }
+        })
+    }
 })
 
 app.listen(3000, (req, res) => {

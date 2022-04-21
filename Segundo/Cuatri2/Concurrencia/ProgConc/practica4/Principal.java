@@ -1,3 +1,5 @@
+package practica4;
+
 public class Principal {
     public static void main(String[] args) throws InterruptedException {
         int n = 21;

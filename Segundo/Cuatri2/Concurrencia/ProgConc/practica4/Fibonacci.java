@@ -1,3 +1,5 @@
+package practica4;
+
 public class Fibonacci implements Runnable{
 
     private int fiboRes;
