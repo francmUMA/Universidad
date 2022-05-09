@@ -19,6 +19,7 @@ To compile and run the program:
 #include <unistd.h>
 #include <limits.h>
 #include <stdio.h>
+#include <string.h>
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
 
@@ -40,6 +41,7 @@ int main(void)
 	while (1)   /* Program terminates normally inside get_command() after ^D is typed*/
 	{   
         char currentDir[256];
+        ignore_terminal_signals();
         if(getcwd(currentDir, sizeof(currentDir)) == NULL){
             perror("No se ha podido obtener el nombre del directorio");
             exit(-1);
@@ -48,27 +50,30 @@ int main(void)
 		if(args[0]==NULL) continue;   // if empty command
         fflush(stdout);     //vaciar buffer para escritura
         get_command(inputBuffer, MAX_LINE, args, &background);
-        pid_fork = fork();
-        if (pid_fork == 0){
-            execvp(args[0], args);
-            printf("Error: command not found -> %s.\n", args[0]);
-            exit(-1);
+        if (strcmp(args[0], "cd") == 0){
+            chdir(args[1]);
         } else {
-            if (background == 0){
-                waitpid(pid_fork, &status, 0);
-                analyze_status(status, &info);
-                printf("Foreground pid: %i, command: %s, status: %i, info: %i \n", pid_fork, args[0], status, info);
+            pid_fork = fork();
+            if (pid_fork == 0){
+                new_process_group(getpid());
+                if (background == 0){
+                    set_terminal(getpid());
+                }
+                restore_terminal_signals();
+                execvp(args[0], args);
+                printf("Error: command not found -> %s.\n", args[0]);
+                exit(-1);
             } else {
-                printf("Background job running... pid: %i, command: %s \n", pid_fork, args[0]);
-            }
+                if (background == 0){
+                    waitpid(pid_fork, &status, WUNTRACED);
+                    set_terminal(getpid());
+                    analyze_status(status, &info);
+                    printf("Foreground pid: %i, command: %s, status: %i, info: %i \n", pid_fork, args[0], status, info);
+                } else {
+                    printf("Background job running... pid: %i, command: %s \n", pid_fork, args[0]);
+                }
+            }	
         }
-		/* the steps are:
-			 (1) fork a child process using fork()
-			 (2) the child process will invoke execvp()
-			 (3) if background == 0, the parent will wait, otherwise continue 
-			 (4) Shell shows a status message for processed command 
-			 (5) loop returns to get_commnad() function
-		*/
-
+        
 	} // end while
 }
