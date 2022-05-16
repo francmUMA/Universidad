@@ -47,9 +47,9 @@ int main(void)
             exit(-1);
         }
 		printf(" %s --> ", currentDir);
-		if(args[0]==NULL) continue;   // if empty command
         fflush(stdout);     //vaciar buffer para escritura
         get_command(inputBuffer, MAX_LINE, args, &background);
+        if(args[0]==NULL) continue;   // if empty command
         if (strcmp(args[0], "cd") == 0){
             chdir(args[1]);
         } else {
