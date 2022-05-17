@@ -15,13 +15,28 @@ To compile and run the program:
 **/
 
 #include "job_control.h"   // remember to compile with module job_control.c 
+#include <signal.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
+
+// -----------------------------------------------------------------------
+//                            Child_handler        
+// -----------------------------------------------------------------------
+
+void *child_handler(pid_t child_pid, int *status, job *list, job *command){
+    if (child_pid == waitpid(child_pid, status, WUNTRACED | WNOHANG)){
+        delete_job(list, command);
+        kill(child_pid, SIGINT);
+        printf("Proceso hijo finalizado.");
+    } 
+}
+
 
 // -----------------------------------------------------------------------
 //                            MAIN          
@@ -37,6 +52,7 @@ int main(void)
 	int status;             /* status returned by wait */
 	enum status status_res; /* status processed by analyze_status() */
 	int info;				/* info processed by analyze_status() */
+    job *list = new_list("list");
 
 	while (1)   /* Program terminates normally inside get_command() after ^D is typed*/
 	{   
@@ -64,12 +80,15 @@ int main(void)
                 printf("Error: command not found -> %s.\n", args[0]);
                 exit(-1);
             } else {
+                job *command = new_job(pid_fork, args[0], background);
+                add_job(list, command);
                 if (background == 0){
+                    signal(SIGCHLD, child_handler(pid_fork, &status, list, command));
                     waitpid(pid_fork, &status, WUNTRACED);
                     set_terminal(getpid());
-                    analyze_status(status, &info);
-                    printf("Foreground pid: %i, command: %s, status: %i, info: %i \n", pid_fork, args[0], status, info);
-                } else {
+                    status_res = analyze_status(status, &info);
+                    printf("Foreground pid: %i, command: %s, status: %i, info: %i \n", pid_fork, args[0], status_res, info);
+                } else {                     
                     printf("Background job running... pid: %i, command: %s \n", pid_fork, args[0]);
                 }
             }	

@@ -15,13 +15,46 @@ To compile and run the program:
 **/
 
 #include "job_control.h"   // remember to compile with module job_control.c 
+#include <signal.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
+job *jobList;
+
+// -----------------------------------------------------------------------
+//                            manejador      
+// -----------------------------------------------------------------------
+
+void manejador(int senal){
+    job *command_fin;
+    int status;
+    int info;
+    int pid_this = 0;
+    enum status status_res;
+
+    for (int i = 1; i <= list_size(jobList); i++){
+        command_fin = get_item_bypos(jobList, i);
+        pid_this = waitpid(command_fin -> pgid, &status, WUNTRACED | WNOHANG);
+        if (pid_this == command_fin -> pgid){
+            status_res = analyze_status(status, &info);
+            printf("\n Background job %s with PID: %i has been %s, Info: %i \n", command_fin -> command, pid_this, status_strings[status_res], info);
+            if (status_res == SUSPENDED){
+                command_fin -> state = STOPPED;
+            } else if (status_res == EXITED){ 
+                command_fin -> state = EXITED;
+                delete_job(jobList, command_fin);
+            }
+            
+        }
+    }
+
+}
+
 
 // -----------------------------------------------------------------------
 //                            MAIN          
@@ -37,6 +70,8 @@ int main(void)
 	int status;             /* status returned by wait */
 	enum status status_res; /* status processed by analyze_status() */
 	int info;				/* info processed by analyze_status() */
+    jobList = new_list("jobList");
+    signal(SIGCHLD, manejador);
 
 	while (1)   /* Program terminates normally inside get_command() after ^D is typed*/
 	{   
@@ -67,9 +102,15 @@ int main(void)
                 if (background == 0){
                     waitpid(pid_fork, &status, WUNTRACED);
                     set_terminal(getpid());
-                    analyze_status(status, &info);
-                    printf("Foreground pid: %i, command: %s, status: %i, info: %i \n", pid_fork, args[0], status, info);
+                    status_res = analyze_status(status, &info);
+                    if (status_res == SUSPENDED){
+                        job *newJob = new_job(pid_fork, args[0], STOPPED);
+                        add_job(jobList, newJob);
+                    }
+                    printf("Foreground pid: %i, command: %s, status: %s, info: %i \n", pid_fork, args[0], status_strings[status_res], info);
                 } else {
+                    job *newJob = new_job(pid_fork, args[0], BACKGROUND);
+                    add_job(jobList, newJob);                     
                     printf("Background job running... pid: %i, command: %s \n", pid_fork, args[0]);
                 }
             }	

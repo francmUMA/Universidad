@@ -25,7 +25,7 @@ public class ClienteUDP {
         String message = "";
         InputStreamReader lector = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(lector);
-        while (message != "TERMINAR") {
+        while (!message.equals("TERMINAR")) {
             System.out.print("Introduce una linea: ");
             try {
                 message = br.readLine();
