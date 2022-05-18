@@ -94,7 +94,7 @@ int main(void)
             exit(-1);
         }
 		cutDir(currentDir);
-        printf("\033[1;36m  🗁  %s \033[0;37m --> ", currentDir);
+        printf(" \033[1;36m🗁  %s \033[0;37m --> ", currentDir);
         fflush(stdout);     //vaciar buffer para escritura
         get_command(inputBuffer, MAX_LINE, args, &background);
         if(args[0]==NULL) continue;   // if empty command
