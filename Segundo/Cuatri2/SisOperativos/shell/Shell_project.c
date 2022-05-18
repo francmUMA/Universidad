@@ -27,6 +27,18 @@ To compile and run the program:
 job *jobList;
 
 // -----------------------------------------------------------------------
+//                            cutDir      
+// -----------------------------------------------------------------------
+void cutDir(char *currentDir){
+    int pos = 0;
+    for (int i = 0; i < strlen(currentDir); i++){
+        if (currentDir[i] == '/') pos = i;
+    }
+    strncpy(currentDir, currentDir + (pos + 1), strlen(currentDir) - pos); 
+}
+    
+
+// -----------------------------------------------------------------------
 //                            manejador      
 // -----------------------------------------------------------------------
 
@@ -42,7 +54,7 @@ void manejador(int senal){
         pid_this = waitpid(command_fin -> pgid, &status, WUNTRACED | WNOHANG);
         if (pid_this == command_fin -> pgid){
             status_res = analyze_status(status, &info);
-            printf("\n Background job %s with PID: %i has been %s, Info: %i \n", command_fin -> command, pid_this, status_strings[status_res], info);
+            printf("\n \033[0;32m Background job %s with PID: %i has been %s, Info: %i \033[0;37m\n", command_fin -> command, pid_this, status_strings[status_res], info);
             if (status_res == SUSPENDED){
                 command_fin -> state = STOPPED;
             } else if (status_res == EXITED){ 
@@ -81,7 +93,8 @@ int main(void)
             perror("No se ha podido obtener el nombre del directorio");
             exit(-1);
         }
-		printf(" %s --> ", currentDir);
+		cutDir(currentDir);
+        printf("\033[1;36m  🗁  %s \033[0;37m --> ", currentDir);
         fflush(stdout);     //vaciar buffer para escritura
         get_command(inputBuffer, MAX_LINE, args, &background);
         if(args[0]==NULL) continue;   // if empty command
@@ -96,7 +109,7 @@ int main(void)
                 }
                 restore_terminal_signals();
                 execvp(args[0], args);
-                printf("Error: command not found -> %s.\n", args[0]);
+                printf("\033[0;31m Error: command not found -> %s.\033[0;37m\n", args[0]);
                 exit(-1);
             } else {
                 if (background == 0){
@@ -107,11 +120,11 @@ int main(void)
                         job *newJob = new_job(pid_fork, args[0], STOPPED);
                         add_job(jobList, newJob);
                     }
-                    printf("Foreground pid: %i, command: %s, status: %s, info: %i \n", pid_fork, args[0], status_strings[status_res], info);
+                    printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", pid_fork, args[0], status_strings[status_res], info);
                 } else {
                     job *newJob = new_job(pid_fork, args[0], BACKGROUND);
                     add_job(jobList, newJob);                     
-                    printf("Background job running... pid: %i, command: %s \n", pid_fork, args[0]);
+                    printf("\033[0;32m Background job running... pid: %i, command: %s \033[0;37m \n", pid_fork, args[0]);
                 }
             }	
         }

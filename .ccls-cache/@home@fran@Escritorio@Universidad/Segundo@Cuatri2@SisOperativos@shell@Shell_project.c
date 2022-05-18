@@ -24,17 +24,47 @@ To compile and run the program:
 #include <string.h>
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
+job *jobList;
 
 // -----------------------------------------------------------------------
-//                            Child_handler        
+//                            cutDir      
+// -----------------------------------------------------------------------
+void cutDir(char *currentDir){
+    int pos = 0;
+    for (int i = 0; i < strlen(currentDir); i++){
+        if (currentDir[i] == '/') pos = i;
+    }
+    strncpy(currentDir, currentDir + (pos + 1), strlen(currentDir) - pos); 
+}
+    
+
+// -----------------------------------------------------------------------
+//                            manejador      
 // -----------------------------------------------------------------------
 
-void *child_handler(pid_t child_pid, int *status, job *list, job *command){
-    if (child_pid == waitpid(child_pid, status, WUNTRACED | WNOHANG)){
-        delete_job(list, command);
-        kill(child_pid, SIGINT);
-        printf("Proceso hijo finalizado.");
-    } 
+void manejador(int senal){
+    job *command_fin;
+    int status;
+    int info;
+    int pid_this = 0;
+    enum status status_res;
+
+    for (int i = 1; i <= list_size(jobList); i++){
+        command_fin = get_item_bypos(jobList, i);
+        pid_this = waitpid(command_fin -> pgid, &status, WUNTRACED | WNOHANG);
+        if (pid_this == command_fin -> pgid){
+            status_res = analyze_status(status, &info);
+            printf("\n \033[0;32m Background job %s with PID: %i has been %s, Info: %i \033[0;37m\n", command_fin -> command, pid_this, status_strings[status_res], info);
+            if (status_res == SUSPENDED){
+                command_fin -> state = STOPPED;
+            } else if (status_res == EXITED){ 
+                command_fin -> state = EXITED;
+                delete_job(jobList, command_fin);
+            }
+            
+        }
+    }
+
 }
 
 
@@ -52,7 +82,8 @@ int main(void)
 	int status;             /* status returned by wait */
 	enum status status_res; /* status processed by analyze_status() */
 	int info;				/* info processed by analyze_status() */
-    job *list = new_list("list");
+    jobList = new_list("jobList");
+    signal(SIGCHLD, manejador);
 
 	while (1)   /* Program terminates normally inside get_command() after ^D is typed*/
 	{   
@@ -62,7 +93,8 @@ int main(void)
             perror("No se ha podido obtener el nombre del directorio");
             exit(-1);
         }
-		printf(" %s --> ", currentDir);
+		cutDir(currentDir);
+        printf("\033[1;36m  🗁  %s \033[0;37m --> ", currentDir);
         fflush(stdout);     //vaciar buffer para escritura
         get_command(inputBuffer, MAX_LINE, args, &background);
         if(args[0]==NULL) continue;   // if empty command
@@ -77,19 +109,22 @@ int main(void)
                 }
                 restore_terminal_signals();
                 execvp(args[0], args);
-                printf("Error: command not found -> %s.\n", args[0]);
+                printf("\033[0;31m Error: command not found -> %s.\033[0;37m\n", args[0]);
                 exit(-1);
             } else {
-                job *command = new_job(pid_fork, args[0], background);
-                add_job(list, command);
                 if (background == 0){
-                    signal(SIGCHLD, child_handler(pid_fork, &status, list, command));
                     waitpid(pid_fork, &status, WUNTRACED);
                     set_terminal(getpid());
                     status_res = analyze_status(status, &info);
-                    printf("Foreground pid: %i, command: %s, status: %i, info: %i \n", pid_fork, args[0], status_res, info);
-                } else {                     
-                    printf("Background job running... pid: %i, command: %s \n", pid_fork, args[0]);
+                    if (status_res == SUSPENDED){
+                        job *newJob = new_job(pid_fork, args[0], STOPPED);
+                        add_job(jobList, newJob);
+                    }
+                    printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", pid_fork, args[0], status_strings[status_res], info);
+                } else {
+                    job *newJob = new_job(pid_fork, args[0], BACKGROUND);
+                    add_job(jobList, newJob);                     
+                    printf("\033[0;32m Background job running... pid: %i, command: %s \033[0;37m \n", pid_fork, args[0]);
                 }
             }	
         }
