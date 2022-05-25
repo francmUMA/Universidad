@@ -22,6 +22,13 @@ public class Vista extends JPanel {
 		this.add(ms, BorderLayout.SOUTH);
 	}
 
+	public void controlador(ActionListener controller){
+		bSi.addActionListener(controller);
+		bSi.setActionCommand(Vista.SI);
+		bNo.addActionListener(controller);
+		bNo.setActionCommand(Vista.NO);
+	}
+
 	public void actualizarEtiqueta(String m) {
 		ms.setText(m);
 	}

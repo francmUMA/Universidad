@@ -1,6 +1,6 @@
 package mvc;
 
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionEvent;  
 import java.awt.event.ActionListener;
 
 public class Controlador implements ActionListener {
@@ -15,7 +15,12 @@ public class Controlador implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if(e.getActionCommand().equals(Vista.SI)){
+			modelo.incrSi();
+		} else if (e.getActionCommand().equals(Vista.NO)){
+			modelo.incrNo();
+		}
+		vista.actualizarEtiqueta(modelo.toString());
 
 	}
 
