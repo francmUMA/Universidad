@@ -20,7 +20,7 @@ public class Vista extends JPanel {
 		pnorte1.add(bNo);
 		this.add(pnorte1, BorderLayout.NORTH);
 		this.add(ms, BorderLayout.SOUTH);
-	}
+	} 
 
 	public void controlador(ActionListener controller){
 		bSi.addActionListener(controller);
