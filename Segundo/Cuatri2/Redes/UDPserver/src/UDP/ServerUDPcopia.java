@@ -43,8 +43,10 @@ public class ServerUDPcopia {
             System.err.println("Error creando el socket " + e.getMessage());
         }
 
+        String line = "";
+
         // Funcion PRINCIPAL del servidor
-        while (true)
+        while (line.compareTo("0") == 0)
         {
             //* COMPLETAR: Crear e inicializar un datagrama VACIO para recibir la respuesta de máximo 500 bytes
             DatagramPacket datagram = null;
@@ -65,7 +67,7 @@ public class ServerUDPcopia {
             }
 
             //* COMPLETAR: Obtener texto recibido
-            String line = new String(datagram.getData());
+            line = new String(datagram.getData());
 
             //* COMPLETAR: Mostrar por pantalla la direccion socket (IP y puerto) del cliente y su texto
             System.out.println("He recibido:" + line +
@@ -93,6 +95,7 @@ public class ServerUDPcopia {
             }
 
         } // Fin del bucle del servicio
+        server.close();
 
     }
 

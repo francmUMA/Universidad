@@ -51,7 +51,7 @@ void manejador(int senal){
 
     for (int i = 1; i <= list_size(jobList); i++){
         command_fin = get_item_bypos(jobList, i);
-        pid_this = waitpid(command_fin -> pgid, &status, WUNTRACED | WNOHANG);
+        pid_this = waitpid(command_fin -> pgid, &status, WUNTRACED | WNOHANG | WCONTINUED);
         if (pid_this == command_fin -> pgid){
             status_res = analyze_status(status, &info);
             printf("\n \033[0;32m Background job %s with PID: %i has been %s, Info: %i \033[0;37m\n", command_fin -> command, pid_this, status_strings[status_res], info);
@@ -60,8 +60,9 @@ void manejador(int senal){
             } else if (status_res == EXITED){ 
                 command_fin -> state = EXITED;
                 delete_job(jobList, command_fin);
+            } else if (status_res == CONTINUED){
+                command_fin -> state = FOREGROUND;
             }
-            
         }
     }
 
@@ -100,6 +101,39 @@ int main(void)
         if(args[0]==NULL) continue;   // if empty command
         if (strcmp(args[0], "cd") == 0){
             chdir(args[1]);
+        } else if (strcmp(args[0], "fg") == 0){
+            int n;
+            if (args[1] == NULL) n = 1;
+            else { n = atoi(args[1]);
+                if (n == 0) printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
+            }      
+            job *actualizar = get_item_bypos(jobList,n);
+            set_terminal(getpid());
+            actualizar -> state = FOREGROUND; 
+            killpg(actualizar -> pgid, SIGCONT);
+            waitpid(actualizar -> pgid, &status, WUNTRACED);
+            status_res = analyze_status(status, &info);
+            if (status_res == SUSPENDED){
+                actualizar -> state = STOPPED;
+                printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", actualizar -> pgid, actualizar -> command, status_strings[status_res], info);
+            } else if (status_res == EXITED){ 
+                actualizar -> state = EXITED;
+                printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", actualizar -> pgid, actualizar -> command, status_strings[status_res], info);
+                delete_job(jobList, actualizar);
+            }
+            
+        } else if (strcmp(args[0], "bg") == 0) {
+            int n;
+            if (args[1] == NULL) n = 1;
+            else { 
+                n = atoi(args[1]);
+                if (n == 0) printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
+            }      
+            job *actualizar = get_item_bypos(jobList,n);
+            actualizar -> state = BACKGROUND; 
+            killpg(actualizar -> pgid, SIGCONT);
+        } else if (strcmp(args[0], "jobs") == 0){
+            print_job_list(jobList);
         } else {
             pid_fork = fork();
             if (pid_fork == 0){
