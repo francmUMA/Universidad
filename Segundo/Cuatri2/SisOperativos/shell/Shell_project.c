@@ -22,6 +22,7 @@ To compile and run the program:
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
 job *jobList;
@@ -103,7 +104,6 @@ int main(void)
             int res;
             res = chdir(args[1]);
             if (res == -1 && args[1] != NULL)  printf("\033[0;31m Error: Directory not found -> %s.\033[0;37m\n", args[1]); 
-            continue;
         } else if (strcmp(args[0], "fg") == 0){
             int n;
             if (args[1] == NULL) n = 1;
@@ -111,7 +111,6 @@ int main(void)
                 n = atoi(args[1]);
                 if (n == 0 || n > list_size(jobList)) {
                     printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
-                    continue;
                 }
             }      
             job *elem = get_item_bypos(jobList, n);
@@ -128,7 +127,6 @@ int main(void)
                 if (status_res == EXITED || status_res == SIGNALED) delete_job(jobList, elem);
                 else if (status_res == SUSPENDED) elem -> state = STOPPED;
             }
-            continue;
             
         } else if (strcmp(args[0], "bg") == 0) {
             int n;
@@ -137,7 +135,6 @@ int main(void)
                 n = atoi(args[1]);
                 if (n == 0 || n > list_size(jobList)) {
                     printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
-                    continue;
                 }
             }      
             job *elem = get_item_bypos(jobList,n);
@@ -146,10 +143,12 @@ int main(void)
                 killpg(elem -> pgid, SIGCONT);
                 printf("\033[0;32m Background job running... pid: %i, command: %s \033[0;37m \n", elem -> pgid, elem -> command);
             }
-            continue;
         } else if (strcmp(args[0], "jobs") == 0){
             print_job_list(jobList);
-            continue;
+        } else if (strcmp(args[0], "children") == 0){
+            //Muestra un listado de procesos activos en el sistema donde se muestra para cada proceso una línea con la información:
+            //PID, nombre del comando, número de procesos hijo y número de threads del proceso
+            //Dicha información se obtiene de /proc
         } else {
             pid_fork = fork();
             if (pid_fork == 0){

@@ -4,58 +4,44 @@ import java.util.concurrent.Semaphore;
 
 public class Coche implements Runnable {
 	private int tam;
-	int numPasajeros = 0;
 	Semaphore scNumPasajeros = new Semaphore(1, true);
-	Semaphore deViaje = new Semaphore(0, true);
-	Semaphore subiendo = new Semaphore(1, true);
-	Semaphore bajando = new Semaphore(0, true);
-	Semaphore bajoSubo = new Semaphore(1, true);
+	int numPasajeros = 0;
+	Semaphore enMarcha = new Semaphore(0, true);
+	Semaphore puedenBajarse = new Semaphore(0, true);
+	Semaphore[] asientos;
 
 	public Coche(int tam) {
 		this.tam = tam;
+		asientos = new Semaphore[tam];
+		for (int i = 0; i < asientos.length; i++){
+			asientos[i] = new Semaphore(1, true);
+		}
 	}
 
 	public void subir(int id) throws InterruptedException {
-		// id del pasajero que se sube al coche
 		scNumPasajeros.acquire();
-		if (numPasajeros == 0) {
-			scNumPasajeros.release();
-			bajoSubo.acquire();
-			scNumPasajeros.acquire();
-		}
+		int copia = numPasajeros;
+		scNumPasajeros.release();
+		asientos[copia].acquire();
+		System.out.println("Pasajero " + id + " sube al coche");
 		numPasajeros++;
-		System.out.println("Se ha subido el pasajero " + id);
 		if (numPasajeros == tam) {
-			deViaje.release();
+			enMarcha.release();
 		}
 		scNumPasajeros.release();
 	}
 
 	public void bajar(int id) throws InterruptedException {
-		// id del pasajero que se baja del coche
 		scNumPasajeros.acquire();
-		if (numPasajeros == tam) {
-			scNumPasajeros.release();
-			bajando.release();
-			bajoSubo.acquire();
-			scNumPasajeros.acquire();
-		} 
 		numPasajeros--;
-		System.out.println("Se ha bajado el pasajero " + id);
-		if (numPasajeros == 0) {
-			subiendo.release();
-			bajoSubo.release();
-		}
-		scNumPasajeros.release();
+
 	}
 
 	private void esperaLleno() throws InterruptedException {
-		// el coche espera a que este lleno para dar una vuelta
-		deViaje.acquire();
-		System.out.println("El viaje ha comenzado");
-		System.out.println("El viaje ha finalizado");
-		bajoSubo.release();
-		bajando.release();
+		enMarcha.acquire();
+		System.out.println("El tren se ha puesto en marcha");
+		System.out.println("El tren ha terminado el viaje");
+		puedenBajarse.release();
 	}
 
 	public void run() {
