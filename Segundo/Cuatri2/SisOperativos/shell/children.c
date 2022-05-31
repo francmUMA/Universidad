@@ -6,20 +6,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-void get_name(char *line, char *name){
-    int posSpace1 = 0;
-    int space1found = 0;
-    int posSpace2 = 0;
-    int space2found = 0;
-    int fin = 0;
-    for (int i = 0; i < strlen(line) && !fin; i++){
-        if (line[i] == ' ' && !space1found) posSpace1 = i;
-        else if (line[i] == ' ' && !space2found) {
-            posSpace2 = i;
-            fin = 1;
-        }
+void get_name(char *name){
+    //elimina el primer '(' y la primera '/' del array de char pasado por parámetro
+    char res[strlen(name) - 3];
+    for(int i = 1; name[i] != '/' && name[i] != ')'; i++){
+        res[i-1] = name[i];
     }
-    strncpy(name, name, strlen(name));
+    strcpy(name, res);
 }
 
 void main(){
@@ -29,18 +22,19 @@ void main(){
     int numThreads;
     char *basura;
     char line[200];
+    printf("PID   NAME            THREADS  CHILDS\n");
     //DIR *proc = opendir("/proc");
     struct dirent *readProc;
     //while ((readProc = readdir(proc)) != NULL && (pid = atoi(readProc -> d_name)) != 0){
         //if (strcmp(readProc -> d_name, ".") != 0 && strcmp(readProc -> d_name, "..") != 0){
             //FILE *file = fopen("/proc/%s/stat", readProc -> d_name);
-            FILE *file = fopen("/proc/24/stat", "r");
+            FILE *file = fopen("/proc/1/stat", "r");
             if (file != NULL) {
-                fgets(line,200,file);
-                get_name(line, name);
+                fscanf(file, "%d %s", &pid, name);
+                get_name(name);
                 numThreads = 1;
                 numHijos = 1;
-                printf("%d %s %d %d\n", pid, name, numThreads, numHijos);
+                printf("%d     %s           %d        %d\n", pid, name, numThreads, numHijos);
                 fclose(file);
             }
         //}

@@ -63,7 +63,7 @@ void manejador(int senal){
                 delete_job(jobList, command_fin);
             } else if (status_res == CONTINUED){
                 command_fin -> state = BACKGROUND;
-            }
+            } 
         }
     }
 
@@ -149,6 +149,7 @@ int main(void)
             //Muestra un listado de procesos activos en el sistema donde se muestra para cada proceso una línea con la información:
             //PID, nombre del comando, número de procesos hijo y número de threads del proceso
             //Dicha información se obtiene de /proc
+            printf("En proceso de creacion...\n");
         } else {
             pid_fork = fork();
             if (pid_fork == 0){

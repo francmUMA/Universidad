@@ -8,33 +8,38 @@ public class Coche implements Runnable {
 	int numPasajeros = 0;
 	Semaphore enMarcha = new Semaphore(0, true);
 	Semaphore puedenBajarse = new Semaphore(0, true);
-	Semaphore[] asientos;
+	Semaphore puedenSubirse = new Semaphore(1, true);
+	
 
 	public Coche(int tam) {
 		this.tam = tam;
-		asientos = new Semaphore[tam];
-		for (int i = 0; i < asientos.length; i++){
-			asientos[i] = new Semaphore(1, true);
-		}
 	}
 
 	public void subir(int id) throws InterruptedException {
+		puedenSubirse.acquire();
 		scNumPasajeros.acquire();
-		int copia = numPasajeros;
-		scNumPasajeros.release();
-		asientos[copia].acquire();
-		System.out.println("Pasajero " + id + " sube al coche");
 		numPasajeros++;
-		if (numPasajeros == tam) {
+		System.out.println("El pasajero con id " + id + " se sube");
+		
+		if (numPasajeros < tam) {
+			puedenSubirse.release();
+		} else if (numPasajeros == tam) {
 			enMarcha.release();
 		}
 		scNumPasajeros.release();
 	}
 
 	public void bajar(int id) throws InterruptedException {
+		puedenBajarse.acquire();
 		scNumPasajeros.acquire();
 		numPasajeros--;
-
+		System.out.println("El pasajero con id " + id + " se baja");
+		if (numPasajeros == 0) {
+			puedenSubirse.release();
+		} else if (numPasajeros < tam) {
+			puedenBajarse.release();
+		}
+		scNumPasajeros.release();
 	}
 
 	private void esperaLleno() throws InterruptedException {
