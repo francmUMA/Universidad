@@ -13,7 +13,7 @@ public class Principal {
 			jug[i] = new Jugador(i,mesa,N);
 		}
 		for (int i = 0; i<N ; i++){
-			jug[i].start();;
+			jug[i].start();
 		}
 	}
 
