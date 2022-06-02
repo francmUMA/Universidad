@@ -1,0 +1,18 @@
+COMANDO CHILDREN
+- Antes de explicar como se ha aborbado este problema, debido a la dificultad para obtener el numero de hijos,
+en su lugar, se muestra el estado en el que se encuentra el proceso y quien es su padre.
+- En primer lugar se han creado las variables necesarias donde se encuentran las variables que se van a mostrar,
+las variables para el analisis de cada línea y la variable del directorio.
+- En segundo lugar, gracias a la librería dirent.h, se puede abrir un directorio y recorrerlo con un while donde
+nos quedamos con los directorios que se corresponden a procesos.
+- Una vez en el bucle, nos encontramos con un directorio de un proceso, por lo procede a abrir el archivo status
+de cada directorio, donde se encuentra la información del proceso.
+- Para analizar el archivo status, se usa el método getline(), el cual nos permite recorrer línea a línea el archivo,
+quedándonos con las partes que nos interesan, ya que cada línea corresponde con una información concreta.
+- En cuanto al analisis de cada linea:
+    - Primero, usamos strtok() con el delimitador ':' para cortar la linea en tokens, el primer token nos dice qué información
+    se está aportando, por lo que en la primera iteración se elige qué atributo toca.
+    - Segundo, volvemos a usar strtok() para extraer el segundo token y como antes hemos seleccionado la información qué tocaba,
+    guardamos dicho token en la variable correspondiente.
+    - Tercero, una vez seleccionada toda la información, la mostramos de forma que esté perfectamente alineada.
+- Por último, cerramos el archivo y cuando se sale del bucle, cerramos el directorio. 

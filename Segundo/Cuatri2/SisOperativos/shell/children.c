@@ -5,38 +5,81 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <unistd.h>
 
-void main(){
+void children(){
     int pid;
     char name[20];
-    //int numHijos;
-    char numThreads[2];
-    char basura[20];
+    char state[20];
+    int father;
+    int numThreads;
     char *line = NULL;
     size_t len = 0;
-    printf("PID   NAME            THREADS  CHILDS\n");
-    //DIR *proc = opendir("/proc");
+    printf("PID             NAME                    STATE          THREADS    PPID\n");
+    DIR *proc = opendir("/proc");
     struct dirent *readProc;
-    //while ((readProc = readdir(proc)) != NULL && (pid = atoi(readProc -> d_name)) != 0){
-        //if (strcmp(readProc -> d_name, ".") != 0 && strcmp(readProc -> d_name, "..") != 0){
-            //FILE *file = fopen("/proc/%s/stat", readProc -> d_name);
-            FILE *file = fopen("/proc/1/status", "r");
+    while ((readProc = readdir(proc)) != NULL){
+        if (strcmp(readProc -> d_name, ".") != 0 && strcmp(readProc -> d_name, "..") != 0 && (atoi(readProc -> d_name)) != 0){
+            char *path = malloc(sizeof(char) * (strlen("/proc//status") + strlen(readProc -> d_name) + 1));
+            char *part1 = malloc(sizeof(char) * (strlen("/proc/") + strlen(readProc -> d_name) + 1));
+            strcpy(part1, "/proc/");
+            strcat(part1, readProc -> d_name);
+            strcpy(path, strcat(part1,"/status"));
+            FILE *file = fopen(path, "r");
+            free(part1);
+            free(path);
             if (file != NULL) {
+                char *delim = ":";
                 while (getline(&line, &len, file) != -1){
-                    strncpy(basura, line, 4);
-                    if (strcmp("Name", basura) == 0){
-                        strncpy(name, line + 6, strlen(line) - 5);
-                    } else if (strcmp("Thre ", basura) == 0){
-                        printf("%s", line);
-                        strncpy(numThreads, line + 8, strlen(line) - 7);
+                    char *token = strtok(line, delim);
+                    int who = 0;
+                    for (int i = 0; i < 2; i++){
+                        if (i == 0){
+                            if (strcmp(token, "Name") == 0){
+                                token = strtok(NULL, delim);
+                                who = 1;
+                            }
+                            else if (strcmp(token, "Threads") == 0){
+                                token = strtok(NULL, delim);
+                                who = 2;
+                            }
+                            else if (strcmp(token, "Pid") == 0){
+                                token = strtok(NULL, delim);
+                                who = 3;
+                            } else if (strcmp(token, "PPid") == 0){
+                                token = strtok(NULL, delim);
+                                who = 4;
+                            } else if (strcmp(token, "State") == 0){
+                                 token = strtok(NULL, delim);
+                                 who = 5;
+                            }
+                        }
+                        else {
+                            if (who == 1){
+                                strcpy(name, strtok(token, "\n"));
+                            }
+                            else if (who == 2){
+                                numThreads = atoi(token);
+                            }
+                            else if (who == 3){
+                                pid = atoi(token);
+                            }
+                            else if (who == 4){
+                                father = atoi(token);
+                            }
+                            else if (who == 5){
+                                strcpy(state, strtok(token, "\n"));
+                            }
+                        }
                     }
                 }
-                printf("%d     %s           %s        %d\n", pid, name, numThreads);
+                printf("%-8d %-20s %-15s %-10d %-6d\n", pid, name, state, numThreads, father);
                 fclose(file);
             }
-        //}
-    //}
-    //closedir(proc);
+        }
+    }
+    closedir(proc);
 }
 
 
