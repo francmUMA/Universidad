@@ -22,8 +22,8 @@ Some code adapted from "Fundamentos de Sistemas Operativos", Silberschatz et al.
 
 // ----------- ENUMERATIONS ---------------------------------------------
 enum status { SUSPENDED, SIGNALED, EXITED, CONTINUED};
-enum job_state { FOREGROUND, BACKGROUND, STOPPED };
-static char* status_strings[] = { "Suspended","Signaled","Exited","Continued" };
+enum job_state { FOREGROUND, BACKGROUND, STOPPED, RESPAWNEABLE };
+static char* status_strings[] = { "Suspended","Signaled","Exited"};
 static char* state_strings[] = { "Foreground","Background","Stopped" };
 
 // ----------- JOB TYPE FOR JOB LIST ------------------------------------

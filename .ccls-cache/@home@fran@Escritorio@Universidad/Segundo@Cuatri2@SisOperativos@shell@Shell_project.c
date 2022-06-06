@@ -22,9 +22,87 @@ To compile and run the program:
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
 job *jobList;
+
+// -----------------------------------------------------------------------
+//                            children      
+// -----------------------------------------------------------------------
+void children(){
+    int pid;
+    char name[20];
+    char state[20];
+    int father;
+    int numThreads;
+    char *line = NULL;
+    size_t len = 0;
+    printf("PID             NAME                    STATE          THREADS    PPID\n");
+    DIR *proc = opendir("/proc");
+    struct dirent *readProc;
+    while ((readProc = readdir(proc)) != NULL){
+        if (strcmp(readProc -> d_name, ".") != 0 && strcmp(readProc -> d_name, "..") != 0 && (atoi(readProc -> d_name)) != 0){
+            char *path = malloc(sizeof(char) * (strlen("/proc//status") + strlen(readProc -> d_name) + 1));
+            char *part1 = malloc(sizeof(char) * (strlen("/proc/") + strlen(readProc -> d_name) + 1));
+            strcpy(part1, "/proc/");
+            strcat(part1, readProc -> d_name);
+            strcpy(path, strcat(part1,"/status"));
+            FILE *file = fopen(path, "r");
+            free(part1);
+            free(path);
+            if (file != NULL) {
+                char *delim = ":";
+                while (getline(&line, &len, file) != -1){
+                    char *token = strtok(line, delim);
+                    int who = 0;
+                    for (int i = 0; i < 2; i++){
+                        if (i == 0){
+                            if (strcmp(token, "Name") == 0){
+                                token = strtok(NULL, delim);
+                                who = 1;
+                            }
+                            else if (strcmp(token, "Threads") == 0){
+                                token = strtok(NULL, delim);
+                                who = 2;
+                            }
+                            else if (strcmp(token, "Pid") == 0){
+                                token = strtok(NULL, delim);
+                                who = 3;
+                            } else if (strcmp(token, "PPid") == 0){
+                                token = strtok(NULL, delim);
+                                who = 4;
+                            } else if (strcmp(token, "State") == 0){
+                                 token = strtok(NULL, delim);
+                                 who = 5;
+                            }
+                        }
+                        else {
+                            if (who == 1){
+                                strcpy(name, strtok(token, "\n"));
+                            }
+                            else if (who == 2){
+                                numThreads = atoi(token);
+                            }
+                            else if (who == 3){
+                                pid = atoi(token);
+                            }
+                            else if (who == 4){
+                                father = atoi(token);
+                            }
+                            else if (who == 5){
+                                strcpy(state, strtok(token, "\n"));
+                            }
+                        }
+                    }
+                }
+                printf("%-8d %-20s %-15s %-10d %-6d\n", pid, name, state, numThreads, father);
+                fclose(file);
+            }
+        }
+    }
+    closedir(proc);
+}
 
 // -----------------------------------------------------------------------
 //                            cutDir      
@@ -57,12 +135,12 @@ void manejador(int senal){
             printf("\n \033[0;32m Background job %s with PID: %i has been %s, Info: %i \033[0;37m\n", command_fin -> command, pid_this, status_strings[status_res], info);
             if (status_res == SUSPENDED){
                 command_fin -> state = STOPPED;
-            } else if (status_res == EXITED){ 
+            } else if (status_res == EXITED || status_res == SIGNALED){ 
                 command_fin -> state = EXITED;
                 delete_job(jobList, command_fin);
             } else if (status_res == CONTINUED){
-                command_fin -> state = FOREGROUND;
-            }
+                command_fin -> state = BACKGROUND;
+            } 
         }
     }
 
@@ -100,26 +178,31 @@ int main(void)
         get_command(inputBuffer, MAX_LINE, args, &background);
         if(args[0]==NULL) continue;   // if empty command
         if (strcmp(args[0], "cd") == 0){
-            chdir(args[1]);
+            int res;
+            res = chdir(args[1]);
+            if (res == -1 && args[1] != NULL)  printf("\033[0;31m Error: Directory not found -> %s.\033[0;37m\n", args[1]); 
         } else if (strcmp(args[0], "fg") == 0){
             int n;
             if (args[1] == NULL) n = 1;
-            else { n = atoi(args[1]);
-                if (n == 0) printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
+            else { 
+                n = atoi(args[1]);
+                if (n == 0 || n > list_size(jobList)) {
+                    printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
+                }
             }      
-            job *actualizar = get_item_bypos(jobList,n);
-            set_terminal(getpid());
-            actualizar -> state = FOREGROUND; 
-            killpg(actualizar -> pgid, SIGCONT);
-            waitpid(actualizar -> pgid, &status, WUNTRACED);
-            status_res = analyze_status(status, &info);
-            if (status_res == SUSPENDED){
-                actualizar -> state = STOPPED;
-                printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", actualizar -> pgid, actualizar -> command, status_strings[status_res], info);
-            } else if (status_res == EXITED){ 
-                actualizar -> state = EXITED;
-                printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", actualizar -> pgid, actualizar -> command, status_strings[status_res], info);
-                delete_job(jobList, actualizar);
+            job *elem = get_item_bypos(jobList, n);
+            if (elem != NULL){
+                set_terminal(elem -> pgid);
+                if (elem -> state == STOPPED) { 
+                    killpg(elem -> pgid, SIGCONT);
+                }
+                elem -> state = FOREGROUND; 
+                waitpid(elem -> pgid, &status, WUNTRACED);
+                status_res = analyze_status(status, &info);
+                set_terminal(getpid());
+                printf("\033[0;32m Foreground pid: %i, command: %s, status: %s, info: %i \033[0;37m\n", elem -> pgid, elem -> command, status_strings[status_res], info);
+                if (status_res == EXITED || status_res == SIGNALED) delete_job(jobList, elem);
+                else if (status_res == SUSPENDED) elem -> state = STOPPED;
             }
             
         } else if (strcmp(args[0], "bg") == 0) {
@@ -127,13 +210,20 @@ int main(void)
             if (args[1] == NULL) n = 1;
             else { 
                 n = atoi(args[1]);
-                if (n == 0) printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
+                if (n == 0 || n > list_size(jobList)) {
+                    printf("\033[0;31m Error: Incorrect argument -> %s.\033[0;37m\n", args[1]);
+                }
             }      
-            job *actualizar = get_item_bypos(jobList,n);
-            actualizar -> state = BACKGROUND; 
-            killpg(actualizar -> pgid, SIGCONT);
+            job *elem = get_item_bypos(jobList,n);
+            if (elem != NULL && elem -> state == STOPPED) {
+                elem -> state = BACKGROUND;
+                killpg(elem -> pgid, SIGCONT);
+                printf("\033[0;32m Background job running... pid: %i, command: %s \033[0;37m \n", elem -> pgid, elem -> command);
+            }
         } else if (strcmp(args[0], "jobs") == 0){
             print_job_list(jobList);
+        } else if (strcmp(args[0], "children") == 0){
+            children();
         } else {
             pid_fork = fork();
             if (pid_fork == 0){
