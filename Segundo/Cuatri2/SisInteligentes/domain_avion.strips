@@ -10,16 +10,18 @@ operator volar(A,Origen,Destino)
 pre:     es_avion(A), es_aeropuerto(Origen), es_aeropuerto(Destino), esta_en(A,Origen)
 post:    ~esta_en(A,Origen), esta_en(A,Destino)
 
-operator camion_ida(C, P)
-pre:     es_cargamento(C), esta_en(C, mad), cargamento_color(C, negro), es_planta(P)
-post:    en_camion(C, P) 
+operator llevar(CAR, P, C, AP)
+pre:     es_aeropuerto(AP), es_camion(C), es_cargamento(CAR), cargamento_color(CAR, negro), es_planta(P), esta_en(C, AP), esta_en(CAR, AP)
+post:    ~esta_en(CAR, AP), ~esta_en(C, AP), esta_en(C, P), esta_en(CAR, P)
 
-operator pintar(C, P)
-pre:     es_cargamento(C), cargamento_color(C, negro) ,es_planta(P), en_camion(C, P)
-post:    cargamento_color(C, blanco), ~en_camion(C, P), esta_en(C, P)
+operator pintar(CAR, P, C)
+pre:     es_camion(C), es_cargamento(CAR), cargamento_color(CAR, negro), es_planta(P), esta_en(C, P), esta_en(CAR, P)
+post:    cargamento_color(CAR, blanco)
 
-operator camion_vuelta(C, P)
-pre:     es_cargamento(C), es_planta(P), cargamento_color(C, blanco), esta_en(C, P) 
-post:    esta_en(C, mad)
+operator traer(CAR, P, C)
+pre:     es_camion(C), es_cargamento(CAR), cargamento_color(CAR, blanco), es_planta(P), esta_en(C, P), esta_en(CAR, P)
+post:    ~esta_en(CAR, P), ~esta_en(C, P), esta_en(C, mad), esta_en(CAR, mad)
+
+
 
 
