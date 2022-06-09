@@ -30,15 +30,54 @@ job *jobList;
 // -----------------------------------------------------------------------
 //                            children      
 // -----------------------------------------------------------------------
+typedef struct childrenJob *CList;
+
+struct childrenJob {
+    int pid;
+    char command[20];
+    int n_children;
+    int n_threads;
+    int ppid;
+    CList next;
+};
+
+void crearLista(CList *lista){
+    *lista = NULL;
+}
+
+void add_children(CList *lista, int pid, char *name, int nThreads, int father){
+    CList newJob = malloc(sizeof(struct childrenJob));
+    if (newJob == NULL){
+        printf("No se ha podido pedir memoria");
+        exit(-1);
+    }
+    newJob -> pid = pid;
+    strcpy(newJob -> command, name);
+    newJob -> n_children = 0;
+    newJob -> n_threads = nThreads;
+    newJob -> ppid = father;
+    newJob -> next = NULL;
+    if (*lista == NULL){
+        (*lista) = newJob;
+    } else {
+        CList ptr = (*lista);
+        while (ptr -> next != NULL){
+            ptr = ptr -> next;
+        }
+        ptr -> next = newJob;
+    }
+}
+
 void children(){
     int pid;
     char name[20];
-    char state[20];
     int father;
     int numThreads;
     char *line = NULL;
     size_t len = 0;
-    printf("PID             NAME                    STATE          THREADS    PPID\n");
+    CList list;
+    crearLista(&list);
+    printf("PID             NAME                THREADS    CHILDS\n");
     DIR *proc = opendir("/proc");
     struct dirent *readProc;
     while ((readProc = readdir(proc)) != NULL){
@@ -72,9 +111,6 @@ void children(){
                             } else if (strcmp(token, "PPid") == 0){
                                 token = strtok(NULL, delim);
                                 who = 4;
-                            } else if (strcmp(token, "State") == 0){
-                                 token = strtok(NULL, delim);
-                                 who = 5;
                             }
                         }
                         else {
@@ -90,18 +126,35 @@ void children(){
                             else if (who == 4){
                                 father = atoi(token);
                             }
-                            else if (who == 5){
-                                strcpy(state, strtok(token, "\n"));
-                            }
                         }
                     }
                 }
-                printf("%-8d %-20s %-15s %-10d %-6d\n", pid, name, state, numThreads, father);
+                add_children(&list, pid, name, numThreads, father);
                 fclose(file);
             }
         }
     }
     closedir(proc);
+
+    //Actualizar el atributo n_children de cada proceso
+    CList ptr = list;
+    while (ptr != NULL){
+        CList ptr2 = list;
+        while (ptr2 != NULL){
+            if (ptr -> pid == ptr2 -> ppid){
+                ptr -> n_children++;
+            }
+            ptr2 = ptr2 -> next;
+        }
+        ptr = ptr -> next;
+    }
+
+    //Mostrar el listado
+    ptr = list;
+    while (ptr != NULL){
+        printf("%-8d %-20s %-10d %-6d\n", ptr -> pid, ptr -> command, ptr -> n_threads, ptr -> n_children);
+        ptr = ptr -> next;
+    }
 }
 
 // -----------------------------------------------------------------------

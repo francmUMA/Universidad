@@ -1,6 +1,4 @@
 COMANDO CHILDREN
-- Antes de explicar como se ha aborbado este problema, debido a la dificultad para obtener el numero de hijos,
-en su lugar, se muestra el estado en el que se encuentra el proceso y quien es su padre.
 - En primer lugar se han creado las variables necesarias donde se encuentran las variables que se van a mostrar,
 las variables para el analisis de cada línea y la variable del directorio.
 - En segundo lugar, gracias a la librería dirent.h, se puede abrir un directorio y recorrerlo con un while donde
@@ -14,5 +12,8 @@ quedándonos con las partes que nos interesan, ya que cada línea corresponde co
     se está aportando, por lo que en la primera iteración se elige qué atributo toca.
     - Segundo, volvemos a usar strtok() para extraer el segundo token y como antes hemos seleccionado la información qué tocaba,
     guardamos dicho token en la variable correspondiente.
-    - Tercero, una vez seleccionada toda la información, la mostramos de forma que esté perfectamente alineada.
-- Por último, cerramos el archivo y cuando se sale del bucle, cerramos el directorio. 
+    - Tercero, una vez seleccionada toda la información, la guardamos en una lista de hijos.
+- Después, cerramos el archivo y cuando se sale del bucle, cerramos el directorio. 
+- A continuación procedemos a actualizar la variable que nos dice cuantos hijos tiene cada proceso mediante dos bucles, de forma que,
+cuando el pid de un proceso sea el ppid de otro, sumamos 1 a la variable del elemento.
+- Por último, recorremos dicha lista para mostrar la información de cada proceso.
