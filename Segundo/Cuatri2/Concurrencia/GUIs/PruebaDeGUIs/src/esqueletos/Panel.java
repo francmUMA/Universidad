@@ -16,8 +16,6 @@ public class Panel extends JPanel{
 	private JProgressBar progresoMonteCarlo = new JProgressBar(0,100);
 	private JProgressBar progresoLeibniz= new JProgressBar(0,100);
 
-	
-	
 	public Panel(){
 		this.setLayout(new GridLayout(3,1,0,0));
 		
@@ -50,10 +48,9 @@ public class Panel extends JPanel{
 		boton.setActionCommand("COMENZAR");
 		
 	}
-
 	
 	public void setControlador(ActionListener ctr){
-		//TODO: registrar ctr en los eventos del boton		
+		boton.addActionListener(ctr);		
 	}
 	
 	public int getIteraciones(){
