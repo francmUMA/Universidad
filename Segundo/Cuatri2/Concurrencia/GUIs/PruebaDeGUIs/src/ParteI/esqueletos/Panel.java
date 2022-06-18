@@ -75,11 +75,11 @@ public class Panel extends JPanel{
 	}
 
 	public void setProgresoMonteCarlo(int p){
-		//TODO: ejercicio 2: actualiza el valor de la barra de progreso 
+		
 	}
 	
 	public void setProgresoLeibniz(int p){
-		//TODO: ejercicio 2: actualiza el valor de la barra de progreso 
+		 
 	}
 
 	
