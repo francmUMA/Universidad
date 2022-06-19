@@ -9,6 +9,7 @@ public class Panel extends JPanel{
 
 	private JTextField iteraciones = new JTextField(16);
 	private JButton boton = new JButton();
+	private JButton boton_cancel = new JButton();
 	
 	private JTextField pi1 = new JTextField(16); //campo de texto donde se muestra el valor aproximado por MonteCarlo
 	private JTextField pi2 = new JTextField(16); //campo de texto donde se muestra el valor aproximado por Gregory-Leibniz
@@ -20,11 +21,13 @@ public class Panel extends JPanel{
 		this.setLayout(new GridLayout(3,1,0,0));
 		
 		setBotonComenzar();
+		setBotonCancelar();
 		
 		JPanel fila1=new JPanel();
 		fila1.add(label);
 		fila1.add(iteraciones);
 		fila1.add(boton);
+		fila1.add(boton_cancel);
 		this.add(fila1);
 		
 		JPanel fila2=new JPanel();
@@ -43,6 +46,11 @@ public class Panel extends JPanel{
 
 	}
 	
+	private void setBotonCancelar() {
+		boton_cancel.setText("Cancelar");
+		boton_cancel.setActionCommand("CANCELAR");
+	}
+
 	public void setBotonComenzar() {
 		boton.setText("Comenzar");
 		boton.setActionCommand("COMENZAR");
@@ -50,7 +58,8 @@ public class Panel extends JPanel{
 	}
 	
 	public void setControlador(ActionListener ctr){
-		boton.addActionListener(ctr);		
+		boton.addActionListener(ctr);
+		boton_cancel.addActionListener(ctr);		
 	}
 	
 	public int getIteraciones(){

@@ -34,8 +34,7 @@ public class WorkerMontecarlo extends SwingWorker<Double, Double>{
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                
             }
         }
         publish((4.0 * res) / iteraciones, 100.0);
@@ -48,20 +47,25 @@ public class WorkerMontecarlo extends SwingWorker<Double, Double>{
     }
 
     public void done(){
-        try {
-            panel.escribePI1(this.get());
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (!isCancelled()){
+            try {
+                panel.escribePI1(this.get());
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
+        
     }
 
     protected void process(List<Double> chunks){
-        panel.escribePI1(chunks.get(0));
-        panel.setProgresoMonteCarlo(chunks.get(1).intValue());
+        if (!isCancelled()){
+            panel.escribePI1(chunks.get(0));
+            panel.setProgresoMonteCarlo(chunks.get(1).intValue());
+        }
     }
     
 }

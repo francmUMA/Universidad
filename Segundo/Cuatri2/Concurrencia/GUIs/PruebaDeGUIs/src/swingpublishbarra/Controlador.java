@@ -1,4 +1,4 @@
-package esqueletos;
+package swingpublishbarra;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

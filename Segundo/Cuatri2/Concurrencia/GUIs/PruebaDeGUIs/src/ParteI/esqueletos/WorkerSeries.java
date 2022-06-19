@@ -1,16 +1,17 @@
-package ParteI.esqueletos;
+package swingworkerdone;
+
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-public class WorkerSeries {
+public class WorkerSeries extends SwingWorker<Double, Object>{
 
     double iteraciones;
-    // Panel panel;
-    // double serie;
+    Panel panel;
 
-    public WorkerSeries(int N){
+    public WorkerSeries(int N, Panel panel){
         iteraciones = Double.valueOf(N);
-        // this.panel = panel;
+        this.panel = panel;
     }
 
     public double aproximarPi() {
@@ -27,14 +28,21 @@ public class WorkerSeries {
         return res;
     }
 
-    // @Override
-    // protected Void doInBackground() throws Exception {
-    //     serie = aproximarPi();
-    //     return null;
-    // }
+    @Override
+    protected Double doInBackground() throws Exception {
+        return aproximarPi();
+    }
 
-    // public void done(){
-    //     panel.escribePI2(serie);
-    // }
+    public void done(){
+        try {
+            panel.escribePI2(this.get());
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
     
 }

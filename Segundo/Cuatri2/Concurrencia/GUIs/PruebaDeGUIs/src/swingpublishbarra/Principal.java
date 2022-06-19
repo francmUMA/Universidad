@@ -1,4 +1,4 @@
-package esqueletos;
+package swingpublishbarra;
 
 import javax.swing.JFrame;
 import java.awt.EventQueue;

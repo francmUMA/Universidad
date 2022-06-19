@@ -14,21 +14,28 @@ public class Controlador implements ActionListener{
 
     public Controlador(Panel panel) {
         this.panel = panel;
+        
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        wm = new WorkerMontecarlo(panel.getIteraciones(), panel);
-        ws = new WorkerSeries(panel.getIteraciones(), panel);
-        try {
-            wm.execute();
-            ws.execute(); 
-        } catch (NullPointerException error){
-            JOptionPane.showMessageDialog(new JFrame(), "No se ha introducido ningun valor", "Dialog", JOptionPane.ERROR_MESSAGE);
-        } catch (NumberFormatException error) {
-            JOptionPane.showMessageDialog(new JFrame(), "El formato es erróneo", "Dialog", JOptionPane.ERROR_MESSAGE);
+        if (e.getActionCommand().equals("COMENZAR")){
+            wm = new WorkerMontecarlo(panel.getIteraciones(), panel);
+            ws = new WorkerSeries(panel.getIteraciones(), panel);
+            try {
+                wm.execute();
+                ws.execute(); 
+            } catch (NullPointerException error){
+                JOptionPane.showMessageDialog(new JFrame(), "No se ha introducido ningun valor", "Dialog", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException error) {
+                JOptionPane.showMessageDialog(new JFrame(), "El formato es erróneo", "Dialog", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (e.getActionCommand().equals("CANCELAR")){
+            if (wm != null && ws != null){
+                wm.cancel(true);
+                ws.cancel(true);
+            } 
         }
-        
     }
     
 }

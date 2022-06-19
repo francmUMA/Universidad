@@ -1,4 +1,4 @@
-package esqueletos;
+package swingpublishbarra;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -25,7 +25,7 @@ public class WorkerSeries extends SwingWorker<Double, Double>{
                 res -= (4.0/i);
             }
             cnt++;
-            publish(res, (i / (double) iteraciones) * 100);
+            publish(res, (cnt / (double) iteraciones) * 100);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

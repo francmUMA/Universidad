@@ -1,18 +1,18 @@
-package ParteI.esqueletos;
+package swingworkerdone;
 
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-public class WorkerMontecarlo{
+public class WorkerMontecarlo extends SwingWorker<Double, Object>{
 
     int iteraciones;
-    //Panel panel;
-    //double montecarlo;
+    Panel panel;
 
-    public WorkerMontecarlo(int N){
+    public WorkerMontecarlo(int N, Panel panel){
         iteraciones = N;
-        //this.panel = panel;
+        this.panel = panel;
     }
 
     public double aproximarPi() {
@@ -31,14 +31,21 @@ public class WorkerMontecarlo{
         return (4.0 * res) / iteraciones;
     }
 
-    // @Override
-    // protected Void doInBackground() throws Exception {
-    //     montecarlo = aproximarPi();
-    //     return null;
-    // }
+    @Override
+    protected Double doInBackground() throws Exception {
+        return aproximarPi();
+    }
 
-    // public void done(){
-    //     panel.escribePI1(montecarlo);
-    // }
+    public void done(){
+        try {
+            panel.escribePI1(this.get());
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
     
 }

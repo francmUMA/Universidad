@@ -25,12 +25,11 @@ public class WorkerSeries extends SwingWorker<Double, Double>{
                 res -= (4.0/i);
             }
             cnt++;
-            publish(res, (i / (double) iteraciones) * 100);
+            publish(res, (cnt / (double) iteraciones) * 100);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                
             }
         }
         publish(res, 100.0);
@@ -43,20 +42,25 @@ public class WorkerSeries extends SwingWorker<Double, Double>{
     }
 
     public void done(){
-        try {
-            panel.escribePI2(this.get());
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (!isCancelled()){
+            try {
+                panel.escribePI2(this.get());
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
+        
     }
 
     protected void process(List<Double> chunks){
-        panel.escribePI2(chunks.get(0));
-        panel.setProgresoLeibniz(chunks.get(1).intValue());
+        if (!isCancelled()){
+            panel.escribePI2(chunks.get(0));
+            panel.setProgresoLeibniz(chunks.get(1).intValue());
+        }
     }
     
 }

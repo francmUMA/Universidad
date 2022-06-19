@@ -1,4 +1,4 @@
-package ParteI.esqueletos;
+package swingworkerdone;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,13 +15,10 @@ public class Controlador implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        wm = new WorkerMontecarlo(panel.getIteraciones());
-        ws = new WorkerSeries(panel.getIteraciones());
-        double montecarlo = wm.aproximarPi();
-        double serie = ws.aproximarPi();
-        
-        panel.escribePI1(montecarlo);
-        panel.escribePI2(serie);
+        wm = new WorkerMontecarlo(panel.getIteraciones(), panel);
+        ws = new WorkerSeries(panel.getIteraciones(), panel);
+        wm.execute();
+        ws.execute();
     }
     
 }
