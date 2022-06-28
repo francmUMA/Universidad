@@ -1,0 +1,3 @@
+El Torcal; 36.7001727; -4.4473278;
+Distrito Malaga Centro; 36.7247075; -4.4186383;
+Territorial Numero 3 Norte; 36.7337666; -4.4503579;

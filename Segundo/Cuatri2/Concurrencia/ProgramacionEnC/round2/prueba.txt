@@ -1,0 +1,1 @@
+Esta es una cadena escrita en un fichero de texto normal
