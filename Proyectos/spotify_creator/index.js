@@ -17,35 +17,48 @@ let options = {
   json: true
 }
 
+let optionsFetch = {
+  method: "POST",
+  headers: {
+    'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
+  },
+  form: {
+    grant_type: 'client_credentials'
+  },
+  json: true
+}
+
 //Petición del token de spotify (PENDIENTE)
-const token = () => {
-  let token = ""
+function getToken(){
   request.post(options, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      token = body.access_token
-      console.log(token)
+      console.log(body.access_token)
     } 
   })
-  return token
+}
+
+function getTokenFetch () {
+  fetch("https://accounts.spotify.com/api/token", optionsFetch)
+  .then(response => response.json())
+  .then(data => console.log(data))
 }
 
 //Obtener información de un artista (modificar token cuando esté lista la funcion)
-const artistInfo = async (artist) =>{
-  let res = ""
-  await fetch(baseURI + '/search?q=' + artist + '&type=artist', {
+function getArtist(artist) {
+  return fetch(baseURI + '/search?q=' + artist + '&type=artist', {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'BQBg0Ej76DE7Iko5BuggNrzCgDuYXUginAIlh-dHIN4V4AExrdKLjXpKx5jR0i9p_FVSy-YckRORtKrd7FcUSng1IV6ONeerez55zMPGUMTbvc_MZAQ'
+      'Authorization': 'Bearer ' + 'BQAN7PlUkMFX6azZl7zNVkp5lfor5yuSNBQ1RmIV6NGxLb-i8aKn2sYxQbVa61J6qvXKb0ks6II_pg9K9OeGy7Ysn7vGd5rtZ6_CDL0TQZzUj0XiXGY'
     },
     json: true
   })
   .then(response => response.json())
-  .then(data => {
-    res = data.artists.items[0].id
-  })
-  return res
 }
+
+getToken()
+
+
 
 
 
