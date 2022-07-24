@@ -18,13 +18,15 @@ let options = {
 }
 
 let optionsFetch = {
-  method: "POST",
   headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
     'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
   },
+  method: "POST",
   form: {
     grant_type: 'client_credentials'
-  },
+  }, 
   json: true
 }
 
@@ -37,26 +39,32 @@ function getToken(){
   })
 }
 
-function getTokenFetch () {
-  fetch("https://accounts.spotify.com/api/token", optionsFetch)
+async function getTokenFetch () {
+  return fetch("https://accounts.spotify.com/api/token", optionsFetch)
   .then(response => response.json())
-  .then(data => console.log(data))
+  .then(data => { return data.access_token })
 }
 
 //Obtener información de un artista (modificar token cuando esté lista la funcion)
-function getArtist(artist) {
+async function getArtistID(artist) {
   return fetch(baseURI + '/search?q=' + artist + '&type=artist', {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + 'BQAN7PlUkMFX6azZl7zNVkp5lfor5yuSNBQ1RmIV6NGxLb-i8aKn2sYxQbVa61J6qvXKb0ks6II_pg9K9OeGy7Ysn7vGd5rtZ6_CDL0TQZzUj0XiXGY'
+      'Authorization': 'Bearer ' + 'BQDK4VR-X8lVl5nrgHm842R3DyVZFcCBOrcuJx54oVpYnRcNaYN4suIqdusIQNh6uhyzwm-xiG0SeMW6AXXJsC01uO0PCGK6w5snoAwTE0XoBDjVhFQ'
     },
     json: true
   })
   .then(response => response.json())
+  .then(data => { return data.artists.items[0].id })
 }
+console.table(await getArtistID("Sub-Zero-Project"))
 
-getToken()
+
+
+
+
+
 
 
 
