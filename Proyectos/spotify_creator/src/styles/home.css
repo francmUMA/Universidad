@@ -1,0 +1,27 @@
+#main {
+    color: white;
+    margin-top: 10%;
+    height: 600px;
+    width: 100%;
+    background-color: black;
+    text-align: center;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  }
+  
+  .spotify-btn {
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10%;
+    height: 10%;
+    width: 40%;
+    border: 3px thick;
+    border-radius: 30px;
+    background-color: #1db954;
+  }
+  
+  .spotify-btn:hover {
+    transition-duration: 0.3s;
+    background-color: #1ed760;
+  }
