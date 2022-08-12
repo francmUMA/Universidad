@@ -1,4 +1,5 @@
-import "../styles/home.css";
+import "./home.css";
+import Navbar from "./Navbar.js";
 
 let client_id = "fee6275da3ab4dd3ba15fd84725347df";
 let redirect_uri = "https://6rbnh9.csb.app/inicio";
@@ -19,13 +20,16 @@ const Home = () => {
 
   return (
     <div id="main">
-      <h1 className="name"> WEBSITE NAME </h1>
-      <span className="description"> description website </span>
-      <br />
-      <h1> Inicia sesión con tu cuenta de Spotify </h1>
-      <button onClick={login} className="spotify-btn">
-        Login with spotify
-      </button>
+      <Navbar />
+      <div id="login-body">
+        <h1 className="description">
+          Make personalized playlists with your favourite artists, songs or
+          discover new music with playlists based on your musical tastes.
+        </h1>
+        <button onClick={login} className="spotify-btn">
+          LET'S DISCOVER
+        </button>
+      </div>
     </div>
   );
 };

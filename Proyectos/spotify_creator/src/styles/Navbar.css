@@ -1,0 +1,64 @@
+#navbar {
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 5.55rem;
+    width: 100%;
+    background-color: black;
+    align-items: center;
+    display: flex;
+  }
+  
+  .spotify-logo {
+    margin-left: 1.85rem;
+    width: 152px;
+    height: auto;
+  }
+  
+  .about-btn {
+    background-color: black;
+    color: white;
+    font-size: 25px;
+    height: 100%;
+    width: 6rem;
+    transition-duration: 0.15s;
+    font-weight: lighter;
+  }
+  
+  .works-btn {
+    background-color: black;
+    color: white;
+    font-size: 25px;
+    height: 100%;
+    width: 11rem;
+    transition-duration: 0.15s;
+    margin-left: 75%;
+    font-weight: lighter;
+  }
+  
+  .about-btn:hover,
+  .works-btn:hover {
+    transition-duration: 0.15s;
+    color: #1ed760;
+  }
+  
+  .spotify-btn {
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 22px;
+    font-weight: bold;
+    height: 75px;
+    margin-top: 1%;
+    margin-left: 5%;
+    width: 20%;
+    border-width: 0px;
+    border-radius: 70px;
+    background-color: #1db954;
+  }
+  
+  .spotify-btn:hover {
+    transition-duration: 0.3s;
+    background-color: #1ed760;
+  }
+  
