@@ -6,7 +6,7 @@ const Navbar = () => {
       <img
         alt=""
         className="spotify-logo"
-        src={require("./Spotify_Logo_RGB_White.png")}
+        src={require("../images/Spotify_Logo_RGB_White.png")}
       />
       <button className="works-btn">How it works</button>
       <button className="about-btn">About</button>
