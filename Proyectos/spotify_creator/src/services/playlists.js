@@ -1,22 +1,13 @@
 import { getAlbumTracks } from "./albums";
 import { getUserID } from "./user";
-
-let options = (token) => {
-  return {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token
-    }
-  };
-};
+import { SPOTIFY as sp, options } from "../.env";
 
 export const createPlaylist = async (token) => {
     let useToken = token;
-    let userID = await getUserID(useToken);
+    let userID = await getUserID(token);
   
     //Creación de la playlist
-    let playlistID = await fetch(process.env.BASE_URI + "/users/" + userID + "/playlists", {
+    let playlistID = await fetch(sp.baseURI + "/users/" + userID + "/playlists", {
       method: "POST",
       body: JSON.stringify({
         name: "The HARDEST playlist",
@@ -26,7 +17,7 @@ export const createPlaylist = async (token) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + useToken
+        Authorization: "Bearer " + token
       }
     })
       .then((response) => {
@@ -81,7 +72,7 @@ export const createPlaylist = async (token) => {
       for (let i = inicio; i < fin; i++) {
         test.push(trackList[i]);
       }
-      await fetch(process.env.BASE_URI + "/playlists/" + playlistID + "/tracks?uris=" + test, {
+      await fetch(sp.baseURI + "/playlists/" + playlistID + "/tracks?uris=" + test, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -103,7 +94,7 @@ export const getPlaylists = async (token) => {
     let allData = [];
     let offset = 0;
     let res = await fetch(
-      process.env.BASE_URI + "/me/playlists?limit=50&offset=" + offset,
+      sp.baseURI + "/me/playlists?limit=50&offset=" + offset,
       options(token)
     )
       .then((response) => response.json())
@@ -116,7 +107,7 @@ export const getPlaylists = async (token) => {
     while (res.total > allData.length) {
       offset += 50;
       res = await fetch(
-        process.env.BASE_URI + "/me/playlists?limit=50&offset=" + offset,
+        sp.baseURI + "/me/playlists?limit=50&offset=" + offset,
         options(token)
       )
         .then((response) => response.json())

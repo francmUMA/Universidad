@@ -19,7 +19,7 @@ const Inicio = () => {
 
   useEffect(() => {
     if (token != null) {
-      Promise.resolve(getPlaylists(token)).then(setPlaylists);
+      getPlaylists(token).then(setPlaylists);
     }
   }, [token]);
 
@@ -57,7 +57,7 @@ const Inicio = () => {
   return (
     <div id="main">
       <Navbar />
-      <Creator />
+      <ListPlaylist />
       <button
         onClick={() => {
           return backHome("/");
