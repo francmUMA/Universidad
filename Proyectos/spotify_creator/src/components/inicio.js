@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar.js";
 import { getToken } from "../services/token.js"
-import { createPlaylist, getPlaylists } from "../services/playlist.js"
+import { createPlaylist, getPlaylists } from "../services/playlists.js"
 
 const Inicio = () => {
   let code = window.location.search.split("=")[1];

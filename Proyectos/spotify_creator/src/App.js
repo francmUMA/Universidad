@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Inicio from "./inicio.js";
-import Home from "./home.js";
+import Inicio from "./components/inicio.js";
+import Home from "./components/home.js";
 
 export default function App() {
   return (
