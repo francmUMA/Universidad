@@ -23,4 +23,6 @@ const Home = () => {
   );
 };
 
+console.log("mec")
+
 export default Home;
