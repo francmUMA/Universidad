@@ -23,6 +23,6 @@ const Home = () => {
   );
 };
 
-console.log("mec")
+console.log("me")
 
 export default Home;
