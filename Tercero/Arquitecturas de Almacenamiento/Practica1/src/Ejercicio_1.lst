@@ -1,0 +1,188 @@
+---------------------------------------------
+PIC ASSEMBLER LISTING
+Line    Address Opcode  Instruction
+---------------------------------------------
+0001    0000            ; Compiled with: PIC Simulator IDE v6.93
+0002    0000            ; Microcontroller model: PIC16F877A
+0003    0000            ; Clock frequency: 4.0 MHz
+0004    0000            ;
+0005    0000            ;       The address of 'display' (byte) (global) is 0x2C
+0006    0000            ;       The address of 'control_bucle' (byte) (global) is 0x2D
+0007    0000            ; Begin
+0008    0000            	R0L EQU 0x20
+0009    0000            	R0H EQU 0x21
+0010    0000            	R1L EQU 0x22
+0011    0000            	R1H EQU 0x23
+0012    0000            	R2L EQU 0x24
+0013    0000            	R2H EQU 0x25
+0014    0000            	R3L EQU 0x26
+0015    0000            	R3H EQU 0x27
+0016    0000            	R4L EQU 0x28
+0017    0000            	R4H EQU 0x29
+0018    0000            	R5L EQU 0x2A
+0019    0000            	R5H EQU 0x2B
+0020    0000            	ORG 0x0000
+0021    0000    118A    	BCF PCLATH,3
+0022    0001    120A    	BCF PCLATH,4
+0023    0002    2805    	GOTO L0003
+0024    0003            	ORG 0x0004
+0025    0004    0009    	RETFIE
+0026    0005            ; Begin of program
+0027    0005            L0003:
+0028    0005            ; 1: Dim control_bucle As Byte
+0029    0005            ; 2: Dim display As Byte
+0030    0005            ; 3: control_bucle = 0
+0031    0005    01AD    	CLRF 0x2D
+0032    0006            ; 4: TRISB = 0
+0033    0006    1683    	BSF STATUS,RP0
+0034    0007    0186    	CLRF 0x06
+0035    0008    1283    	BCF STATUS,RP0
+0036    0009            ; 5: main:
+0037    0009            L0001:
+0038    0009            ; 6: display = control_bucle
+0039    0009    082D    	MOVF 0x2D,W
+0040    000A    00AC    	MOVWF 0x2C
+0041    000B            ; 7: Gosub calculadisplay
+0042    000B    2018    	CALL L0002
+0043    000C            ; 8: PORTB = display
+0044    000C    082C    	MOVF 0x2C,W
+0045    000D    0086    	MOVWF 0x06
+0046    000E            ; 9: control_bucle = control_bucle + 1
+0047    000E    082D    	MOVF 0x2D,W
+0048    000F    3E01    	ADDLW 0x01
+0049    0010    00AD    	MOVWF 0x2D
+0050    0011            ; 10: If control_bucle = 10 Then
+0051    0011    082D    	MOVF 0x2D,W
+0052    0012    3C0A    	SUBLW 0x0A
+0053    0013    1D03    	BTFSS STATUS,Z
+0054    0014    2816    	GOTO L0004
+0055    0015            ; 11: control_bucle = 0
+0056    0015    01AD    	CLRF 0x2D
+0057    0016            ; 12: Endif
+0058    0016            L0004:
+0059    0016            ; 13: Goto main
+0060    0016    2809    	GOTO L0001
+0061    0017            ; 14: End
+0062    0017    2817    L0005:	GOTO L0005
+0063    0018            ; 15: calculadisplay:
+0064    0018            L0002:
+0065    0018            ; 16: Select Case display
+0066    0018            ; 17: Case 0
+0067    0018    082C    	MOVF 0x2C,W
+0068    0019    3C00    	SUBLW 0x00
+0069    001A    1D03    	BTFSS STATUS,Z
+0070    001B    281F    	GOTO L0006
+0071    001C            ; 18: display = %00111111
+0072    001C    303F    	MOVLW 0x3F
+0073    001D    00AC    	MOVWF 0x2C
+0074    001E            ; 19: Case 1
+0075    001E    285D    	GOTO L0007
+0076    001F            L0006:
+0077    001F    082C    	MOVF 0x2C,W
+0078    0020    3C01    	SUBLW 0x01
+0079    0021    1D03    	BTFSS STATUS,Z
+0080    0022    2826    	GOTO L0008
+0081    0023            ; 20: display = %00000110
+0082    0023    3006    	MOVLW 0x06
+0083    0024    00AC    	MOVWF 0x2C
+0084    0025            ; 21: Case 2
+0085    0025    285D    	GOTO L0009
+0086    0026            L0008:
+0087    0026    082C    	MOVF 0x2C,W
+0088    0027    3C02    	SUBLW 0x02
+0089    0028    1D03    	BTFSS STATUS,Z
+0090    0029    282D    	GOTO L0010
+0091    002A            ; 22: display = %01011011
+0092    002A    305B    	MOVLW 0x5B
+0093    002B    00AC    	MOVWF 0x2C
+0094    002C            ; 23: Case 3
+0095    002C    285D    	GOTO L0011
+0096    002D            L0010:
+0097    002D    082C    	MOVF 0x2C,W
+0098    002E    3C03    	SUBLW 0x03
+0099    002F    1D03    	BTFSS STATUS,Z
+0100    0030    2834    	GOTO L0012
+0101    0031            ; 24: display = %01001111
+0102    0031    304F    	MOVLW 0x4F
+0103    0032    00AC    	MOVWF 0x2C
+0104    0033            ; 25: Case 4
+0105    0033    285D    	GOTO L0013
+0106    0034            L0012:
+0107    0034    082C    	MOVF 0x2C,W
+0108    0035    3C04    	SUBLW 0x04
+0109    0036    1D03    	BTFSS STATUS,Z
+0110    0037    283B    	GOTO L0014
+0111    0038            ; 26: display = %01100110
+0112    0038    3066    	MOVLW 0x66
+0113    0039    00AC    	MOVWF 0x2C
+0114    003A            ; 27: Case 5
+0115    003A    285D    	GOTO L0015
+0116    003B            L0014:
+0117    003B    082C    	MOVF 0x2C,W
+0118    003C    3C05    	SUBLW 0x05
+0119    003D    1D03    	BTFSS STATUS,Z
+0120    003E    2842    	GOTO L0016
+0121    003F            ; 28: display = %01101101
+0122    003F    306D    	MOVLW 0x6D
+0123    0040    00AC    	MOVWF 0x2C
+0124    0041            ; 29: Case 6
+0125    0041    285D    	GOTO L0017
+0126    0042            L0016:
+0127    0042    082C    	MOVF 0x2C,W
+0128    0043    3C06    	SUBLW 0x06
+0129    0044    1D03    	BTFSS STATUS,Z
+0130    0045    2849    	GOTO L0018
+0131    0046            ; 30: display = %01111101
+0132    0046    307D    	MOVLW 0x7D
+0133    0047    00AC    	MOVWF 0x2C
+0134    0048            ; 31: Case 7
+0135    0048    285D    	GOTO L0019
+0136    0049            L0018:
+0137    0049    082C    	MOVF 0x2C,W
+0138    004A    3C07    	SUBLW 0x07
+0139    004B    1D03    	BTFSS STATUS,Z
+0140    004C    2850    	GOTO L0020
+0141    004D            ; 32: display = %00000111
+0142    004D    3007    	MOVLW 0x07
+0143    004E    00AC    	MOVWF 0x2C
+0144    004F            ; 33: Case 8
+0145    004F    285D    	GOTO L0021
+0146    0050            L0020:
+0147    0050    082C    	MOVF 0x2C,W
+0148    0051    3C08    	SUBLW 0x08
+0149    0052    1D03    	BTFSS STATUS,Z
+0150    0053    2857    	GOTO L0022
+0151    0054            ; 34: display = %01111111
+0152    0054    307F    	MOVLW 0x7F
+0153    0055    00AC    	MOVWF 0x2C
+0154    0056            ; 35: Case 9
+0155    0056    285D    	GOTO L0023
+0156    0057            L0022:
+0157    0057    082C    	MOVF 0x2C,W
+0158    0058    3C09    	SUBLW 0x09
+0159    0059    1D03    	BTFSS STATUS,Z
+0160    005A    285D    	GOTO L0024
+0161    005B            ; 36: display = %01100111
+0162    005B    3067    	MOVLW 0x67
+0163    005C    00AC    	MOVWF 0x2C
+0164    005D            ; 37: EndSelect
+0165    005D            L0024:
+0166    005D            L0023:
+0167    005D            L0021:
+0168    005D            L0019:
+0169    005D            L0017:
+0170    005D            L0015:
+0171    005D            L0013:
+0172    005D            L0011:
+0173    005D            L0009:
+0174    005D            L0007:
+0175    005D            ; 38: Return
+0176    005D    0008    	RETURN
+0177    005E            ; 39: 
+0178    005E            ; 40: 
+0179    005E            ; End of program
+0180    005E    285E    L0025:	GOTO L0025
+0181    005F            ; End of listing
+0182    005F            	END
+---------------------------------------------
+Number of errors = 0

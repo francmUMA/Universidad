@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+  
+  <title>Ejercicio 1: E/S por programa (PIO) mapeada en memoria</title>
+</head>
+
+
+<body>
+
+
+<h1 style="text-align: center;"> <b style=""><span style="font-size: 18pt;"></span></b></h1>
+
+
+<table style="width: 1098px; height: 155px;" border="0">
+
+
+  <tbody>
+
+
+    <tr>
+
+
+      <td style="width: 21.25px;"><img style="width: 99px; height: 93px;" alt="" src="img/uma.png"><br>
+
+
+      </td>
+
+
+      <td style="width: 1164.97px;">
+      
+      <h1 style="text-align: center;"><b style=""><span style="font-size: 18pt;">Ejercicio 1: E/S por programa (PIO)
+mapeada en memoria<br>
+
+
+      </span></b></h1>
+
+
+      </td>
+
+
+      <td style="width: 21.25px;"> <img style="width: 99px; height: 93px;" title="dac" src="img/dac.png"> </td>
+
+
+    </tr>
+
+
+  
+  </tbody>
+</table>
+
+
+<h2>1. Objetivo</h2>
+
+
+El objetivo de este ejercicio es que el alumno escriba un driver de
+dispositivo, en BASIC, que permita al PIC16F877A usar el puerto B para
+controlar un display de 7 segmentos en el que, uno a uno y sin
+soluci&oacute;n de continuidad, deben ir apareciendo todos los
+d&iacute;gitos del 0 al 9, tras lo cual se vuelve a empezar desde
+el 0.<br>
+
+
+<br>
+
+
+<br>
+
+
+<h2>2. Sistema de test</h2>
+
+
+<br>
+
+
+La configuraci&oacute;n del sistema de pruebas simulador es la
+mostrada en la siguiente figura:<br>
+
+
+<br>
+
+
+<div style="text-align: center;"><img style="width: 800px; height: 610px;" alt="" src="img/SistemaDeTest.jpg"><br>
+
+
+</div>
+
+
+<p>El 16F877A usar&aacute; los 8 bits del puerto paralelo de
+E/S B para controlar (encendiendo o apagando segmentos individuales) el
+valor representado en el Display 1 (el m&aacute;s a la izquierda)
+de la herramienta&nbsp;<span style="font-style: italic;">7-Segment
+LED Display Panel</span>, accesible desde el
+men&uacute;&nbsp;<span style="font-style: italic;">Tools</span>
+del simulador.</p>
+
+
+<br>
+
+
+<h2>3. Control del display</h2>
+
+
+Cada display consta de 8 elementos controlables (7 segmentos y un punto
+decimal), organizados como muestra la figura:<br>
+
+
+<br>
+
+
+<div style="text-align: center;"><img style="width: 177px; height: 300px;" alt="" src="img/Display.png"><br>
+
+
+</div>
+
+
+<br>
+
+
+<p>En un sistema real el control del display se
+realizar&iacute;a conectando f&iacute;sicamente cada segmento a
+una linea distinta del puerto de E/S; el segmento se enciende poniendo
+la l&iacute;nea a <span style="font-weight: bold;">1</span>,
+y se apaga poniendo la linea a <span style="font-weight: bold;">0</span>.
+En nuestro simulador estas conexiones f&iacute;sicas se emulan
+asignando segmentos y lineas en una herramienta de
+configuraci&oacute;n; <a href="img/config_displays.htm">esta
+animaci&oacute;n</a> muestra c&oacute;mo hacer esta
+asignaci&oacute;n en un ejemplo que usa 3 displays y los tres
+puertos de 8 bits de E/S B, C y D.</p>
+
+
+<p style="text-align: center;"><img style="width: 800px; height: 1087px;" alt="" src="img/figura2-3.png"></p>
+
+
+<p></p>
+
+<p>Como el 16F877A usa E/S mapeada por memoria, los registros de datos
+de entrada o salida asociados al puerto B (es decir, los latches
+conectados a las lineas del puerto) se acceden a trav&eacute;s d euna
+direcci&oacute;n de memoria, concretamente la 06hl. Para hacer
+m&aacute;s legible el c&oacute;digo, el compilador BASIC permite usar
+un nombre simb&oacute;lico (la variable especial PORTB) para referirse
+a esa posici&oacute;n de memoria.</p>
+
+<p>Adicionalmente, el compilador permite referenciar individualmente
+cada bit del puerto B (de hecho, de cualquier registro con nombre). De
+esta forma, por ejemplo, la instrucci&oacute;n PORTB = 0 pone a <span style="font-weight: bold;">0</span> todas las lineas del puerto, mientras PORTB.0 = 1 pone a&nbsp;<span style="font-weight: bold;">1</span> la linea menos significativa del puerto (el bit 0, que encender&aacute; el segmento "a").</p>
+
+<br>
+
+
+<h2>4. Uso del registro TRISx para especificar direcci&oacute;n de la E/S</h2>
+
+Dado que en el PIC16F877A el puerto B es bidireccional, antes de usarlo
+es preciso configurar expl&iacute;citamente la direcci&oacute;n de cada
+linea. Esto se hace a trav&eacute;s del registro de control TRISB
+(ubicado en la posici&oacute;n 86h del mapa de memoria), en el que cada
+uno de sus 8 bits representa la direcci&oacute;n configurada para la
+linea, con un <span style="font-weight: bold;">1</span> indicando entrada y un <span style="font-weight: bold;">0</span>
+indicando salida. De nuevo el compilador BASIC ofrece una variable
+especial (TRISB) para dar un nombre simb&oacute;lico a la
+direcci&oacute;n 86h. Como en PORTB, asignar un valor a la viariable
+TRISB da simultaneamente valor a los 8 bits del registro TRISB, pero se
+puede tambi&eacute;n asignar valores a bits individuales usando la
+notaci&oacute;n TRISB.x, con x = 0 a 7.<br>
+
+<br>
+
+<h2>5. Programa BASIC de ejemplo</h2>
+
+Para ayudar en la puesta en marcha del ejercicio, se proporciona aqu&iacute; un <a href="src/Ejercicio_1.bas">programa de ejemplo</a> que visualiza en el display de 7 segmentos alternativamente un gui&oacute;n y un punto decimal.
+<br>
+
+
+<br>
+
+
+</body>
+</html>

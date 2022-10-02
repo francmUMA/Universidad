@@ -1,0 +1,150 @@
+---------------------------------------------
+PIC ASSEMBLER LISTING
+Line    Address Opcode  Instruction
+---------------------------------------------
+0001    0000            ; Compiled with: PIC Simulator IDE v8.158
+0002    0000            ; Microcontroller model: PIC16F877A
+0003    0000            ; Clock frequency: 4.0MHz
+0004    0000            ;
+0005    0000            	R0L EQU 0x020
+0006    0000            	R0H EQU 0x021
+0007    0000            	R4L EQU 0x028
+0008    0000            	R4H EQU 0x029
+0009    0000            	R0HL EQU 0x020
+0010    0000            	R4HL EQU 0x028
+0011    0000            ;       The address of 'control_bucle' (byte) (global) is 0x022
+0012    0000            ;       The address of 'display' (byte) (global) is 0x023
+0013    0000            	ORG 0x0000
+0014    0000    118A    	BCF PCLATH,3
+0015    0001    120A    	BCF PCLATH,4
+0016    0002    2805    	GOTO L0003
+0017    0003            	ORG 0x0004
+0018    0004    0009    	RETFIE
+0019    0005            ; User code start
+0020    0005            L0003:
+0021    0005            ; 1: Dim control_bucle As Byte
+0022    0005            ; 2: Dim display As Byte
+0023    0005            ; 3: control_bucle = 0
+0024    0005    01A2    	CLRF 0x022
+0025    0006            ; 4: TRISD = 0
+0026    0006    1683    	BSF STATUS,RP0
+0027    0007    0188    	CLRF TRISD
+0028    0008    1283    	BCF STATUS,RP0
+0029    0009            ; 5: TRISA = %11111011
+0030    0009    30FB    	MOVLW 0xFB
+0031    000A    1683    	BSF STATUS,RP0
+0032    000B    0085    	MOVWF TRISA
+0033    000C    1283    	BCF STATUS,RP0
+0034    000D            ; 6: PORTA = %00000100
+0035    000D    3004    	MOVLW 0x04
+0036    000E    0085    	MOVWF PORTA
+0037    000F            ; 7: main:
+0038    000F            L0001:
+0039    000F            ; 8: Gosub calculadisplay
+0040    000F    201F    	CALL L0002
+0041    0010            ; 9: PORTD = display
+0042    0010    0823    	MOVF 0x023,W
+0043    0011    0088    	MOVWF PORTD
+0044    0012            ; 10: WaitMs 1000
+0045    0012    30E8    	MOVLW 0xE8
+0046    0013    00A0    	MOVWF R0L
+0047    0014    3003    	MOVLW 0x03
+0048    0015    00A1    	MOVWF R0H
+0049    0016    203B    	CALL W001
+0050    0017            ; 11: control_bucle = control_bucle + 1
+0051    0017    0AA2    	INCF 0x022,F
+0052    0018            ; 12: If control_bucle = 8 Then
+0053    0018    0822    	MOVF 0x022,W
+0054    0019    3C08    	SUBLW 0x08
+0055    001A    1D03    	BTFSS STATUS,Z
+0056    001B    281D    	GOTO L0004
+0057    001C            ; 13: control_bucle = 0
+0058    001C    01A2    	CLRF 0x022
+0059    001D            ; 14: Endif
+0060    001D            L0004:
+0061    001D            ; 15: Goto main
+0062    001D    280F    	GOTO L0001
+0063    001E            ; 16: End
+0064    001E    281E    L0005:	GOTO L0005
+0065    001F            ; 17: calculadisplay:
+0066    001F            L0002:
+0067    001F            ; 18: If control_bucle = 0 Then
+0068    001F    0822    	MOVF 0x022,W
+0069    0020    3C00    	SUBLW 0x00
+0070    0021    1D03    	BTFSS STATUS,Z
+0071    0022    2826    	GOTO L0006
+0072    0023            ; 19: display = %00000001
+0073    0023    3001    	MOVLW 0x01
+0074    0024    00A3    	MOVWF 0x023
+0075    0025            ; 20: Else
+0076    0025    282D    	GOTO L0007
+0077    0026            L0006:
+0078    0026            ; 21: display = ShiftLeft(display, 1)
+0079    0026    0823    	MOVF 0x023,W
+0080    0027    00A0    	MOVWF R0L
+0081    0028    01A1    	CLRF R0H
+0082    0029    3001    	MOVLW 0x01
+0083    002A    204C    	CALL SL00
+0084    002B    0820    	MOVF R0L,W
+0085    002C    00A3    	MOVWF 0x023
+0086    002D            ; 22: Endif
+0087    002D            L0007:
+0088    002D            ; 23: Return
+0089    002D    0008    	RETURN
+0090    002E            ; End of user code
+0091    002E    282E    L0008:	GOTO L0008
+0092    002F            ;
+0093    002F            ;
+0094    002F            ; Delay Routine Byte
+0095    002F            ; minimal routine execution time: 8탎
+0096    002F            ; routine execution time step: 3탎
+0097    002F            ; maximal routine execution time: 770탎
+0098    002F            DL01:
+0099    002F    0BA8    	DECFSZ R4L,F
+0100    0030    282F    	GOTO DL01
+0101    0031    0008    	RETURN
+0102    0032            ; Delay Routine Word
+0103    0032            ; minimal routine execution time: 15탎
+0104    0032            ; routine execution time step: 10탎
+0105    0032            ; maximal routine execution time: 655365탎
+0106    0032            DL02:
+0107    0032    3001    	MOVLW 0x01
+0108    0033    02A8    	SUBWF R4L,F
+0109    0034    0100    	CLRW
+0110    0035    1C03    	BTFSS STATUS,C
+0111    0036    3E01    	ADDLW 0x01
+0112    0037    02A9    	SUBWF R4H,F
+0113    0038    1C03    	BTFSS STATUS,C
+0114    0039    0008    	RETURN
+0115    003A    2832    	GOTO DL02
+0116    003B            ; Waitms Routine
+0117    003B    3001    W001:	MOVLW 0x01
+0118    003C    02A0    	SUBWF R0L,F
+0119    003D    0100    	CLRW
+0120    003E    1C03    	BTFSS STATUS,C
+0121    003F    3E01    	ADDLW 0x01
+0122    0040    02A1    	SUBWF R0H,F
+0123    0041    1C03    	BTFSS STATUS,C
+0124    0042    0008    	RETURN
+0125    0043    3061    	MOVLW 0x61
+0126    0044    00A8    	MOVWF R4L
+0127    0045    3000    	MOVLW 0x00
+0128    0046    00A9    	MOVWF R4H
+0129    0047    2032    	CALL DL02
+0130    0048    283B    	GOTO W001
+0131    0049            ;
+0132    0049            ;
+0133    0049            ; Word ShiftLeft Routine
+0134    0049    1003    SL01:	BCF STATUS,C
+0135    004A    0DA0    	RLF R0L,F
+0136    004B    0DA1    	RLF R0H,F
+0137    004C    3EFF    SL00:	ADDLW 0xFF
+0138    004D    1803    	BTFSC STATUS,C
+0139    004E    2849    	GOTO SL01
+0140    004F    0008    	RETURN
+0141    0050            ;
+0142    0050            ;
+0143    0050            ; End of listing
+0144    0050            	END
+---------------------------------------------
+Number of errors = 0

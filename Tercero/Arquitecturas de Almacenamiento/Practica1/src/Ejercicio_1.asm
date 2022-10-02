@@ -1,0 +1,182 @@
+; Compiled with: PIC Simulator IDE v6.93
+; Microcontroller model: PIC16F877A
+; Clock frequency: 4.0 MHz
+;
+;       The address of 'display' (byte) (global) is 0x2C
+;       The address of 'control_bucle' (byte) (global) is 0x2D
+; Begin
+	R0L EQU 0x20
+	R0H EQU 0x21
+	R1L EQU 0x22
+	R1H EQU 0x23
+	R2L EQU 0x24
+	R2H EQU 0x25
+	R3L EQU 0x26
+	R3H EQU 0x27
+	R4L EQU 0x28
+	R4H EQU 0x29
+	R5L EQU 0x2A
+	R5H EQU 0x2B
+	ORG 0x0000
+	BCF PCLATH,3
+	BCF PCLATH,4
+	GOTO L0003
+	ORG 0x0004
+	RETFIE
+; Begin of program
+L0003:
+; 1: Dim control_bucle As Byte
+; 2: Dim display As Byte
+; 3: control_bucle = 0
+	CLRF 0x2D
+; 4: TRISB = 0
+	BSF STATUS,RP0
+	CLRF 0x06
+	BCF STATUS,RP0
+; 5: main:
+L0001:
+; 6: display = control_bucle
+	MOVF 0x2D,W
+	MOVWF 0x2C
+; 7: Gosub calculadisplay
+	CALL L0002
+; 8: PORTB = display
+	MOVF 0x2C,W
+	MOVWF 0x06
+; 9: control_bucle = control_bucle + 1
+	MOVF 0x2D,W
+	ADDLW 0x01
+	MOVWF 0x2D
+; 10: If control_bucle = 10 Then
+	MOVF 0x2D,W
+	SUBLW 0x0A
+	BTFSS STATUS,Z
+	GOTO L0004
+; 11: control_bucle = 0
+	CLRF 0x2D
+; 12: Endif
+L0004:
+; 13: Goto main
+	GOTO L0001
+; 14: End
+L0005:	GOTO L0005
+; 15: calculadisplay:
+L0002:
+; 16: Select Case display
+; 17: Case 0
+	MOVF 0x2C,W
+	SUBLW 0x00
+	BTFSS STATUS,Z
+	GOTO L0006
+; 18: display = %00111111
+	MOVLW 0x3F
+	MOVWF 0x2C
+; 19: Case 1
+	GOTO L0007
+L0006:
+	MOVF 0x2C,W
+	SUBLW 0x01
+	BTFSS STATUS,Z
+	GOTO L0008
+; 20: display = %00000110
+	MOVLW 0x06
+	MOVWF 0x2C
+; 21: Case 2
+	GOTO L0009
+L0008:
+	MOVF 0x2C,W
+	SUBLW 0x02
+	BTFSS STATUS,Z
+	GOTO L0010
+; 22: display = %01011011
+	MOVLW 0x5B
+	MOVWF 0x2C
+; 23: Case 3
+	GOTO L0011
+L0010:
+	MOVF 0x2C,W
+	SUBLW 0x03
+	BTFSS STATUS,Z
+	GOTO L0012
+; 24: display = %01001111
+	MOVLW 0x4F
+	MOVWF 0x2C
+; 25: Case 4
+	GOTO L0013
+L0012:
+	MOVF 0x2C,W
+	SUBLW 0x04
+	BTFSS STATUS,Z
+	GOTO L0014
+; 26: display = %01100110
+	MOVLW 0x66
+	MOVWF 0x2C
+; 27: Case 5
+	GOTO L0015
+L0014:
+	MOVF 0x2C,W
+	SUBLW 0x05
+	BTFSS STATUS,Z
+	GOTO L0016
+; 28: display = %01101101
+	MOVLW 0x6D
+	MOVWF 0x2C
+; 29: Case 6
+	GOTO L0017
+L0016:
+	MOVF 0x2C,W
+	SUBLW 0x06
+	BTFSS STATUS,Z
+	GOTO L0018
+; 30: display = %01111101
+	MOVLW 0x7D
+	MOVWF 0x2C
+; 31: Case 7
+	GOTO L0019
+L0018:
+	MOVF 0x2C,W
+	SUBLW 0x07
+	BTFSS STATUS,Z
+	GOTO L0020
+; 32: display = %00000111
+	MOVLW 0x07
+	MOVWF 0x2C
+; 33: Case 8
+	GOTO L0021
+L0020:
+	MOVF 0x2C,W
+	SUBLW 0x08
+	BTFSS STATUS,Z
+	GOTO L0022
+; 34: display = %01111111
+	MOVLW 0x7F
+	MOVWF 0x2C
+; 35: Case 9
+	GOTO L0023
+L0022:
+	MOVF 0x2C,W
+	SUBLW 0x09
+	BTFSS STATUS,Z
+	GOTO L0024
+; 36: display = %01100111
+	MOVLW 0x67
+	MOVWF 0x2C
+; 37: EndSelect
+L0024:
+L0023:
+L0021:
+L0019:
+L0017:
+L0015:
+L0013:
+L0011:
+L0009:
+L0007:
+; 38: Return
+	RETURN
+; 39: 
+; 40: 
+; End of program
+L0025:	GOTO L0025
+; End of listing
+	END
