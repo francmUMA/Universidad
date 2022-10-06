@@ -1,0 +1,29 @@
+# vsim -f hds_args.tmp -foreign "hdsInit C:/MentorGraphics/HDS_2018.2/resources/downstream/modelsim/ModelSim_64Bit.dll" -pli ""C:/MentorGraphics/HDS_2018.2/resources/downstream/modelsim/ModelSim_64Bit.dll"" 
+# Start time: 17:51:20 on Oct 04,2022
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading work.mux2(struct)#1
+# ** Fatal: (vsim-3347) Port "sel" is an unconstrained array.
+#    Time: 0 ns  Iteration: 0  Instance: /mux2 File: C:/HDS/ejercicios_inicio/work/hdl/mux2_struct.vhd Line: 15
+# FATAL ERROR while loading design
+# Error loading design
+# End time: 17:51:20 on Oct 04,2022, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+vsim work._opt
+# vsim work._opt -foreign "hdsInit C:/MentorGraphics/HDS_2018.2/resources/downstream/modelsim/ModelSim_64Bit.dll" -pli ""C:/MentorGraphics/HDS_2018.2/resources/downstream/modelsim/ModelSim_64Bit.dll"" 
+# Start time: 17:51:31 on Oct 04,2022
+# ** Warning: (vsim-1963) Explicit invocation on automatically named optimized design "_opt" will not cause it to be locked.
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading work.mux2(struct)#1
+# ** Fatal: (vsim-3347) Port "sel" is an unconstrained array.
+#    Time: 0 ns  Iteration: 0  Instance: /mux2 File: C:/HDS/ejercicios_inicio/work/hdl/mux2_struct.vhd Line: 15
+# FATAL ERROR while loading design
+# Error loading design
+# End time: 17:51:32 on Oct 04,2022, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 1

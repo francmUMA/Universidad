@@ -1,0 +1,112 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/HDS/ejercicios_inicio/work/work
+T_opt
+!s110 1664898573
+Vo;_L_=C:b2_`iEEDgR=eg0
+Z1 04 4 6 work mux2 struct 1
+=1-d85ed38846b5-633c560d-208-3498
+o-quiet +acc -auto_acc_if_foreign -work work -L work
+Z2 tCvgOpt 0
+n@_opt
+Z3 OL;O;10.6d;65
+R0
+T_opt1
+!s110 1664898592
+VR6^^7dNL76ZYRSX<3=Kke0
+R1
+=1-d85ed38846b5-633c5620-171-aa4
+o-quiet +acc -auto_acc_if_foreign -work work
+R2
+n@_opt1
+R3
+R0
+Emux2
+Z4 w1664898555
+Z5 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z6 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z7 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z8 8C:/HDS/ejercicios_inicio/work/hdl/mux2_struct.vhd
+Z9 FC:/HDS/ejercicios_inicio/work/hdl/mux2_struct.vhd
+l0
+L13
+V0oLGbXIEoPj:<bIYnEc@K3
+!s100 [Df6gJ6X9>2n6LkR1lPDQ0
+Z10 OL;C;10.6d;65
+33
+Z11 !s110 1664898555
+!i10b 1
+Z12 !s108 1664898555.000000
+Z13 !s90 -work|work|-nologo|-2008|-f|C:/Users/Fran/AppData/Local/Temp/Files0|
+Z14 !s107 C:/HDS/ejercicios_inicio/work/hdl/mux2_struct.vhd|
+!i113 0
+Z15 o-nologo -work work -2008
+Z16 tExplicit 1 CvgOpt 0
+Astruct
+DEx4 work 4 mux2 0 22 0oLGbXIEoPj:<bIYnEc@K3
+R5
+R6
+R7
+l47
+L39
+V9UdbU_2<9BHElQ8lKjm;^2
+!s100 HC4W?n[bjNLK8OJ>3kfdC2
+R10
+33
+R11
+!i10b 1
+R12
+R13
+R14
+!i113 0
+R15
+R16
+Emux4
+Z17 w1664900783
+R5
+R6
+R7
+R0
+Z18 8C:/HDS/ejercicios_inicio/work/hdl/mux4_struct.vhd
+Z19 FC:/HDS/ejercicios_inicio/work/hdl/mux4_struct.vhd
+l0
+L13
+V4Jo;6S6im;LiR8A;B_05a3
+!s100 JEZ<52HY^BnG1EO;P`]XW1
+R10
+33
+Z20 !s110 1664900792
+!i10b 1
+Z21 !s108 1664900792.000000
+R13
+!s107 C:/HDS/ejercicios_inicio/work/hdl/mux4_struct.vhd|
+!i113 0
+R15
+R16
+Astruct
+DEx4 work 4 mux4 0 22 4Jo;6S6im;LiR8A;B_05a3
+R5
+R6
+R7
+l49
+L41
+VZ8P;m=N7ASc9SW2Ioc>CN3
+!s100 fRDSKJ30;=4RH=D85iFQc2
+R10
+33
+R20
+!i10b 1
+R21
+R13
+Z22 !s107 C:/HDS/ejercicios_inicio/work/hdl/mux4_struct.vhd|
+!i113 0
+R15
+R16

@@ -1,0 +1,1 @@
+ -L work -l transcript.txt -i -t ns -multisource_delay latest +typdelays work.mux2(struct)

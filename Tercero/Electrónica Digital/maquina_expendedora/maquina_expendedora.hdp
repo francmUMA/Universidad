@@ -1,0 +1,11 @@
+[hdl]
+maquina_expendedora_lib = $HDS_PROJECT_DIR\maquina_expendedora_lib\hdl
+[hds]
+maquina_expendedora_lib = $HDS_PROJECT_DIR\maquina_expendedora_lib\hds
+[hds_settings]
+default_library = maquina_expendedora_lib
+version = 2
+[library_type]
+maquina_expendedora_lib = regular
+[shared]
+others = $HDS_TEAM_HOME/shared.hdp

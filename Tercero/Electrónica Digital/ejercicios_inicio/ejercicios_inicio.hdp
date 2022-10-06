@@ -1,0 +1,15 @@
+[DesignChecker]
+work = $HDS_PROJECT_DIR\work\designcheck
+[ModelSim]
+work = $HDS_PROJECT_DIR\work\work
+[hdl]
+work = $HDS_PROJECT_DIR\work\hdl
+[hds]
+work = $HDS_PROJECT_DIR\work\hds
+[hds_settings]
+default_library = work
+version = 2
+[library_type]
+work = regular
+[shared]
+others = $HDS_TEAM_HOME/shared.hdp

@@ -1,0 +1,57 @@
+DESIGN mux2
+VIEW symbol.sb
+NO_GRAPHIC 0
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 50,0 8 0 
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 126,0 14 0 
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 116,0 15 0 
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 121,0 16 0 
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 131,0 17 0 
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 1,0 20 0 
+DESIGN mux2
+VIEW symbol.sb
+GRAPHIC 1,0 21 0 
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 24
+DESIGN mux2
+VIEW struct.bd
+GRAPHIC 42,0 33 0 
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 36
+DESIGN mux2
+VIEW struct.bd
+GRAPHIC 0,0 38 2 
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 43
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 44
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 45
+DESIGN mux2
+VIEW struct.bd
+GRAPHIC 109,0 48 0 
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 55
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 56
+DESIGN mux2
+VIEW struct.bd
+NO_GRAPHIC 59
