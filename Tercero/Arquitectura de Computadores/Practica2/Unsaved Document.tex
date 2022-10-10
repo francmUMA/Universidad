@@ -1,0 +1,43 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, layout = a4paper, textheight = 9.5in, textwidth = 6.5in]{geometry}
+\usepackage{graphicx}
+ 
+\begin{document}
+	\begin{titlepage}	
+		\centering
+		{\includegraphics[width=0.35\textwidth]{/home/fran/Descargas/uma_logo.jpg}\par}
+		\vspace{0.1cm}
+		\centering	
+		{\bfseries\LARGE Universidad De Málaga \par}
+		\vspace{1cm}
+		{\scshape\Large E.T.S Ingeniería Infórmatica\par}
+		\vspace{1cm}
+		{\scshape\large Ingeniería de Computadores, 3A\par}
+		\vspace{3cm}
+		{\scshape\Huge Práctica 2. Medición del Rendimiento\par}
+		\vspace{3cm}
+		{\Large Francisco Javier Cano Moreno\par}
+		\vspace{1cm}
+		{\Large 16 de Octubre de 2022 \par}
+	\end{titlepage}
+
+    \section{Ejecuta perf list y analiza que tipos de eventos proporciona.} 
+
+    \section{Ejecuta perf stat –e cpu-cycles,instructions ./benchmark2 y
+    compara el tiempo proporcionado por perf con la salida del programa. ¿Hay
+    diferencia? ¿por qué?}
+
+    \section{Si ejecutas varias veces el programa, ¿da siempre el mismo número de eventos?
+    Justifica la respuesta.}
+
+    \section{Utiliza ahora el comando record en lugar de stat y examina la salida usando
+    perf report. Utiliza la opción annotate para relacionar los eventos con el
+    código. ¿Qué instrucción es la que tiene mayor impacto en los eventos
+    examinados?}
+
+    \section{Cambia el valor de optimización del compilador, controlado con –O0 en OPT, y
+    vuelve a obtener el número de eventos para cada opción (-O1, -O2, -O3). Rellena
+    una tabla con los resultados obtenidos.}
+
+\end{document}
+
