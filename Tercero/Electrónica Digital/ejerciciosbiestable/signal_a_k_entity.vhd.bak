@@ -1,0 +1,16 @@
+--
+-- VHDL Entity work.signal_a_k.arch_name
+--
+-- Created:
+--          by - Fran.UNKNOWN (DESKTOP-IVAGNN6)
+--          at - 17:44:41 26/10/2022
+--
+-- using Mentor Graphics HDL Designer(TM) 2018.2 (Build 19)
+--
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_arith.all;
+
+ENTITY signal_a_k IS
+END ENTITY signal_a_k;
+

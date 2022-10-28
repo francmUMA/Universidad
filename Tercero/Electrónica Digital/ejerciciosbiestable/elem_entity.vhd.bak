@@ -1,0 +1,31 @@
+--
+-- VHDL Entity work.elem.arch_name
+--
+-- Created:
+--          by - Fran.UNKNOWN (DESKTOP-IVAGNN6)
+--          at - 16:16:27 26/10/2022
+--
+-- using Mentor Graphics HDL Designer(TM) 2018.2 (Build 19)
+--
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_arith.all;
+
+entity elem is
+  port ( A, K : in bit;
+            C : out bit );
+end Elem;
+
+architecture Descripc of elem is  signal R : Bit := '0';
+  signal Eo : bit := '0';
+begin
+  L1: Eo <= R xor A;
+  L2: C <= R;
+  L3: process
+    begin
+      if K = '1' then
+        R <= Eo;
+      end if;
+      wait on k;
+  end process;
+end Descripc;

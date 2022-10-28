@@ -41,6 +41,10 @@ fase = angle(H);
 % A RELLENAR POR EL ALUMNO
 % ------------------------
 
+[H_max, p] = max(abs(H));
+H_normalizada = H ./ H_max; 
+H_normalizada_dB = 20 * log10(abs(H_normalizada));
+
 % Dibujamos la Figura 1:
 % A) Magnitud sin normalizar (lineal)
 % B) Fase
@@ -55,8 +59,14 @@ figure(1);
 subplot(2,2,1); plot(w, abs(H)); grid;
 xlabel('Frecuencia[rad/muestra]'); ylabel('|H(z)|');
 
-subplot(2,2,2); plot(w, fase); grid;
+subplot(2,2,2); plot(w, unwrap(fase)); grid;
 xlabel('Frecuencia[rad/muestra]'); ylabel('Fase[rad]');
+
+subplot(2,2,3); plot(w, abs(H_normalizada)); grid;
+xlabel('Frecuencia[rad/muestra]'); ylabel('Magnitud en Hz'); 
+
+subplot(2,2,4); plot(w, abs(H_normalizada_dB)); grid;
+xlabel('Frecuencia[rad/muestra]'); ylabel('Magnitud en dB'); 
 
 
 % Dibujamos la Figura 2:
@@ -69,11 +79,23 @@ xlabel('Frecuencia[rad/muestra]'); ylabel('Fase[rad]');
 % que el seno de entrada, que vendr� dado en la variable "longitud".
 % Este n� de muestras debe coincidir con las de la FFT del seno de entrada,
 % que ser� de 0 a 2*pi espaciados "2*pi/longitud"
-w2 = [0:2*pi/longitud:2*pi-(2*pi/longitud)];
+w2 = 0:2*pi/longitud:2*pi-(2*pi/longitud);
 
 % ------------------------
 % A RELLENAR POR EL ALUMNO
 % ------------------------
+
+% Definimos la señal
+Frecuencia = 100;
+Fs = 800;
+Amplitud = 4;
+Ts = 1 / Fs;
+t = 0:Ts:(longitud - 1)/Fs;
+senal = Amplitud * sin(2 * pi * Frecuencia * t);
+
+figure(2);
+
+
 
 % Dibujamos la Figura 3:
 % A) Se�al Senoidal de Entrada en funci�n del tiempo
