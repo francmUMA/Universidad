@@ -86,7 +86,8 @@ xlabel('Frecuencia[rad/muestra]'); ylabel('Magnitud (dB)');
 % ------------------------
 
 Amplitud = 4;
-Frecuencia = 100;
+% Frecuencia = 100;
+Frecuencia = 50;
 Fs = 800;
 Ts = 1 / Fs;
 Tmax = 16 / Frecuencia;
