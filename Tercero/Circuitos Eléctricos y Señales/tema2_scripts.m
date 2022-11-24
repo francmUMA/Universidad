@@ -37,3 +37,5 @@ plot(X, Y16);
 plot(X, Y32);
 hold off;
 xlabel('Tamaño de Matriz'); ylabel('Speed Up respecto Naïve');
+
+%% Calculo de la funcion de transferencia del ejercicio a entregar
