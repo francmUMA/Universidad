@@ -134,6 +134,10 @@ H1_normalizado = H1 ./ H1_max;
 % ------------------------
 H1_normalizado(1) = 1.0;
 
+figure(9); subplot(2,1,1);
+plot(w, abs(H1_normalizado)); xlabel('Frecuencia(Hz)'); ylabel('Magnitud');
+title('Filtro Pasa Bajos');
+
 % Multiplicamos en frecuencia dato a dato
 % ------------------------
 % A RELLENAR POR EL ALUMNO
@@ -211,6 +215,9 @@ H3 = exp(-40 * 1i * w) - H2_normalizado;
 [H3_max, p] = max(abs(H3));
 H3_normalizado = H3 ./ H3_max;
 
+figure(9); subplot(2,1,2);
+plot(w, abs(H3_normalizado)); xlabel('Frecuencia(Hz)'); ylabel('Magnitud');
+title('Filtro Pasa Altos');
 % Multiplicamos en frecuencia dato a dato la se?al ya filtrada en el paso anterior
 % por el filtro H3 pasa altos normalizado.
 % ------------------------
@@ -371,7 +378,9 @@ threshold_i1 = npki + 0.25 * (spki - npki);
 % ------------------------
 % A RELLENAR POR EL ALUMNO
 % ------------------------
-[picos, locs]  = findpeaks(ECG_integ);    
+intervalo = 0.2*Fs;
+% [picos, locs]  = findpeaks(ECG_integ); % --No mejorado--
+[picos, locs]  = findpeaks(ECG_integ,'MinPeakDistance',intervalo); % --Mejora 1--
 total_picos = length(picos);
 % Creamos un vector relleno de ceros que indicar? si hay QRS en un punto o no
 % Si hay 0 es que no hay QRS, si hay otro valor es que s? lo hay

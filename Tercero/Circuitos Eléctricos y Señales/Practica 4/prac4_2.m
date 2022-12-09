@@ -104,145 +104,24 @@ subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_fft_ECG_1_sinOFFSET(1:(lo
 xlabel('Frecuencia(Hz)');  ylabel('|ECG|');
 
 
-% 5.- Aplicar un filtro pasa-bajos a la se?al del ECG (H1)
-% --------------------------------------------------------
-% Generamos un filtro H basado en el n? de muestras de la se?al,
-% que vendr? dado en la variable "longitud".
-% Este n? de muestras debe coincidir con las de la FFT de la propia se?al del ECG,
-% que ser? de 0 a 2*pi espaciados "2*pi/longitud"
-w = 0:2*pi/longitud:2*pi-(2*pi/longitud);
-% Definimos el filtro pasa-bajos para una Fs = 500 Hz (modificado respecto al Pan-Tompkins).
-H1 = (1 - exp(-15 * 1i * w)).^2 ./ (1 - exp(-1 * 1i * w)).^2;
+% Aplicar el filtro diseñado
+% All frequency values are in Hz.
 
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
+Fstop1 = 2;         % First Stopband Frequency
+Fpass1 = 5;           % First Passband Frequency
+Fpass2 = 15;          % Second Passband Frequency
+Fstop2 = 40;        % Second Stopband Frequency
+Astop1 = 10;          % First Stopband Attenuation (dB)
+Apass  = 1;           % Passband Ripple (dB)
+Astop2 = 15;          % Second Stopband Attenuation (dB)
+match  = 'passband';  % Band to match exactly
 
-% Normalizamos el filtro, buscando el valor m?ximo del m?dulo (importante)
-% Obtenemos un valor real por el que dividimos todo el filtro
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-[H1_max, p] = max(abs(H1));
-H1_normalizado = H1 ./ H1_max;
+% Construct an FDESIGN object and call its BUTTER method.
+h  = fdesign.bandpass(Fstop1, Fpass1, Fpass2, Fstop2, Astop1, Apass, ...
+                      Astop2, Fs);
+Hd = design(h, 'butter', 'MatchExactly', match);
+ECG_filtrado = filter(Hd, ECG_1_sinOFFSET);
 
-% El valor del filtro en la frecuencia 0 es infinito,
-% pero deber?a tener ganancia 1
-% (al ser un filtro pasa-bajos)
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-H1_normalizado(1) = 1.0;
-
-% Multiplicamos en frecuencia dato a dato
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-res1_z = fft_ECG_1_sinOFFSET .* H1_normalizado;
-
-
-% Calculamos FFT inversa.
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-res1_compleja = ifft(res1_z);
-res1_real = real(res1_compleja);
-
-
-% Figura 3, subplot 2
-% Representamos gr?ficamente la se?al de la FFT filtrada pasa-bajos
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-magnitud_res1_z = abs(res1_z);
-figure(3);
-subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_res1_z(1:(longitud/16)+1)); grid;
-xlabel('Frecuencia(Hz)'); ylabel('|ECG|');
-
-% Figura 3, subplot 1
-% Representamos gr?ficamente la se?al en el tiempo
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-
-subplot(2,1,1); plot(t, res1_real); grid;
-xlabel('Tiempo(s)');  ylabel('ECG(mV)');
-
-% 6.- Aplicar un filtro pasa-altos a la se?al del ECG (H3)
-% --------------------------------------------------------
-% Definimos el filtro pasa altos para una Fs = 500 Hz (modificado respecto al Pan-Tompkins).
-% Lo hacemos definiendo primero un pasa bajos H2
-
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-H2 = (1 - exp(-80 * 1i * w)) ./ (1 - exp(-1 * 1i * w));
-
-% Normalizamos el filtro H2, buscando el valor m?ximo del m?dulo (importante)
-% Obtenemos un valor real por el que dividimos todo el filtro
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-[H2_max, p] = max(abs(H2));
-H2_normalizado = H2 ./ H2_max;
-
-
-% El valor del filtro en la frecuencia 0 es infinito,
-% pero deber?a tener ganancia 1
-% (al ser un filtro pasa-bajos)
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-H2_normalizado(1) = 1.0;
-
-% Restamos a un filtro pasa todo el filtro pasa bajos H2,
-% y obtenemos as? el filtro definitivo pasa altos H3.
-
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-H3 = exp(-40 * 1i * w) - H2_normalizado;
-
-% Normalizamos el filtro H3, buscando el valor m?ximo del m?dulo (importante)
-% Obtenemos un valor real por el que dividimos todo el filtro
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-[H3_max, p] = max(abs(H3));
-H3_normalizado = H3 ./ H3_max;
-
-% Multiplicamos en frecuencia dato a dato la se?al ya filtrada en el paso anterior
-% por el filtro H3 pasa altos normalizado.
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-res2_z = res1_z .* H3_normalizado;
-
-% Calculamos FFT inversa.
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-res2_compleja = ifft(res2_z);
-res2_real = real(res2_compleja);
-
-% Figura 4, subplot 2
-% Representamos gr?ficamente la se?al de la FFT filtrada pasa-bajos y pasa altos
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-magnitud_res2_z = abs(res2_z);
-figure(4);
-subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_res2_z(1:(longitud/16)+1)); grid;
-xlabel('Frecuencia(Hz)'); ylabel('|ECG|');
-
-
-% Figura 4, subplot 1
-% Representamos gr?ficamente la se?al en el tiempo
-% ------------------------
-% A RELLENAR POR EL ALUMNO
-% ------------------------
-subplot(2,1,1); plot(t, res2_real); grid;
-xlabel('Tiempo(s)');  ylabel('ECG(mV)');
 
 
 % 8.- Calcular la derivada a la se?al ya filtrada
@@ -265,7 +144,10 @@ H5_normalizado = H5 ./ H5_max;
 % ------------------------
 % A RELLENAR POR EL ALUMNO
 % ------------------------
-res3_z = res2_z .* H5_normalizado;
+fft_ECG_filtrado = fft(ECG_filtrado, longitud);
+magnitud_fft_ECG_filtrado = abs(fft_ECG_filtrado);
+
+res3_z = fft_ECG_filtrado .* H5_normalizado;
 
 % Calculamos FFT inversa.
 % ------------------------
@@ -371,7 +253,9 @@ threshold_i1 = npki + 0.25 * (spki - npki);
 % ------------------------
 % A RELLENAR POR EL ALUMNO
 % ------------------------
-[picos, locs]  = findpeaks(ECG_integ);    
+intervalo = 0.2*Fs;
+% [picos, locs]  = findpeaks(ECG_integ); % --No mejorado--
+[picos, locs]  = findpeaks(ECG_integ,'MinPeakDistance',intervalo); % --Mejora 1--
 total_picos = length(picos);
 % Creamos un vector relleno de ceros que indicar? si hay QRS en un punto o no
 % Si hay 0 es que no hay QRS, si hay otro valor es que s? lo hay
@@ -424,7 +308,7 @@ qrs_positivos = qrs > 0;
 plot(t(thrs_positivos), threshs(thrs_positivos), '*r'); 
 plot(t(spkis_positivos), spkis(spkis_positivos), '+g'); 
 plot(t(npkis_positivos), npkis(npkis_positivos), '.k');  
-plot(t(npkis_positivos), npkis(npkis_positivos), '.k');
+plot(t(qrs_positivos), qrs(qrs_positivos), '^m');
 
 % Figura 7, subplot 2
 % Dibujamos la ECG sin DC para comprobar los sitios donde hemos encontrado complejos QRS
