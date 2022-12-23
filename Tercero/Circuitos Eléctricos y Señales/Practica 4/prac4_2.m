@@ -40,7 +40,7 @@ Fs = 500;
 Ts = 1 / Fs;
 % Definimos el intervalo de tiempo de representaci?n de la se?al del ECG
 t = 0:Ts:(longitud-1)/Fs;
-
+w = 0:2*pi/longitud:2*pi-(2*pi/longitud);
 
 
 % 2.- Eliminar el OFFSET de esta se?al del ECG.
@@ -104,7 +104,7 @@ subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_fft_ECG_1_sinOFFSET(1:(lo
 xlabel('Frecuencia(Hz)');  ylabel('|ECG|');
 
 
-% Aplicar el filtro diseñado
+% Aplicar el filtro diseï¿½ado
 % All frequency values are in Hz.
 
 Fstop1 = 2;         % First Stopband Frequency
@@ -121,6 +121,9 @@ h  = fdesign.bandpass(Fstop1, Fpass1, Fpass2, Fstop2, Astop1, Apass, ...
                       Astop2, Fs);
 Hd = design(h, 'butter', 'MatchExactly', match);
 ECG_filtrado = filter(Hd, ECG_1_sinOFFSET);
+
+
+
 
 
 
@@ -146,6 +149,13 @@ H5_normalizado = H5 ./ H5_max;
 % ------------------------
 fft_ECG_filtrado = fft(ECG_filtrado, longitud);
 magnitud_fft_ECG_filtrado = abs(fft_ECG_filtrado);
+
+figure(4);
+subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_fft_ECG_filtrado(1:(longitud/16)+1),'r'); grid; hold on;
+subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_fft_ECG_1_sinOFFSET(1:(longitud/16)+1),'b'); grid;
+xlabel('Frecuencia(rad/muestra)'); ylabel('Magnitud');
+subplot(2,1,1); plot(t, ECG_filtrado); grid;
+xlabel('Tiempo(s)'); ylabel('ECG(mV)');
 
 res3_z = fft_ECG_filtrado .* H5_normalizado;
 

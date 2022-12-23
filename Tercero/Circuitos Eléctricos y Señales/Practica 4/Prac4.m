@@ -135,7 +135,7 @@ H1_normalizado = H1 ./ H1_max;
 H1_normalizado(1) = 1.0;
 
 figure(9); subplot(2,1,1);
-plot(w, abs(H1_normalizado)); xlabel('Frecuencia(Hz)'); ylabel('Magnitud');
+plot(w, abs(H1_normalizado)); xlabel('Frecuencia(rad/muestra)'); ylabel('Magnitud');
 title('Filtro Pasa Bajos');
 
 % Multiplicamos en frecuencia dato a dato
@@ -175,8 +175,7 @@ xlabel('Tiempo(s)');  ylabel('ECG(mV)');
 % 6.- Aplicar un filtro pasa-altos a la se?al del ECG (H3)
 % --------------------------------------------------------
 % Definimos el filtro pasa altos para una Fs = 500 Hz (modificado respecto al Pan-Tompkins).
-% Lo hacemos definiendo primero un pasa bajos H2
-
+% Lo hacemos definiendo primero un pasa bajos Hz
 % ------------------------
 % A RELLENAR POR EL ALUMNO
 % ------------------------
@@ -201,7 +200,6 @@ H2_normalizado(1) = 1.0;
 
 % Restamos a un filtro pasa todo el filtro pasa bajos H2,
 % y obtenemos as? el filtro definitivo pasa altos H3.
-
 % ------------------------
 % A RELLENAR POR EL ALUMNO
 % ------------------------
@@ -214,6 +212,8 @@ H3 = exp(-40 * 1i * w) - H2_normalizado;
 % ------------------------
 [H3_max, p] = max(abs(H3));
 H3_normalizado = H3 ./ H3_max;
+
+
 
 figure(9); subplot(2,1,2);
 plot(w, abs(H3_normalizado)); xlabel('Frecuencia(Hz)'); ylabel('Magnitud');
@@ -239,7 +239,9 @@ res2_real = real(res2_compleja);
 % ------------------------
 magnitud_res2_z = abs(res2_z);
 figure(4);
+%subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_fft_ECG_1_sinOFFSET(1:(longitud/16)+1)); grid; hold on;
 subplot(2,1,2); plot(EjeX(1:(longitud/16)+1), magnitud_res2_z(1:(longitud/16)+1)); grid;
+%hold off
 xlabel('Frecuencia(Hz)'); ylabel('|ECG|');
 
 
@@ -434,7 +436,7 @@ plot(t(thrs_positivos), threshs(thrs_positivos), '*r');
 plot(t(spkis_positivos), spkis(spkis_positivos), '+g'); 
 plot(t(npkis_positivos), npkis(npkis_positivos), '.k');  
 plot(t(qrs_positivos), qrs(qrs_positivos), '^m');
-
+hold off;
 % Figura 7, subplot 2
 % Dibujamos la ECG sin DC para comprobar los sitios donde hemos encontrado complejos QRS
 % ------------------------
