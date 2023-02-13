@@ -26,47 +26,57 @@
 
 #include <stdio.h>
 
-typedef struct node {
+typedef struct node* Lista;
+
+struct node {
     union { int dato;               // operando o resultado para hexadecimal
             char dato_binario[9];   // cadena para almacenar el operando/resultado binario
             char operacion[10];     // cadena descriptiva de la operacion
           } contenido;
-    void * siguiente;
+    Lista siguiente;
 } node;
 
-int exec_op(int opcion, int op1, int op2){
+
+int exec_op(unsigned char opcion, int op1, int op2){
     if(opcion == 1){        //OR
-        return 0;
+        return op1 | op2;
 
     } else if(opcion == 2){ //AND
-        return 0;
+        return op1 & op2;
 
     } else if(opcion == 3){ //XOR
-        return 0;
+        return op1 ^ op2;
 
     } else if(opcion == 4){ //<<
-        return 0;
+        return op1 << op2;
 
     } else if(opcion == 5){ //>>
-        return 0;
-
-    } else if(opcion == 6){ //Cambio de base - 0 -> binario, 1 -> hexadecimal
-        return 0;
-
-    } else {
-        return 0;
+        return op1 >> op2;
     }
+    return -1;
+}
+
+void memory_manager(Lista *list){
+
 }
 
 int main(){
-    int opcion, op1, op2;
-    printf("1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base (0 -> binario, 1 -> hexadecimal)\n0.- SALIR\nElige una opción: ");
-    scanf("%d", &opcion);
-    if (opcion != 0){
-        printf("\nIntroduce los operandos: ");
-        scanf("%d %d", &op1, &op2);
-        printf("El resultado es: %d", exec_op(opcion, op1, op2));   
-    } else {
-        printf("Hasta la proxima!!!");
+    unsigned char opcion, format = '0'; 
+    int op1, op2;
+    while (opcion != '0') {
+        printf("1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base (0 -> binario, 1 -> hexadecimal)\n0.- SALIR\nElige una opción: ");
+        scanf("%c", &opcion);
+
+        if (opcion == '1' || opcion == '2' || opcion == '3' || opcion == '4' || opcion == '5'){
+            printf("\nIntroduce los operandos: ");
+            scanf("%i %i", &op1, &op2);
+            printf("El resultado es: %d", exec_op(opcion, op1, op2));  
+
+        } else if (opcion == '6') {     //Cambio de formato
+            printf("Introduce el valor y el formato: ");
+            scanf("%i %c", &op1, &format);
+        }   
+        printf("\n");
     }
+    printf("Hasta la proxima!!!"); 
 }
