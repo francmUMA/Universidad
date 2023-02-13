@@ -1,0 +1,64 @@
+; Enciende/Apaga el diodo cada segundo
+;
+	.list off
+	.Include sfr.inc
+	.list on
+;
+;----- DEFINICIÓN DE SÍMBOLOS 3DKUM16C/62PU ---------------------------------------------
+;
+	VramTOP .equ 000400h ; inicio de la RAM interna
+	VramEND .equ 007CFFh ; final de la RAM interna
+	VIstack .equ 007CFFh ; Direccion de la cima de la pila stack pointer
+	VprogTOP .equ 0A0000h ; inicio del area de programa
+	Vintbase .equ 0FA000h ; inicio tabla de interrupciones variable
+	Vvector .equ 0FFFDCh ; inicio tabla de interrupciones fija
+	SB_base .equ 000380h ; Base del direccionamiento SB relativo
+;
+;----- AREA DE DATOS RAM -----------------------------------------------------------------
+;
+	.section	memory,data
+	.org	VramTOP
+;
+;----- AREA DE PROGRAMA ROM  -------------------------------------------------------------
+ 	.section	prog,code
+	.org	VprogTOP
+;
+;----- inicialización de temporizador y puertos 3DKUM16C/62PU ---------------------------------------------
+;
+
+reset:  bset PD2_0 		; ¿? (elije el que quieras del P2_?
+	mov.b #80h,TA0MR 	; TA0 en modo timer con f32
+	mov.w #2250,TA0 	; 2250 periodos de 27,77 ns x 32= 2 ms. (reloj de 36MHz)
+	bset TA0S 		; arranca el contador
+	mov.w #0,r2		; repetir 10 veces
+;
+;----- PROGRAMA PRINCIPAL ----------------------------------------------------------------------------------------------
+;
+main:
+	mov.w #0,r0 ; r0 cuenta de periodos de 2 ms.
+apagado:
+	btstc 3,TA0IC ; Desbordamiento del TA0 (2msec)?
+	jnc apagado
+	add.w #1,r0 ; r0 = r0+1
+	cmp.w #1500,r0 ; r0=1000?
+	jnz apagado
+	bnot P2_0 ; cambia la polaridad del diodo
+	mov.w #0,r0
+encendido:
+	btstc 3,TA0IC ; Desbordamiento del TA0 (2msec)?
+	jnc encendido
+	add.w #1,r0 ; r0 = r0+1
+	cmp.w #1000,r0 ; r0=1000?
+	jnz encendido
+	bnot P2_0 ; cambia la polaridad del diodo
+	add.w #1,r2
+	cmp.w #10,r2
+	jnz main
+;
+;----- INTERRUPCIÓN DE RESET (INICIALIZA PC) --------------------------------------------------------------------
+;
+	.section	int_reset,romdata
+	.org 		Vvector+(8*4)
+	.lword 		reset
+;
+	.end

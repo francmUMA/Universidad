@@ -1,0 +1,162 @@
+; Enciende/Apaga el diodo cada segundo
+;
+	.Include sfr.inc
+
+;
+;
+;----- Definición de Símbolos para 3DKUM16C/62PU -------------------------------------------
+;
+	VramTOP		.equ	000400h			; inicio de la RAM interna
+	VramEND		.equ	007CFFh			; final de la RAM interna
+	VprogTOP		.equ	0A0000h			; inicio del area de programa
+	Vvector		.equ	0FFFDCh			; inicio tabla de interrupciones fija
+	Vintbase		.equ	0FA000h			; inicio tabla de interrupciones variable
+	VIstack		.equ	007CFFh			; stack pointer
+	SB_base		.equ	000380h			; base address of SB recative
+;
+;
+;----- keep of RAM area -----------------------------------------
+;
+	.section	memory,data
+	.org		VramTOP
+;
+num:
+	.blkw	2
+data:
+	.blkw	500
+;
+ 	.section	prog,code
+	.org		VprogTOP
+	.sb		SB_base				; assings aprovisional SB register value
+	.sbsym		mnum				; place data in SB addressing mode
+	.sbsym		num
+;
+;
+;----- clear of RAM ---------------------------------------------
+;
+reset:
+	ldc	#VIstack,ISP				; set Interrupt Stack Pointer
+  	ldc	#SB_base,SB				; set SB register
+	ldintb	#Tabla_Vector_Usuario			; set INterrupt TaBle register
+;
+	mov.w	#0,R0					; 0 clear
+	mov.w	#(VramEND+1-VramTOP)/2,R3		; number of times
+	mov.w	#VramTOP,A1				; start address
+	sstr.w
+
+;---------------------- Inicialización ---- (3DKM16C/62PU) -------------------------------------------------
+	ldintb #Tabla_Vector_Usuario ; Necesito dummy
+	bset PD2_7 ; P2_7 salida
+	;mov.b #80h,TA0MR ; TA0 en modo temporizador con f32
+	;mov.b #1,TA0IC ; Limpia el bit de petición de interrupción. Prioridad 1
+	;mov.w #2250,TA0 ; 2250 periodos de 27,7ns*32= 2 ms. (reloj 36MHz)
+	;bset TA0S ; arranca el contador
+	;mov.w #0,r0 ; r0 cuenta de periodos de 2 ms.
+	fclr I
+	mov.b #3h,INT0IC
+	fset I
+;
+;----- programa principal ----------------------------------------------------------------------------------
+;
+main:
+	jmp main
+	
+;
+;----- manejador de la rutina de interrupción del TA0 --------------------------------------------------------
+;
+sw_ta0:
+	add.w #1,r0 ; desbordamiento (cada 2 ms)
+	reit
+;
+;----- manejador de la rutina dummy ----------------------------------------------------------------------------------------
+;
+dummy:
+	reit
+
+;
+;-----manejador interrupcion boton---------------------------------------------------------------------------------------------------------------
+;
+sw_int0:
+	bnot P2_7 ; cambia la polaridad del diodo
+	reit
+	
+
+;
+;----- interrupci¢n del temporizador TA0 (tabla de vectores variable) ---------------------------------------------
+;
+	.section int_ta0,romdata
+	.org Vintbase
+Tabla_Vector_Usuario:
+	.lword		dummy			; No0  Break Interrupt
+	.lword		dummy			; No1  Break Interrupt
+	.lword		dummy			; No2  Break Interrupt
+	.lword		dummy			; No3  Break Interrupt
+	.lword		dummy			; No4  Break Interrupt
+	.lword		dummy			; No5  Break Interrupt
+	.lword		dummy			; No6  Break Interrupt
+	.lword		dummy			; No7  Break Interrupt
+	.lword		dummy			; No8  Break Interrupt
+	.lword		dummy			; No9  Break Interrupt
+	.lword		dummy			; No10 Bus Clash Detect
+	.lword		dummy			; No11 DMA0 
+	.lword		dummy			; No12 DMA1 
+	.lword		dummy			; No13 KEY IN Interrupt
+	.lword		dummy	   		; No14 A-D Interrupt
+	.lword		dummy			; No15 UART2 Transmission Interrupt
+	.lword		dummy			; No16 UART2 receive Interrupt
+	.lword		dummy			; No17 UART0 Transmission Interrupt
+	.lword		dummy			; No18 UART0 receive Interrupt
+	.lword		0FF900H			; No19 UART1 Transmission Interrupt
+	.lword		0ff900H			; No20 UART1 receive Interrupt
+	.lword		dummy 			; No21 TimerA0 Interrupt
+	.lword		dummy   		; No22 TimerA1 Interrupt
+	.lword		dummy			; No23 TimerA2 Interrupt
+	.lword		dummy			; No24 TimerA3 Interrupt
+	.lword		dummy			; No25 TimerA4 Interrupt
+	.lword		dummy			; No26 TimerB0 Interrupt
+	.lword		dummy			; No27 TimerB1 Interrupt
+	.lword		dummy			; No28 TimerB2 Interrupt
+	.lword		sw_int0			; No29 INIT0(Active Low) Interrupt
+	.lword		dummy			; No30 INIT1(Active Low) Interrupt
+	.lword		dummy			; No31 INIT2(Active Low) Interrupt
+	.lword		dummy			; No32 S/W Interrupt
+	.lword		dummy			; No33 S/W Interrupt
+	.lword		dummy			; No34 S/W Interrupt
+	.lword		dummy			; No35 S/W Interrupt
+	.lword		dummy			; No36 S/W Interrupt
+	.lword		dummy			; No37 S/W Interrupt
+	.lword		dummy			; No38 S/W Interrupt
+	.lword		dummy			; No39 S/W Interrupt
+	.lword		dummy			; No40 S/W Interrupt
+	.lword		dummy			; No41 S/W Interrupt
+	.lword		dummy			; No42 S/W Interrupt
+	.lword		dummy			; No43 S/W Interrupt
+	.lword		dummy			; No44 S/W Interrupt
+	.lword		dummy			; No45 S/W Interrupt
+	.lword		dummy			; No46 S/W Interrupt
+	.lword		dummy			; No47 S/W Interrupt
+	.lword		dummy			; No48 S/W Interrupt
+	.lword		dummy			; No49 S/W Interrupt
+	.lword		dummy			; No50 S/W Interrupt
+	.lword		dummy			; No51 S/W Interrupt
+	.lword		dummy			; No52 S/W Interrupt
+	.lword		dummy			; No53 S/W Interrupt
+	.lword		dummy			; No54 S/W Interrupt
+	.lword		dummy			; No55 S/W Interrupt
+	.lword		dummy			; No56 S/W Interrupt
+	.lword		dummy			; No57 S/W Interrupt
+	.lword		dummy			; No58 S/W Interrupt
+	.lword		dummy			; No59 S/W Interrupt
+	.lword		dummy			; No60 S/W Interrupt
+	.lword		dummy			; No61 S/W Interrupt
+	.lword		dummy			; No62 S/W Interrupt
+	.lword		dummy			; No63 S/W Interrupt
+
+;
+	.section	inter,romdata
+	.org		Vvector+(8*4)
+	.lword 		reset
+
+
+;Para la placa 3DKM16C/62PU la dirección asignada a las interrupciones 19 y 20 de transmisión y recepción de la UART1 (del programa monitor) en la tabla de vectores variables es 0FF900H
+	.end
