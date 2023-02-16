@@ -37,45 +37,57 @@ struct node {
 } node;
 
 
-int exec_op(unsigned char opcion, int op1, int op2){
-    if(opcion == 1){        //OR
-        return op1 | op2;
+/*int exec_op(unsigned char opcion, char *op1, char *op2){*/
+    /*if(opcion == 1){        //OR*/
+        /*return op1 | op2;*/
 
-    } else if(opcion == 2){ //AND
-        return op1 & op2;
+    /*} else if(opcion == 2){ //AND*/
+        /*return op1 & op2;*/
 
-    } else if(opcion == 3){ //XOR
-        return op1 ^ op2;
+    /*} else if(opcion == 3){ //XOR*/
+        /*return op1 ^ op2;*/
 
-    } else if(opcion == 4){ //<<
-        return op1 << op2;
+    /*} else if(opcion == 4){ //<<*/
+        /*return op1 << op2;*/
 
-    } else if(opcion == 5){ //>>
-        return op1 >> op2;
-    }
-    return -1;
-}
+    /*} else if(opcion == 5){ //>>*/
+        /*return op1 >> op2;*/
+    /*}*/
+    /*return -1;*/
+/*}*/
 
 void memory_manager(Lista *list){
 
 }
 
+void read_operand(int *operand, unsigned char format){
+    if (format == '1'){
+        scanf("%x", operand);
+    }    
+}
+
 int main(){
-    unsigned char opcion, format = '0'; 
+    unsigned char format = '0'; 
+    char opcion[3];
     int op1, op2;
-    while (opcion != '0') {
-        printf("1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base (0 -> binario, 1 -> hexadecimal)\n0.- SALIR\nElige una opción: ");
-        scanf("%c", &opcion);
+    while (opcion[0] != '0') {
 
-        if (opcion == '1' || opcion == '2' || opcion == '3' || opcion == '4' || opcion == '5'){
-            printf("\nIntroduce los operandos: ");
-            scanf("%i %i", &op1, &op2);
-            printf("El resultado es: %d", exec_op(opcion, op1, op2));  
-
-        } else if (opcion == '6') {     //Cambio de formato
-            printf("Introduce el valor y el formato: ");
-            scanf("%i %c", &op1, &format);
-        }   
+        //Muestra el modo en el que se trabaja
+        if (format == '0') printf("MODO BINARIO");
+        else printf("MODO HEXADECIMAL");
+        
+        //Muestra todas las opciones y lee de teclado la que el usuario haya escrito
+        printf("\n1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base (0 -> binario, 1 -> hexadecimal)\n0.- SALIR\nElige una opción: ");
+        fgets(opcion, 2, stdin);
+        printf("Opcion escogida: %s", opcion); 
+        //Lectura de operandos y ejecucion de una operacion
+        if (opcion[0] == '1' || opcion[0] == '2' || opcion[0] == '3' || opcion[0] == '4' || opcion[0] == '5'){
+            printf("\nIntroduce el primer operando: ");
+            read_operand(&op1, format);
+            printf("Introduce el segundo operando: ");
+            read_operand(&op2, format);
+            printf("Los valores leidos son: %x %x", op1, op2); 
+        } else if (opcion[0] == 6) format = '1';
         printf("\n");
     }
     printf("Hasta la proxima!!!"); 
