@@ -10,3 +10,13 @@
 */
 
 
+#include <stdio.h>
+
+int main(){
+    int res;
+    int o1 = 567;  //1000110111
+    int o2 = 362;  //0101101011
+    res = o1 & o2; //0000100010
+    printf("%d", res);
+}
+
