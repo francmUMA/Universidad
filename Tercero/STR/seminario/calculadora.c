@@ -26,16 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct node* Lista;
-
-struct node {
-    union { int dato;               // operando o resultado para hexadecimal
-            char dato_binario[9];   // cadena para almacenar el operando/resultado binario
-            char operacion[10];     // cadena descriptiva de la operacion
-          } contenido;
-    Lista siguiente;
-} node;
+#include "memory_manager.c"
 
 
 //Implementacion de la funcion itoa
@@ -98,10 +89,6 @@ void exec_op(char *opcion, int op1, int op2, unsigned char format){
     }
 }
 
-void memory_manager(Lista *list){
-
-}
-
 void read_operand(int *operand, unsigned char format){
     char res_read[32];
     char *aux;
@@ -118,6 +105,8 @@ int main(){
     unsigned char format = '0'; 
     char opcion[2];
     int op1, op2;
+    Lista memory;
+    
     while (opcion[0] != '0') {
 
         //Muestra el modo en el que se trabaja
@@ -127,7 +116,7 @@ int main(){
         //Muestra todas las opciones y lee de teclado la que el usuario haya escrito
         printf("\n1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base\n0.- SALIR\nElige una opción: ");
         fgets(opcion, 2, stdin);
-        printf("Opcion escogida: %s", opcion); 
+         
 
         //Lectura de operandos y ejecucion de una operacion
         if (opcion[0] == '1' || opcion[0] == '2' || opcion[0] == '3' || opcion[0] == '4' || opcion[0] == '5'){
