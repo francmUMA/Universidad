@@ -26,7 +26,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "memory_manager.c"
+
 
 
 //Implementacion de la funcion itoa
@@ -60,19 +62,19 @@ void exec_op(char *opcion, int op1, int op2, unsigned char format){
     int res = -1;
     char res_string[32];
 
-    if(opcion[0] == '1'){        //OR
+    if(strcmp(opcion, "1") == 0) {        //OR
         res = op1 | op2;
 
-    } else if(opcion[0] == '2'){ //AND
+    } else if(strcmp(opcion, "2") == 0){ //AND
         res = op1 & op2;
 
-    } else if(opcion[0] == '3'){ //XOR
+    } else if(strcmp(opcion, "3") == 0){ //XOR
         res = op1 ^ op2;
 
-    } else if(opcion[0] == '4'){ //<<
+    } else if(strcmp(opcion, "4") == 0){ //<<
         res = op1 << op2;
 
-    } else if(opcion[0] == '5'){ //>>
+    } else if(strcmp(opcion, "5") == 0){ //>>
         res = op1 >> op2;
     }
     
@@ -103,11 +105,12 @@ void read_operand(int *operand, unsigned char format){
 
 int main(){
     unsigned char format = '0'; 
-    char opcion[2];
+    char opcion[3];
     int op1, op2;
     Lista memory;
+    create_list(&memory);
     
-    while (opcion[0] != '0') {
+    while (strcmp(opcion, "0") != 0) {
 
         //Muestra el modo en el que se trabaja
         if (format == '0') printf("MODO BINARIO");
@@ -115,19 +118,26 @@ int main(){
         
         //Muestra todas las opciones y lee de teclado la que el usuario haya escrito
         printf("\n1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base\n0.- SALIR\nElige una opción: ");
-        fgets(opcion, 2, stdin);
+        fgets(opcion, 3, stdin); 
          
 
         //Lectura de operandos y ejecucion de una operacion
-        if (opcion[0] == '1' || opcion[0] == '2' || opcion[0] == '3' || opcion[0] == '4' || opcion[0] == '5'){
+        if (strcmp(opcion, "100") == 0 || strcmp(opcion, "200") == 0 || strcmp(opcion, "300") == 0 || strcmp(opcion, "400") == 0 || strcmp(opcion, "500") == 0) {
             printf("\nIntroduce el primer operando: ");
             read_operand(&op1, format);
             printf("Introduce el segundo operando: ");
             read_operand(&op2, format);
             exec_op(opcion, op1, op2, format);
-        } else if (opcion[0] == '6'){
-            format = '1';
-        }        
+
+        } else if (strcmp(opcion, "600") == 0 ){
+            if (format == '1') {
+                format = '0';
+                add_node("Cambio(0)", &memory, '0');
+            } else {
+                format = '1';
+                add_node("Cambio(1)", &memory, '0'); 
+            } 
+        } else if (strcmp(opcion, "010") == 0 ) print_memory(memory);       
         printf("\n");
     }
     printf("Hasta la proxima!!!"); 

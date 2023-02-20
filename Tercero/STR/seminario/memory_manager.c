@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 typedef struct node* Lista;
 
@@ -13,26 +13,43 @@ struct node {
 } node;
 
 void create_list(Lista *list){
-    Lista newlist = malloc(sizeof(node));
-    if (newlist == NULL){
-        perror("Malloc memory fail");
-        exit(-1);
-    } else {
-        newlist = NULL;
-        *list = newlist;
-    }
+    *list = NULL;    
 }
 
-void add_operand();
+void add_node(char *opr, Lista *list, char elem){
 
-void add_binary();
+    //Creación de nodo
+    Lista new_node = malloc(sizeof(node));
+    if (elem == '0') {
+        strcpy(new_node -> contenido.operacion, opr);
+    } else if (elem == '1'){
+        strcpy(new_node -> contenido.dato_binario, opr);
+    } else {
+        strcpy(new_node -> contenido.dato, opr);
 
-void add_hex();
+    }
+    new_node -> siguiente = NULL;
+
+    //Añadir el nodo
+    if ((*list) == NULL){
+        *list = new_node;
+    } else {
+        Lista aux = (*list);
+        while (aux -> siguiente != NULL) {
+            aux = aux -> siguiente;
+        }
+        aux -> siguiente = new_node;
+    } 
+}
+
 
 void delete_node();
 
 void print_memory(Lista list){
-
+    while (list != NULL) {
+        printf("%s ", list -> contenido.dato);
+        list = list -> siguiente;
+    }
 }
 
 
