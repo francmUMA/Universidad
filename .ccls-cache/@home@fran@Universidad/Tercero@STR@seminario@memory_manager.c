@@ -5,8 +5,7 @@
 typedef struct node* Lista;
 
 struct node {
-    union { char dato[32];          // operando o resultado para hexadecimal
-            char dato_binario[32];  // cadena para almacenar el operando/resultado binario
+    union { char dato[32];          // operando o resultado
             char operacion[10];     // cadena descriptiva de la operacion
           } contenido;
     Lista siguiente;
@@ -22,8 +21,6 @@ void add_node(char *opr, Lista *list, char elem){
     Lista new_node = malloc(sizeof(node));
     if (elem == '0') {
         strcpy(new_node -> contenido.operacion, opr);
-    } else if (elem == '1'){
-        strcpy(new_node -> contenido.dato_binario, opr);
     } else {
         strcpy(new_node -> contenido.dato, opr);
 
@@ -43,11 +40,28 @@ void add_node(char *opr, Lista *list, char elem){
 }
 
 
-void delete_node();
+void delete_memory(Lista *memory){
+    Lista ptr = (*memory);
+    while (ptr != NULL){
+        (*memory) = (*memory) -> siguiente;
+        free(ptr);
+        ptr = (*memory);
+    }
+    (*memory) = NULL;
+}
+
+void memory_available(int *allow){
+    *allow = 1;
+}
+
+void memory_unavailable(int *allow){
+    *allow = 0;
+}
 
 void print_memory(Lista list){
+    printf("Memoria: ");
     while (list != NULL) {
-        printf("%s ", list -> contenido.dato);
+        printf("\n%s", list -> contenido.dato);
         list = list -> siguiente;
     }
 }
