@@ -56,27 +56,36 @@ char* itoa(int value, char* result, int base) {
     return result;
 }
 
-void exec_op(char *opcion, int op1, int op2, unsigned char format){
+void exec_op(int opcion, int op1, int op2, unsigned char format, Lista *memory){
 
     //Se opera normal
     int res = -1;
     char res_string[32];
-
-    if(strcmp(opcion, "1") == 0) {        //OR
-        res = op1 | op2;
-
-    } else if(strcmp(opcion, "2") == 0){ //AND
-        res = op1 & op2;
-
-    } else if(strcmp(opcion, "3") == 0){ //XOR
-        res = op1 ^ op2;
-
-    } else if(strcmp(opcion, "4") == 0){ //<<
-        res = op1 << op2;
-
-    } else if(strcmp(opcion, "5") == 0){ //>>
-        res = op1 >> op2;
-    }
+    
+    switch (opcion) {
+        case 1:
+            res = op1 | op2;         //OR
+            add_node("OR", memory, 0);
+            break;
+        case 2:
+            res = op1 & op2;
+            add_node("AND", memory, 0);
+            break;
+        case 3:
+            res = op1 ^ op2;
+            add_node("^", memory, 0);
+            break;
+        case 4:
+            res = op1 << op2;
+            add_node("<<", memory, 0);
+            break;
+        case 5:
+            res = op1 >> op2;
+            add_node(">>", memory, 0);
+            break;
+        default: 
+            break;
+    } 
     
     //Se transforma al formato correspondiente
     if (res == -1) {
@@ -89,56 +98,73 @@ void exec_op(char *opcion, int op1, int op2, unsigned char format){
         }
         printf("El resultado es: %s\n", res_string);
     }
+    add_node(res_string, memory, 1);
 }
 
-void read_operand(int *operand, unsigned char format){
+void read_operand(int *operand, unsigned char format, Lista *memory){
     char res_read[32];
     char *aux;
-    scanf("%s", res_read);
+
+    fgets(res_read, 32, stdin);
+    add_node(res_read, memory, 1);
+
     if (format == '1'){
        *operand = strtol(res_read, &aux, 16); 
     } else {
        *operand = strtol(res_read, &aux, 2);
-    } 
+    }
+
     printf("El operando leido es %i\n", *operand);
 }
 
 int main(){
     unsigned char format = '0'; 
-    char opcion[3];
+    char read_opcion[4];
+    int opcion = -1;
     int op1, op2;
+    int allow_memory = 0;
+
     Lista memory;
     create_list(&memory);
     
-    while (strcmp(opcion, "0") != 0) {
+    while (opcion != 0) {
 
         //Muestra el modo en el que se trabaja
         if (format == '0') printf("MODO BINARIO");
         else printf("MODO HEXADECIMAL");
         
         //Muestra todas las opciones y lee de teclado la que el usuario haya escrito
-        printf("\n1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base\n0.- SALIR\nElige una opción: ");
-        fgets(opcion, 3, stdin); 
-         
+        printf("\n1.- OR\n2.- AND\n3.- XOR\n4.- <<\n5.- >>\n6.- Cambio de base\n7.- Habilitar memoria\n8.- Deshabilitar memoria\n9.- Borrar memoria\n10.- Mostrar memoria\n0.- SALIR\nElige una opción: ");
+        fgets(read_opcion, 4, stdin); 
+        opcion = atoi(read_opcion);
+        
 
         //Lectura de operandos y ejecucion de una operacion
-        if (strcmp(opcion, "100") == 0 || strcmp(opcion, "200") == 0 || strcmp(opcion, "300") == 0 || strcmp(opcion, "400") == 0 || strcmp(opcion, "500") == 0) {
+        if (opcion == 1 || opcion == 2 || opcion == 3|| opcion == 4 || opcion == 5){
             printf("\nIntroduce el primer operando: ");
-            read_operand(&op1, format);
+            read_operand(&op1, format, &memory);
             printf("Introduce el segundo operando: ");
-            read_operand(&op2, format);
-            exec_op(opcion, op1, op2, format);
+            read_operand(&op2, format, &memory);
+            exec_op(opcion, op1, op2, format, &memory);
 
-        } else if (strcmp(opcion, "600") == 0 ){
+        } else if (opcion == 6){
             if (format == '1') {
                 format = '0';
-                add_node("Cambio(0)", &memory, '0');
+                if (allow_memory) add_node("Cambio(0)", &memory, '0');
             } else {
                 format = '1';
-                add_node("Cambio(1)", &memory, '0'); 
-            } 
-        } else if (strcmp(opcion, "010") == 0 ) print_memory(memory);       
+                if (allow_memory) add_node("Cambio(1)", &memory, '0'); 
+            }
+
+        }
+
+        else if (opcion == 10) print_memory(memory);
+        else if (opcion == 7 ) memory_available(&allow_memory);
+        else if (opcion == 8 ) memory_unavailable(&allow_memory);
+        else if (opcion == 9 ) delete_memory(&memory);
+        
         printf("\n");
     }
+    delete_memory(&memory);
     printf("Hasta la proxima!!!"); 
 }
