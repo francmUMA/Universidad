@@ -1,0 +1,1 @@
+cmd_/home/devfran/Universidad/Tercero/DSO/mean/Module.symvers :=  scripts/mod/modpost  -a    -N -o /home/devfran/Universidad/Tercero/DSO/mean/Module.symvers -n -T /home/devfran/Universidad/Tercero/DSO/mean/modules.order -i Module.symvers -e 

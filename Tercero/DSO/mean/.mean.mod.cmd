@@ -1,0 +1,1 @@
+cmd_/home/devfran/Universidad/Tercero/DSO/mean/mean.mod := printf '%s\n'   mean.o | awk '!x[$$0]++ { print("/home/devfran/Universidad/Tercero/DSO/mean/"$$0) }' > /home/devfran/Universidad/Tercero/DSO/mean/mean.mod
