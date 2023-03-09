@@ -4,6 +4,8 @@
 #include <linux/string.h>
 #include <linux/slab.h>
 #include <linux/delay.h>
+#include <linux/uaccess.h>
+
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("DAC");
@@ -14,10 +16,38 @@ MODULE_DESCRIPTION("Modulo que printea la media de los valores introducidos.");
 /****************************************************************************/
 
 #define ENTRY_NAME "mean"
-#define PERMS 0644
+#define PERMS 0666
 
 static int counter;		//Guarda el número de valores introducidos
 static int suma_acumulada;	//Guarda la suma acumulada de los valores de entrada
+
+//Atoi
+int atoi(const char* S, long *val)
+{
+    long num = 0;
+    int i = 0;
+    int numeric = S[i] && (S[i] >= '0' && S[i] <= '9');
+    
+ 
+    // run till the end of the string is reached, or the
+    // current character is non-numeric
+    while (numeric)
+    { 
+        num = num * 10 + (S[i] - '0');
+        i++;   
+        numeric = S[i] && (S[i] >= '0' && S[i] <= '9');
+    }
+
+    if (numeric) (*val) = num;
+    else if ((!numeric && S[i] == '\n' && i > 0) || (!numeric && S[i] == '\0' && i > 0)) {
+        numeric = 1;
+        (*val) = num;
+    } 
+    
+    return numeric;
+}
+ 
+
 
 /****************************************************************************/
 // proc file operations
@@ -30,7 +60,10 @@ ssize_t mean_proc_read(struct file *sp_file, char __user *buf, size_t size, loff
 
     printk(KERN_NOTICE "proc has called read\n");
     if (counter == 0) len = sprintf(message, "Aún no se ha introducido ningún valor\n");
-    else len = sprintf(message, "COUNT -> %d \n MEDIA -> %d\n", counter, suma_acumulada / counter);    
+    else {
+        int media = (suma_acumulada * 100) / counter;
+        len = sprintf(message, "COUNT -> %d \nMEDIA -> %d.%02d\n", counter, media/100, media%100);
+    }
     copy_to_user(buf, message, len);
     
     *offset += len;
@@ -38,14 +71,28 @@ ssize_t mean_proc_read(struct file *sp_file, char __user *buf, size_t size, loff
     return len;
 }
 
-/*ssize_t mean_proc_write(){*/
-	/*;*/
-/*}*/
-
+ssize_t mean_proc_write(struct file *filp, const char __user *buf, size_t count, loff_t *offset){
+    char str_value[20];
+    long value;
+    if (copy_from_user(str_value, buf, count)) return -EFAULT;
+    printk(KERN_NOTICE "Introducido: %s\n", str_value);
+    if(strcmp(str_value, "CLEAR") == 0 || strcmp(str_value, "CLEAR\n") == 0) {
+        counter = 0;
+        suma_acumulada = 0;
+    } else {
+        int ret = atoi(str_value, &value);
+        if (!ret) return -EINVAL;  
+        counter += 1; 
+        suma_acumulada += value;
+    }
+        *offset += count;
+        return count;
+}
 
 //Modificación de las operaciones de lectura y escritura
 static struct proc_ops fops = {
-        .proc_read  = mean_proc_read
+        .proc_read  = mean_proc_read,
+        .proc_write = mean_proc_write
 };
 
 

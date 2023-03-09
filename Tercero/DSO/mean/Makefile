@@ -11,8 +11,8 @@ compile:
 
 install: 
 	sudo insmod ${MODULE}.ko 
-	dmesg | tail 
+	sudo dmesg | tail 
 
 uninstall:
 	sudo rmmod ${MODULE} 
-	dmesg | tail
+	sudo dmesg | tail
