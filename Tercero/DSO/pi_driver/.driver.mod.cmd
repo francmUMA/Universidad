@@ -1,0 +1,1 @@
+cmd_/home/devfran/Universidad/Tercero/DSO/pi_driver/driver.mod := printf '%s\n'   driver.o | awk '!x[$$0]++ { print("/home/devfran/Universidad/Tercero/DSO/pi_driver/"$$0) }' > /home/devfran/Universidad/Tercero/DSO/pi_driver/driver.mod

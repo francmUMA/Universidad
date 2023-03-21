@@ -1,0 +1,1 @@
+cmd_/home/devfran/Universidad/Tercero/DSO/pi_driver/modules.order := {   echo /home/devfran/Universidad/Tercero/DSO/pi_driver/driver.o; :; } > /home/devfran/Universidad/Tercero/DSO/pi_driver/modules.order

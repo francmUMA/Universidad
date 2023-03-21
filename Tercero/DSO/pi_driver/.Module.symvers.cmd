@@ -1,0 +1,1 @@
+cmd_/home/devfran/Universidad/Tercero/DSO/pi_driver/Module.symvers :=  scripts/mod/modpost  -a    -N -o /home/devfran/Universidad/Tercero/DSO/pi_driver/Module.symvers -n -T /home/devfran/Universidad/Tercero/DSO/pi_driver/modules.order -i Module.symvers -e 
