@@ -1,1 +1,1 @@
-cmd_/home/devfran/Universidad/Tercero/DSO/pi_driver/Module.symvers :=  scripts/mod/modpost  -a    -N -o /home/devfran/Universidad/Tercero/DSO/pi_driver/Module.symvers -n -T /home/devfran/Universidad/Tercero/DSO/pi_driver/modules.order -i Module.symvers -e 
+cmd_/home/dso/Universidad/Tercero/DSO/pi_driver/Module.symvers := sed 's/\.ko$$/\.o/' /home/dso/Universidad/Tercero/DSO/pi_driver/modules.order | scripts/mod/modpost -m -a  -o /home/dso/Universidad/Tercero/DSO/pi_driver/Module.symvers -e -i Module.symvers   -T -
