@@ -23,7 +23,7 @@ static void byte2leds(char ch, int mode){
     int i;
     int val = (int) ch;
     if (mode == 0){
-        for (i = 0; i<6; i++) gpio_set_value(LED_GPIOS[i], (val >> i));
+        for (i = 0; i<6; i++) gpio_set_value(LED_GPIOS[i], (val >> i) & 1);
     } else if (mode == 1){
         for (i = 0; i<6; i++) {
             if ((val >> i) & 0x01) gpio_set_value(LED_GPIOS[i], 1);
@@ -50,9 +50,9 @@ static ssize_t leds_read(struct file *filp, char *buf, size_t count, loff_t *off
     if (*offset > 0) return 0;
 
     int len = sprintf(message, 
-                      "STATUS\nLED1 -> %i\nLED2 -> %i\nLED3 -> %i\nLED4 -> %i\nLED5 -> %i\nLED6 -> %i\n",
-                      gpio_get_value(LED1), gpio_get_value(LED2), gpio_get_value(LED3), gpio_get_value(LED4),
-                      gpio_get_value(LED5), gpio_get_value(LED6));
+                      "STATUS\nLED6 -> %i\nLED5 -> %i\nLED4 -> %i\nLED3 -> %i\nLED2 -> %i\nLED1 -> %i\n",
+                      gpio_get_value(LED6), gpio_get_value(LED5), gpio_get_value(LED4), gpio_get_value(LED3),
+                      gpio_get_value(LED2), gpio_get_value(LED1));
     if (copy_to_user(buf, message, len)) return -EFAULT;
     *offset += len;
     return len;
@@ -62,10 +62,7 @@ static ssize_t leds_write(struct file *filp, const char *buf, size_t count, loff
 	unsigned char ch;
 	if (copy_from_user(&ch, buf, 1)) return -EFAULT;
 	printk(KERN_INFO "Valor recibido: %d\n", (int) ch);
-    if ((ch >> 6) & 0x00){
-        byte2leds(ch, 0);
-    }
-    else if ((ch >> 6) & 0x01){
+    if ((ch >> 6) & 0x01){
         byte2leds(ch, 1);
     }
     else if ((ch >> 6) & 0x02){
@@ -73,7 +70,10 @@ static ssize_t leds_write(struct file *filp, const char *buf, size_t count, loff
     }
     else if ((ch >> 6) & 0x03){
         byte2leds(ch, 3);
+    } else {
+        byte2leds(ch, 0);
     }
+        
     return 1;
 }
 
@@ -144,9 +144,10 @@ static void r_cleanup(void) {
     gpio_free(LED4);
     gpio_free(LED5);
     gpio_free(LED6);
+    gpio_free(GPIO_SPEAKER);
 
     if (leds_miscdev.this_device) misc_deregister(&leds_miscdev);
-    if (speaker_miscdev.this_device) misc_deregister(&spaker_miscdev);
+    if (speaker_miscdev.this_device) misc_deregister(&speaker_miscdev);
 
     printk(KERN_NOTICE "Removing %s module\n",KBUILD_MODNAME);
     return;
@@ -188,7 +189,7 @@ static int r_init(void) {
     gpio_direction_output(LED5, 0 );
     gpio_direction_output(LED6, 0 );
     gpio_direction_output(LED6, 0 );
-
+    gpio_direction_output(GPIO_SPEAKER, 0 );
 
     printk(KERN_NOTICE "Hey, %s module is being loaded!\n",KBUILD_MODNAME);
     return 0;
