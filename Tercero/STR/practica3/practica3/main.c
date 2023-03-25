@@ -15,20 +15,20 @@ void digitalWrite(unsigned char data){
 	PORTC = (((data & 0x80) >> 7) << PINC3) | (((data & 0x40) >> 6) << PINC4);
 }
 
-unsigned char count = 0x00;
+static uint8_t count = 0;
 
 ISR(INT0_vect){
-	ADCSRA |= (1<<ADIE) | (1<<ADSC);
+	ADCSRA = (1<<ADIE) | (1<<ADSC) | (1<<ADEN) |(1<<ADPS2);
 }
 
 ISR(PCINT0_vect){
-	ADCSRA |= (0<<ADIE) | (0<<ADSC);
-	//if (PINB & (1 << PINB3)){
-		//count |= 0x01;
-	//} else if (PINB & (1<<PINB4)){
-		//count--;
-	//}
-	digitalWrite(0x00);
+	ADCSRA = 0;
+	if (PINB & (1 << PINB3)){
+		count++;
+	} else if (PINB & (1<<PINB4)){
+		count--;
+	}
+	digitalWrite(count);
 }
 
 ISR(ADC_vect){
@@ -70,8 +70,8 @@ int main(void)
 	EIFR = 0x00;
 	
 	/*---------------------------- INTERRUPCION POR CAMBIO DE PIN -------------------------------*/
-	PCICR = 0x01;
-	PCMSK0 = 0x01;
+	PCICR = (1<<PCIE0);
+	PCMSK0 = (1<<PCINT4) | (1<<PCINT3);			//Boton B y A
 	
 	initADC();
 	initLEDS();
