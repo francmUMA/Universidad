@@ -26,7 +26,7 @@
 
 static int LED_GPIOS[] = {LED6, LED5, LED4, LED3, LED2, LED1};
 static char pulsaciones[100];
-static int counter_pulsaciones = 0;
+static int pulsaciones_counter = 0;
 
 static void byte2leds(char ch, int mode){
     int i;
@@ -47,7 +47,7 @@ static void byte2leds(char ch, int mode){
             else gpio_set_value(LED_GPIOS[i], 1); 
         }
     }
-    
+}   
 
 /****************************************************************************/
 /* Leds driver file operations */
@@ -132,29 +132,21 @@ static struct miscdevice speaker_miscdev = {
 static short int irq_BUTTON1 = 0;
 static short int irq_BUTTON2 = 0;
 
-static void tasklet_handler(unsigned long);
+static void tasklet_handler(unsigned long dato){
+    if (dato == 1) pulsaciones[pulsaciones_counter] = '1';
+    else pulsaciones[pulsaciones_counter] = '2';
+    pulsaciones_counter+=1;
+}
 
-static void allow_int_timer_handler(unsigned long);
-
-DECLARE_TASKLET(tasklet_button, tasklet_handler);
-
-DEFINE_TIMER(allow_int_timer, allow_int_timer_handler);
+static DECLARE_TASKLET(tasklet_button, tasklet_handler);
 
 static irqreturn_t irq_handler(int irq, void *dev_id, struct pt_regs *regs){
-    if (irq == irq_BUTTON1) tasklet_init(&tasklet_button, tasklet_handler, 1);
-    else if (irq == irq_BUTTON2) tasklet_init(&tasklet_button, tasklet_handler, 2);
+    unsigned long data;
+    if (irq == irq_BUTTON1) data = 1;
+    else if (irq == irq_BUTTON2) data = 2;
+    tasklet_init(&tasklet_button, tasklet_handler, data);
     tasklet_schedule(&tasklet_button);
     return IRQ_HANDLED;
-}
-
-static void tasklet_handler(unsigned long dato){
-    if (dato == 1) pulsaciones[counter] = '1';
-    else pulsaciones[counter] = '2';
-    counter+=1;
-}
-
-static void allow_int_timer_handler(unsigned long dato){
-    ;
 }
 
 static ssize_t buttons_read(struct file *filp, char *buf, size_t count, loff_t *offset){
@@ -219,10 +211,9 @@ static void r_cleanup(void) {
     if (speaker_miscdev.this_device) misc_deregister(&speaker_miscdev);
     if (buttons_miscdev.this_device) misc_deregister(&buttons_miscdev);
 
-    if (irq_BUTTON1) free(irq_BUTTON1, "Se ha pulsado el boton 1");
-    if (irq_BUTTON2) free(irq_BUTTON2, "Se ha pulsado el boton 2");
+    if (irq_BUTTON1) free_irq(irq_BUTTON1, "Se ha pulsado el boton 1");
+    if (irq_BUTTON2) free_irq(irq_BUTTON2, "Se ha pulsado el boton 2");
 
-    del_timer(&allow_int_timer);
     tasklet_kill(&tasklet_button);
 
     printk(KERN_NOTICE "Removing %s module\n",KBUILD_MODNAME);
@@ -288,7 +279,7 @@ static int r_init(void) {
                            IRQF_TRIGGER_FALLING,
                            "BUTTON1",
                            "Se ha pulsado el boton 1"))) {
-        printk(KERN_ERR "IRQ request failed\n")
+        printk(KERN_ERR "IRQ request failed\n");
         return res;
     }
     if ((res = request_irq(irq_BUTTON2,
@@ -296,7 +287,7 @@ static int r_init(void) {
                            IRQF_TRIGGER_FALLING,
                            "BUTTON2",
                            "Se ha pulsado el boton 2"))) {
-        printk(KERN_ERR "IRQ request failed\n")
+        printk(KERN_ERR "IRQ request failed\n");
         return res;
     }
 

@@ -1,1 +1,0 @@
-cmd_/home/dso/Universidad/Tercero/DSO/pi_driver/driver.ko := ld -r -EL -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/dso/Universidad/Tercero/DSO/pi_driver/driver.ko /home/dso/Universidad/Tercero/DSO/pi_driver/driver.o /home/dso/Universidad/Tercero/DSO/pi_driver/driver.mod.o;  true
