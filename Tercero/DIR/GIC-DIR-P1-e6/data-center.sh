@@ -138,3 +138,27 @@ ip dhcp excluded-address 10.1.4.1
 ip dhcp excluded-address 10.1.6.1
 ip dhcp excluded-address 10.1.8.1
 ip dhcp excluded-address 10.1.10.1
+
+
+enable
+config term
+
+interface FastEthernet 0/0.507
+encapsulation dot1Q 507
+ip address 10.1.12.1 255.255.254.0
+exit
+
+interface FastEthernet 0/0.508
+encapsulation dot1Q 508
+ip address 10.1.14.1 255.255.254.0
+exit
+
+ip dhcp excluded-address 10.1.12.1
+ip dhcp excluded-address 10.1.12.2
+ip dhcp excluded-address 10.1.14.1
+ip dhcp excluded-address 10.1.14.2
+
+exit
+copy running-config startup-config
+
+exit
