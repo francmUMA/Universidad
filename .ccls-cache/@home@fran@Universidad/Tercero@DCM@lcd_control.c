@@ -30,7 +30,6 @@ void LCD_enviarByte(uint8_t comando, uint8_t byte){
         HAL_GPIO_WritePin(GPIO_SCK_PIN, 1);
         delay(1);
         HAL_GPIO_WritePin(GPIO_SCK_PIN, 0);
-        delay(1);
         HAL_GPIO_WritePin(GPIO_SI_PIN, (byte >> i) & 1);
     }
 
@@ -41,21 +40,6 @@ void LCD_enviarByte(uint8_t comando, uint8_t byte){
 //0 entran por la izquierda, 1 entran por la derecha
 void LCD_inicializacion(int banco, int entrada_caracteres){
     LCD_enable();
-
-    //Poner la frecuencia por defecto
-    LCD_enviarByte(1, 0x10);
-
-    //Banco = 0 -> 18, Banco = 1 -> 19
-    if (banco == 0) LCD_enviarByte(1, 0x18);
-    else if (banco == 1) LCD_enviarByte(1, 0x19);
-    
-    //Display ON -> 0x09
-    LCD_enviarByte(1, 0x09);
-
-    //Entrada de caracteres
-    if (entrada_caracteres) LCD_enviarByte(1, 71);
-    else LCD_enviarByte(1, 72);
-    
 }
 
 void LCD_ocupado(void){ 
