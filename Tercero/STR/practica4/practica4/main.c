@@ -23,24 +23,48 @@ void initLEDS(){
 }
 
 void initTimers(){
-	TCCR1B |= (1<<WGM12) | (1<<CS12);			//Preescalado = 256
-	TIMSK1 |= (1<<OCIE1A);	
-	OCR1A = 15625;								//250ms
+	//Timer 0 en modo FastPWM
+	TCCR0A |= (1<<WGM01) | (1<<WGM00);						//FastPWM
+	TCCR0A |= (1<<COM0A1);									//Non-Inverted
+	TCCR0B |= (1<<CS02);									//Preescalado de 256
+	OCR0A = 16;												//256 microsgs
+	
+	//Timer 1 en modo CTC
+	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);			//Preescalado = 1024 y top en OCR1A	
+	OCR1A = 46875;											//3s
+	
+	//Timer 2 en modo CTC
+	TCCR2A = (1<<WGM21);									//Modo CTC con top en OCRA
+	TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20);				//Preescalado de 1024
+	OCR2A = 157;											//10ms
 }
 
 ISR(INT0_vect){
-	OCR1A = 62500;								//1s
+	digitalWrite(0);
+	TIMSK1 = (1<<OCIE1A);
+	//TIMSK2 = (0<<OCIE2A);
+	//TIMSK0 = (1<<TOIE0);
 }
 
 ISR(TIMER1_COMPA_vect){
+	//Apagar leds y deshabilitar timer 1
+	digitalWrite(0xFF);
+	//TIMSK1 = (0<<OCIE1A);
+	//Habilitar timer 2
+	//TIMSK2 = (1<<OCIE2A);
+	
+}
+
+ISR(TIMER2_COMPA_vect){
 	counter += 1;
-	if (counter > 63) counter = 0;
 	digitalWrite(counter);
 }
 
 ISR(PCINT0_vect){
-	if		(PINB & (1<<PINB3)) OCR1A = 15625;								//250ms
-	else if (PINB & (1<<PINB4)) OCR1A = 31250;								//500ms
+	digitalWrite(0);
+	TIMSK1 = (1<<OCIE1A);
+	//TIMSK2 = (0<<OCIE2A);
+	//TIMSK0 = (1<<TOIE0);
 }
 
 int main(void)
@@ -64,10 +88,13 @@ int main(void)
 	
     initLEDS();
 	initTimers();
-	digitalWrite(counter);
     
     //Activar interrupciones
     sei();
+	//Activar timer 1
+	//TIMSK1 = (1<<OCIE1A);
+	//Arrancan los LEDs 3 segundos
+	digitalWrite(0xFF);
     
     while (1);
 }
