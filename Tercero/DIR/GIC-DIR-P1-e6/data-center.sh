@@ -60,7 +60,7 @@ interface FastEthernet 0/0
 no shutdown
 exit
 
-interface FastEthernet 0/0.500
+interface FastEthernet 1/0.500
 encapsulation dot1Q 500
 ip address 192.168.0.2 255.255.255.252
 exit
@@ -158,6 +158,41 @@ ip dhcp excluded-address 10.1.12.2
 ip dhcp excluded-address 10.1.14.1
 ip dhcp excluded-address 10.1.14.2
 
+exit
+copy running-config startup-config
+
+exit
+
+#Configuracion de la vlan 500
+enable
+configure terminal
+
+interface FastEthernet 1/0
+no shutdown
+exit
+
+interface FastEthernet 1/0.500
+encapsulation dot1Q 500
+ip address 192.168.0.2 255.255.255.252
+exit
+
+ip dhcp excluded-address 192.168.0.1
+ip dhcp excluded-address 192.168.0.2
+exit
+copy running-config startup-config
+
+exit
+
+#Configuracion de routing dinamico
+enable
+configure terminal
+
+router rip
+version 2
+no auto-summary
+network 10.0.0.0
+network 192.168.0.0
+exit
 exit
 copy running-config startup-config
 
