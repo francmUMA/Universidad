@@ -1,1 +1,1 @@
-cmd_/home/dso/Universidad/Tercero/DSO/pi_driver/modules.order := {   echo /home/dso/Universidad/Tercero/DSO/pi_driver/driver.ko; :; } | awk '!x[$$0]++' - > /home/dso/Universidad/Tercero/DSO/pi_driver/modules.order
+cmd_/home/franpi/Universidad/Tercero/DSO/pi_driver/modules.order := {   echo /home/franpi/Universidad/Tercero/DSO/pi_driver/driver.ko; :; } > /home/franpi/Universidad/Tercero/DSO/pi_driver/modules.order

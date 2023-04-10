@@ -4,13 +4,13 @@ KERNEL_SRC=/lib/modules/`uname -r`/build
 
 obj-m += $(MODULE).o
 
-
+time_waiting=
 
 compile:
 	make -C $(KERNEL_SRC) M=${CURDIR} modules
 
 install:
-	sudo insmod $(MODULE).ko
+	sudo insmod $(MODULE).ko time_waiting=$(time_waiting) 
 	sudo dmesg | tail
 
 uninstall:

@@ -8,6 +8,8 @@
 #include <linux/wait.h>
 #include <linux/sched.h>
 #include <linux/jiffies.h>
+#include <linux/timer.h>
+#include <linux/semaphore.h>
 
 #define DRIVER_AUTHOR "Francisco Javier Cano Moreno"
 #define DRIVER_DESC "Driver de gestión de los GPIO para RaspberryPI"
@@ -107,7 +109,7 @@ static struct miscdevice leds_miscdev = {
 
 static ssize_t speaker_write(struct file *filp, const char *buf, size_t count, loff_t *offset){
     unsigned char ch;
-	if (copy_from_user(&ch, buf, 1)) return -EFAULT;
+    if (copy_from_user(&ch, buf, 1)) return -EFAULT;
     printk(KERN_INFO "Valor recibido: %d\n", (int) ch);
     if (ch == '0') gpio_set_value(SPEAKER, 0);
     else gpio_set_value(SPEAKER, 1);
@@ -131,28 +133,75 @@ static struct miscdevice speaker_miscdev = {
 /****************************************************************************/
 static short int irq_BUTTON1 = 0;
 static short int irq_BUTTON2 = 0;
+static int time_waiting = 150;
+static short int allow_handler = 1;		//Permite el acceso al manejador de interrupciones
+short int ocupado = 1;
+static unsigned long jiffies_default; 
 
-static void tasklet_handler(unsigned long dato){
-    if (dato == 1) pulsaciones[pulsaciones_counter] = '1';
-    else pulsaciones[pulsaciones_counter] = '2';
+module_param(time_waiting, int, 0);
+
+static DEFINE_SEMAPHORE(semaforo);	
+static DECLARE_WAIT_QUEUE_HEAD(read_waiting_queue);
+
+static void tasklet_handler1(struct tasklet_struct *);
+static void tasklet_handler2(struct tasklet_struct *);
+
+static void tasklet_handler1(struct tasklet_struct *tasklet_info){
+    pulsaciones[pulsaciones_counter] = '1';
     pulsaciones_counter+=1;
+    if (pulsaciones_counter == 1) wake_up_interruptible(&read_waiting_queue);
 }
 
-static DECLARE_TASKLET(tasklet_button, tasklet_handler);
+static void tasklet_handler2(struct tasklet_struct *tasklet_info){
+    pulsaciones[pulsaciones_counter] = '2';
+    pulsaciones_counter+=1;
+    if (pulsaciones_counter == 1) wake_up_interruptible(&read_waiting_queue);
+}
+
+static DECLARE_TASKLET(tasklet_button1, tasklet_handler1);
+
+static DECLARE_TASKLET(tasklet_button2, tasklet_handler2);
+
+static void timer_handler(struct timer_list *);
+
+static DEFINE_TIMER(timer_int, timer_handler);
 
 static irqreturn_t irq_handler(int irq, void *dev_id, struct pt_regs *regs){
-    unsigned long data;
-    if (irq == irq_BUTTON1) data = 1;
-    else if (irq == irq_BUTTON2) data = 2;
-    tasklet_init(&tasklet_button, tasklet_handler, data);
-    tasklet_schedule(&tasklet_button);
+    if (allow_handler == 1){
+	allow_handler = 0;
+   	if (irq == irq_BUTTON1) tasklet_schedule(&tasklet_button1);
+    	else if (irq == irq_BUTTON2) tasklet_schedule(&tasklet_button2);
+    
+    	jiffies_default = msecs_to_jiffies(time_waiting); 
+    	printk(KERN_NOTICE "Interrupciones deshabilitadas.\n");
+	mod_timer(&timer_int, jiffies + time_waiting);
+    }
     return IRQ_HANDLED;
 }
 
+static void timer_handler(struct timer_list *timer){     	
+    allow_handler = 1;
+    printk(KERN_NOTICE "Interrupciones habilitadas.\n");
+}
+
 static ssize_t buttons_read(struct file *filp, char *buf, size_t count, loff_t *offset){
+    char message[101];
+    int len;
     if (*offset > 0) return 0;
-    int len = strlen(pulsaciones);
-    if (copy_to_user(buf, pulsaciones, len)) return -EFAULT;
+    if (down_interruptible(&semaforo)) {
+	    printk(KERN_ERR "Dispositivo Ocupado.\n");
+	    return -ERESTARTSYS;
+    }
+    //Bloqueo
+    if(strlen(pulsaciones) == 0) if (wait_event_interruptible(read_waiting_queue,pulsaciones_counter > 0)){
+	printk(KERN_ERR "Read canceled.\n");
+	return -ERESTARTSYS;
+    }
+    len = sprintf(message, "%s\n", pulsaciones);
+    pulsaciones_counter = 0;
+    pulsaciones[0] = '\0';
+    if (copy_to_user(buf, message, len)) return -EFAULT;
+    up(&semaforo);
     *offset += len;
     return len;
 }
@@ -214,7 +263,10 @@ static void r_cleanup(void) {
     if (irq_BUTTON1) free_irq(irq_BUTTON1, "Se ha pulsado el boton 1");
     if (irq_BUTTON2) free_irq(irq_BUTTON2, "Se ha pulsado el boton 2");
 
-    tasklet_kill(&tasklet_button);
+    tasklet_kill(&tasklet_button1);
+    tasklet_kill(&tasklet_button2);
+
+    del_timer(&timer_int);
 
     printk(KERN_NOTICE "Removing %s module\n",KBUILD_MODNAME);
     return;
@@ -291,7 +343,7 @@ static int r_init(void) {
         return res;
     }
 
-
+    printk(KERN_NOTICE "Time: %i", time_waiting);
     printk(KERN_NOTICE "Hey, %s module is being loaded!\n",KBUILD_MODNAME);
     return 0;
 }
