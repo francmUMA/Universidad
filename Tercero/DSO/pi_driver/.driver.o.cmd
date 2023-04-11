@@ -1,8 +1,8 @@
-cmd_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := gcc -Wp,-MMD,/home/franpi/Universidad/Tercero/DSO/pi_driver/.driver.o.d -nostdinc -I./arch/arm/include -I./arch/arm/include/generated  -I./include -I./arch/arm/include/uapi -I./arch/arm/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -include ./include/linux/compiler_types.h -D__KERNEL__ -mlittle-endian -fmacro-prefix-map=./= -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE -Werror=implicit-function-declaration -Werror=implicit-int -Werror=return-type -Wno-format-security -std=gnu11 -fno-dwarf2-cfi-asm -mno-fdpic -fno-ipa-sra -mabi=aapcs-linux -mfpu=vfp -funwind-tables -mtp=cp15 -marm -Wa,-mno-warn-deprecated -D__LINUX_ARM_ARCH__=7 -march=armv7-a -msoft-float -Uarm -fno-delete-null-pointer-checks -Wno-frame-address -Wno-format-truncation -Wno-format-overflow -Wno-address-of-packed-member -O2 -fno-allow-store-data-races -Wframe-larger-than=1024 -fstack-protector-strong -Wno-main -Wno-unused-but-set-variable -Wno-unused-const-variable -fno-stack-clash-protection -pg -Wdeclaration-after-statement -Wvla -Wno-pointer-sign -Wcast-function-type -Wno-stringop-truncation -Wno-stringop-overflow -Wno-restrict -Wno-maybe-uninitialized -Wno-alloc-size-larger-than -Wimplicit-fallthrough=5 -fno-strict-overflow -fno-stack-check -fconserve-stack -Werror=date-time -Werror=incompatible-pointer-types -Werror=designated-init -Wno-packed-not-aligned  -DMODULE  -DKBUILD_BASENAME='"driver"' -DKBUILD_MODNAME='"driver"' -D__KBUILD_MODNAME=kmod_driver -c -o /home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o /home/franpi/Universidad/Tercero/DSO/pi_driver/driver.c  
+cmd_/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o := gcc -Wp,-MMD,/home/dso/Universidad/Tercero/DSO/pi_driver/.driver.o.d -nostdinc -isystem /usr/lib/gcc/arm-linux-gnueabihf/10/include -I./arch/arm/include -I./arch/arm/include/generated  -I./include -I./arch/arm/include/uapi -I./arch/arm/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -include ./include/linux/compiler_types.h -D__KERNEL__ -mlittle-endian -fmacro-prefix-map=./= -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE -Werror=implicit-function-declaration -Werror=implicit-int -Werror=return-type -Wno-format-security -std=gnu89 -fno-dwarf2-cfi-asm -fno-omit-frame-pointer -mapcs -mno-sched-prolog -fno-ipa-sra -mabi=aapcs-linux -mfpu=vfp -marm -Wa,-mno-warn-deprecated -D__LINUX_ARM_ARCH__=7 -march=armv7-a -msoft-float -Uarm -fno-delete-null-pointer-checks -Wno-frame-address -Wno-format-truncation -Wno-format-overflow -Wno-address-of-packed-member -O2 -fno-allow-store-data-races -Wframe-larger-than=1024 -fstack-protector-strong -Wimplicit-fallthrough=5 -Wno-main -Wno-unused-but-set-variable -Wno-unused-const-variable -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-clash-protection -pg -Wdeclaration-after-statement -Wvla -Wno-pointer-sign -Wno-stringop-truncation -Wno-zero-length-bounds -Wno-array-bounds -Wno-stringop-overflow -Wno-restrict -Wno-maybe-uninitialized -Wno-alloc-size-larger-than -fno-strict-overflow -fno-stack-check -fconserve-stack -Werror=date-time -Werror=incompatible-pointer-types -Werror=designated-init -Wno-packed-not-aligned  -DMODULE  -DKBUILD_BASENAME='"driver"' -DKBUILD_MODNAME='"driver"' -D__KBUILD_MODNAME=kmod_driver -c -o /home/dso/Universidad/Tercero/DSO/pi_driver/driver.o /home/dso/Universidad/Tercero/DSO/pi_driver/driver.c
 
-source_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := /home/franpi/Universidad/Tercero/DSO/pi_driver/driver.c
+source_/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o := /home/dso/Universidad/Tercero/DSO/pi_driver/driver.c
 
-deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
+deps_/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/compiler-version.h \
     $(wildcard include/config/CC_VERSION_TEXT) \
   include/linux/kconfig.h \
@@ -10,15 +10,12 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/BOOGER) \
     $(wildcard include/config/FOO) \
   include/linux/compiler_types.h \
-    $(wildcard include/config/DEBUG_INFO_BTF) \
-    $(wildcard include/config/PAHOLE_HAS_BTF_TAG) \
     $(wildcard include/config/HAVE_ARCH_COMPILER_H) \
     $(wildcard include/config/CC_HAS_ASM_INLINE) \
   include/linux/compiler_attributes.h \
   include/linux/compiler-gcc.h \
     $(wildcard include/config/RETPOLINE) \
     $(wildcard include/config/ARCH_USE_BUILTIN_BSWAP) \
-    $(wildcard include/config/SHADOW_CALL_STACK) \
     $(wildcard include/config/KCOV) \
   include/linux/module.h \
     $(wildcard include/config/MODULES) \
@@ -26,9 +23,8 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/MODULES_TREE_LOOKUP) \
     $(wildcard include/config/LIVEPATCH) \
     $(wildcard include/config/STACKTRACE_BUILD_ID) \
-    $(wildcard include/config/ARCH_USES_CFI_TRAPS) \
+    $(wildcard include/config/CFI_CLANG) \
     $(wildcard include/config/MODULE_SIG) \
-    $(wildcard include/config/ARCH_WANTS_MODULES_DATA_IN_VMALLOC) \
     $(wildcard include/config/GENERIC_BUG) \
     $(wildcard include/config/KALLSYMS) \
     $(wildcard include/config/SMP) \
@@ -42,25 +38,12 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/FTRACE_MCOUNT_RECORD) \
     $(wildcard include/config/KPROBES) \
     $(wildcard include/config/HAVE_STATIC_CALL_INLINE) \
-    $(wildcard include/config/KUNIT) \
     $(wildcard include/config/PRINTK_INDEX) \
     $(wildcard include/config/MODULE_UNLOAD) \
     $(wildcard include/config/CONSTRUCTORS) \
     $(wildcard include/config/FUNCTION_ERROR_INJECTION) \
   include/linux/list.h \
     $(wildcard include/config/DEBUG_LIST) \
-  include/linux/container_of.h \
-  include/linux/build_bug.h \
-  include/linux/compiler.h \
-    $(wildcard include/config/TRACE_BRANCH_PROFILING) \
-    $(wildcard include/config/PROFILE_ALL_BRANCHES) \
-    $(wildcard include/config/OBJTOOL) \
-  include/linux/compiler_types.h \
-  arch/arm/include/generated/asm/rwonce.h \
-  include/asm-generic/rwonce.h \
-  include/linux/kasan-checks.h \
-    $(wildcard include/config/KASAN_GENERIC) \
-    $(wildcard include/config/KASAN_SW_TAGS) \
   include/linux/types.h \
     $(wildcard include/config/HAVE_UID16) \
     $(wildcard include/config/UID16) \
@@ -78,61 +61,57 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/uapi/linux/posix_types.h \
   include/linux/stddef.h \
   include/uapi/linux/stddef.h \
+  include/linux/compiler_types.h \
   arch/arm/include/uapi/asm/posix_types.h \
   include/uapi/asm-generic/posix_types.h \
-  include/linux/kcsan-checks.h \
-    $(wildcard include/config/KCSAN) \
-    $(wildcard include/config/KCSAN_WEAK_MEMORY) \
-    $(wildcard include/config/KCSAN_IGNORE_ATOMICS) \
-  include/linux/err.h \
-  arch/arm/include/generated/uapi/asm/errno.h \
-  include/uapi/asm-generic/errno.h \
-  include/uapi/asm-generic/errno-base.h \
   include/linux/poison.h \
     $(wildcard include/config/ILLEGAL_POINTER_VALUE) \
   include/linux/const.h \
   include/vdso/const.h \
   include/uapi/linux/const.h \
-  arch/arm/include/asm/barrier.h \
-    $(wildcard include/config/CPU_32v6K) \
-    $(wildcard include/config/THUMB2_KERNEL) \
-    $(wildcard include/config/CPU_XSC3) \
-    $(wildcard include/config/CPU_FA526) \
-    $(wildcard include/config/ARM_HEAVY_MB) \
-    $(wildcard include/config/ARM_DMA_MEM_BUFFERABLE) \
-    $(wildcard include/config/CPU_SPECTRE) \
-  include/asm-generic/barrier.h \
-  include/linux/stat.h \
-  arch/arm/include/uapi/asm/stat.h \
-  include/uapi/linux/stat.h \
-  include/linux/time.h \
-    $(wildcard include/config/POSIX_TIMERS) \
-  include/linux/cache.h \
-    $(wildcard include/config/ARCH_HAS_CACHE_LINE_SIZE) \
-  include/uapi/linux/kernel.h \
-  include/uapi/linux/sysinfo.h \
-  arch/arm/include/asm/cache.h \
-    $(wildcard include/config/ARM_L1_CACHE_SHIFT) \
-    $(wildcard include/config/AEABI) \
-  include/linux/math64.h \
-    $(wildcard include/config/ARCH_SUPPORTS_INT128) \
-  include/linux/math.h \
-  arch/arm/include/asm/div64.h \
-  arch/arm/include/asm/compiler.h \
-  include/asm-generic/div64.h \
-  include/linux/log2.h \
-    $(wildcard include/config/ARCH_HAS_ILOG2_U32) \
-    $(wildcard include/config/ARCH_HAS_ILOG2_U64) \
+  include/linux/kernel.h \
+    $(wildcard include/config/PREEMPT_VOLUNTARY) \
+    $(wildcard include/config/PREEMPT_DYNAMIC) \
+    $(wildcard include/config/PREEMPT_) \
+    $(wildcard include/config/DEBUG_ATOMIC_SLEEP) \
+    $(wildcard include/config/MMU) \
+    $(wildcard include/config/PROVE_LOCKING) \
+  include/linux/stdarg.h \
+  include/linux/align.h \
+  include/linux/limits.h \
+  include/uapi/linux/limits.h \
+  include/vdso/limits.h \
+  include/linux/linkage.h \
+    $(wildcard include/config/ARCH_USE_SYM_ANNOTATIONS) \
+  include/linux/stringify.h \
+  include/linux/export.h \
+    $(wildcard include/config/MODVERSIONS) \
+    $(wildcard include/config/MODULE_REL_CRCS) \
+    $(wildcard include/config/HAVE_ARCH_PREL32_RELOCATIONS) \
+    $(wildcard include/config/TRIM_UNUSED_KSYMS) \
+  arch/arm/include/asm/linkage.h \
+  include/linux/compiler.h \
+    $(wildcard include/config/TRACE_BRANCH_PROFILING) \
+    $(wildcard include/config/PROFILE_ALL_BRANCHES) \
+    $(wildcard include/config/STACK_VALIDATION) \
+  arch/arm/include/generated/asm/rwonce.h \
+  include/asm-generic/rwonce.h \
+  include/linux/kasan-checks.h \
+    $(wildcard include/config/KASAN_GENERIC) \
+    $(wildcard include/config/KASAN_SW_TAGS) \
+  include/linux/kcsan-checks.h \
+    $(wildcard include/config/KCSAN) \
+    $(wildcard include/config/KCSAN_IGNORE_ATOMICS) \
   include/linux/bitops.h \
   include/linux/bits.h \
   include/vdso/bits.h \
+  include/linux/build_bug.h \
   include/linux/typecheck.h \
-  include/asm-generic/bitops/generic-non-atomic.h \
+  include/uapi/linux/kernel.h \
+  include/uapi/linux/sysinfo.h \
   arch/arm/include/asm/bitops.h \
   include/linux/irqflags.h \
-    $(wildcard include/config/PROVE_LOCKING) \
     $(wildcard include/config/TRACE_IRQFLAGS) \
-    $(wildcard include/config/PREEMPT_RT) \
     $(wildcard include/config/IRQSOFF_TRACER) \
     $(wildcard include/config/PREEMPT_TRACER) \
     $(wildcard include/config/DEBUG_IRQFLAGS) \
@@ -141,6 +120,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/CPU_V7M) \
   arch/arm/include/asm/ptrace.h \
     $(wildcard include/config/ARM_THUMB) \
+    $(wildcard include/config/THUMB2_KERNEL) \
   arch/arm/include/uapi/asm/ptrace.h \
     $(wildcard include/config/CPU_ENDIAN_BE8) \
   arch/arm/include/asm/hwcap.h \
@@ -148,9 +128,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/asm-generic/irqflags.h \
   arch/arm/include/asm/percpu.h \
     $(wildcard include/config/CPU_V6) \
-    $(wildcard include/config/ARM_HAS_GROUP_RELOCS) \
-    $(wildcard include/config/ARM_MODULE_PLTS) \
-  arch/arm/include/asm/insn.h \
   include/asm-generic/percpu.h \
     $(wildcard include/config/DEBUG_PREEMPT) \
     $(wildcard include/config/HAVE_SETUP_PER_CPU_AREA) \
@@ -160,8 +137,15 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/percpu-defs.h \
     $(wildcard include/config/DEBUG_FORCE_WEAK_PER_CPU) \
     $(wildcard include/config/AMD_MEM_ENCRYPT) \
+  arch/arm/include/asm/barrier.h \
+    $(wildcard include/config/CPU_32v6K) \
+    $(wildcard include/config/CPU_XSC3) \
+    $(wildcard include/config/CPU_FA526) \
+    $(wildcard include/config/ARM_HEAVY_MB) \
+    $(wildcard include/config/ARM_DMA_MEM_BUFFERABLE) \
+    $(wildcard include/config/CPU_SPECTRE) \
+  include/asm-generic/barrier.h \
   include/asm-generic/bitops/non-atomic.h \
-  include/asm-generic/bitops/non-instrumented-non-atomic.h \
   include/asm-generic/bitops/builtin-__fls.h \
   include/asm-generic/bitops/builtin-__ffs.h \
   include/asm-generic/bitops/builtin-fls.h \
@@ -181,11 +165,13 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   arch/arm/include/asm/processor.h \
     $(wildcard include/config/HAVE_HW_BREAKPOINT) \
     $(wildcard include/config/BINFMT_ELF_FDPIC) \
-    $(wildcard include/config/MMU) \
   arch/arm/include/asm/hw_breakpoint.h \
   arch/arm/include/asm/unified.h \
   arch/arm/include/asm/vdso/processor.h \
     $(wildcard include/config/ARM_ERRATA_754327) \
+  arch/arm/include/asm/cache.h \
+    $(wildcard include/config/ARM_L1_CACHE_SHIFT) \
+    $(wildcard include/config/AEABI) \
   arch/arm/include/asm/cmpxchg.h \
     $(wildcard include/config/CPU_SA1100) \
     $(wildcard include/config/CPU_SA110) \
@@ -194,9 +180,9 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/atomic/atomic-long.h \
   include/linux/atomic/atomic-instrumented.h \
   include/linux/instrumented.h \
-  include/linux/kmsan-checks.h \
-    $(wildcard include/config/KMSAN) \
   include/asm-generic/bitops/instrumented-lock.h \
+  include/asm-generic/bitops/find.h \
+    $(wildcard include/config/GENERIC_FIND_FIRST_BIT) \
   include/asm-generic/bitops/le.h \
   arch/arm/include/uapi/asm/byteorder.h \
   include/linux/byteorder/little_endian.h \
@@ -207,6 +193,60 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   arch/arm/include/uapi/asm/swab.h \
   include/linux/byteorder/generic.h \
   include/asm-generic/bitops/ext2-atomic-setbit.h \
+  include/linux/kstrtox.h \
+  include/linux/log2.h \
+    $(wildcard include/config/ARCH_HAS_ILOG2_U32) \
+    $(wildcard include/config/ARCH_HAS_ILOG2_U64) \
+  include/linux/math.h \
+  arch/arm/include/asm/div64.h \
+  arch/arm/include/asm/compiler.h \
+  include/asm-generic/div64.h \
+  include/linux/minmax.h \
+  include/linux/panic.h \
+    $(wildcard include/config/PANIC_TIMEOUT) \
+  include/linux/printk.h \
+    $(wildcard include/config/MESSAGE_LOGLEVEL_DEFAULT) \
+    $(wildcard include/config/CONSOLE_LOGLEVEL_DEFAULT) \
+    $(wildcard include/config/CONSOLE_LOGLEVEL_QUIET) \
+    $(wildcard include/config/EARLY_PRINTK) \
+    $(wildcard include/config/PRINTK) \
+    $(wildcard include/config/DYNAMIC_DEBUG) \
+    $(wildcard include/config/DYNAMIC_DEBUG_CORE) \
+  include/linux/init.h \
+    $(wildcard include/config/STRICT_KERNEL_RWX) \
+    $(wildcard include/config/STRICT_MODULE_RWX) \
+    $(wildcard include/config/LTO_CLANG) \
+  include/linux/kern_levels.h \
+  include/linux/cache.h \
+    $(wildcard include/config/ARCH_HAS_CACHE_LINE_SIZE) \
+  include/linux/ratelimit_types.h \
+  include/uapi/linux/param.h \
+  arch/arm/include/generated/uapi/asm/param.h \
+  include/asm-generic/param.h \
+    $(wildcard include/config/HZ) \
+  include/uapi/asm-generic/param.h \
+  include/linux/spinlock_types.h \
+    $(wildcard include/config/PREEMPT_RT) \
+    $(wildcard include/config/DEBUG_LOCK_ALLOC) \
+  include/linux/spinlock_types_raw.h \
+    $(wildcard include/config/DEBUG_SPINLOCK) \
+  arch/arm/include/asm/spinlock_types.h \
+  include/linux/lockdep_types.h \
+    $(wildcard include/config/PROVE_RAW_LOCK_NESTING) \
+    $(wildcard include/config/PREEMPT_LOCK) \
+    $(wildcard include/config/LOCKDEP) \
+    $(wildcard include/config/LOCK_STAT) \
+  include/linux/rwlock_types.h \
+  include/linux/once_lite.h \
+  include/linux/static_call_types.h \
+    $(wildcard include/config/HAVE_STATIC_CALL) \
+  include/linux/stat.h \
+  arch/arm/include/uapi/asm/stat.h \
+  include/uapi/linux/stat.h \
+  include/linux/time.h \
+    $(wildcard include/config/POSIX_TIMERS) \
+  include/linux/math64.h \
+    $(wildcard include/config/ARCH_SUPPORTS_INT128) \
   include/vdso/math64.h \
   include/linux/time64.h \
   include/vdso/time64.h \
@@ -215,11 +255,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/time32.h \
   include/linux/timex.h \
   include/uapi/linux/timex.h \
-  include/uapi/linux/param.h \
-  arch/arm/include/generated/uapi/asm/param.h \
-  include/asm-generic/param.h \
-    $(wildcard include/config/HZ) \
-  include/uapi/asm-generic/param.h \
   arch/arm/include/asm/timex.h \
   include/vdso/time32.h \
   include/vdso/time.h \
@@ -243,74 +278,23 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/NUMA_BALANCING) \
     $(wildcard include/config/ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH) \
     $(wildcard include/config/HUGETLB_PAGE) \
-    $(wildcard include/config/IOMMU_SVA) \
-    $(wildcard include/config/KSM) \
-    $(wildcard include/config/LRU_GEN) \
+    $(wildcard include/config/IOMMU_SUPPORT) \
   include/linux/mm_types_task.h \
     $(wildcard include/config/SPLIT_PTLOCK_CPUS) \
     $(wildcard include/config/ARCH_ENABLE_SPLIT_PMD_PTLOCK) \
   include/linux/cpumask.h \
-    $(wildcard include/config/FORCE_NR_CPUS) \
+    $(wildcard include/config/CPUMASK_OFFSTACK) \
     $(wildcard include/config/HOTPLUG_CPU) \
     $(wildcard include/config/DEBUG_PER_CPU_MAPS) \
-    $(wildcard include/config/CPUMASK_OFFSTACK) \
-  include/linux/kernel.h \
-    $(wildcard include/config/PREEMPT_VOLUNTARY_BUILD) \
-    $(wildcard include/config/PREEMPT_DYNAMIC) \
-    $(wildcard include/config/HAVE_PREEMPT_DYNAMIC_CALL) \
-    $(wildcard include/config/HAVE_PREEMPT_DYNAMIC_KEY) \
-    $(wildcard include/config/PREEMPT_) \
-    $(wildcard include/config/DEBUG_ATOMIC_SLEEP) \
-  include/linux/stdarg.h \
-  include/linux/align.h \
-  include/linux/limits.h \
-  include/uapi/linux/limits.h \
-  include/vdso/limits.h \
-  include/linux/linkage.h \
-    $(wildcard include/config/ARCH_USE_SYM_ANNOTATIONS) \
-  include/linux/stringify.h \
-  include/linux/export.h \
-    $(wildcard include/config/MODVERSIONS) \
-    $(wildcard include/config/HAVE_ARCH_PREL32_RELOCATIONS) \
-    $(wildcard include/config/TRIM_UNUSED_KSYMS) \
-  arch/arm/include/asm/linkage.h \
-  include/linux/kstrtox.h \
-  include/linux/minmax.h \
-  include/linux/panic.h \
-    $(wildcard include/config/PANIC_TIMEOUT) \
-  include/linux/printk.h \
-    $(wildcard include/config/MESSAGE_LOGLEVEL_DEFAULT) \
-    $(wildcard include/config/CONSOLE_LOGLEVEL_DEFAULT) \
-    $(wildcard include/config/CONSOLE_LOGLEVEL_QUIET) \
-    $(wildcard include/config/EARLY_PRINTK) \
-    $(wildcard include/config/PRINTK) \
-    $(wildcard include/config/DYNAMIC_DEBUG) \
-    $(wildcard include/config/DYNAMIC_DEBUG_CORE) \
-  include/linux/init.h \
-    $(wildcard include/config/STRICT_KERNEL_RWX) \
-    $(wildcard include/config/STRICT_MODULE_RWX) \
-    $(wildcard include/config/LTO_CLANG) \
-  include/linux/kern_levels.h \
-  include/linux/ratelimit_types.h \
-  include/linux/spinlock_types_raw.h \
-    $(wildcard include/config/DEBUG_SPINLOCK) \
-    $(wildcard include/config/DEBUG_LOCK_ALLOC) \
-  arch/arm/include/asm/spinlock_types.h \
-  include/linux/lockdep_types.h \
-    $(wildcard include/config/PROVE_RAW_LOCK_NESTING) \
-    $(wildcard include/config/LOCKDEP) \
-    $(wildcard include/config/LOCK_STAT) \
-  include/linux/once_lite.h \
-  include/linux/static_call_types.h \
-    $(wildcard include/config/HAVE_STATIC_CALL) \
-  include/linux/instruction_pointer.h \
   include/linux/bitmap.h \
-  include/linux/find.h \
   include/linux/string.h \
     $(wildcard include/config/BINARY_PRINTF) \
     $(wildcard include/config/FORTIFY_SOURCE) \
   include/linux/errno.h \
   include/uapi/linux/errno.h \
+  arch/arm/include/generated/uapi/asm/errno.h \
+  include/uapi/asm-generic/errno.h \
+  include/uapi/asm-generic/errno-base.h \
   include/uapi/linux/string.h \
   arch/arm/include/asm/string.h \
     $(wildcard include/config/KASAN) \
@@ -325,13 +309,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/BUG) \
     $(wildcard include/config/GENERIC_BUG_RELATIVE_POINTERS) \
   include/linux/instrumentation.h \
-    $(wildcard include/config/NOINSTR_VALIDATION) \
-  include/linux/gfp_types.h \
-    $(wildcard include/config/KASAN_HW_TAGS) \
-  include/linux/numa.h \
-    $(wildcard include/config/NODES_SHIFT) \
-    $(wildcard include/config/NUMA_KEEP_MEMINFO) \
-    $(wildcard include/config/HAVE_ARCH_NODE_DEV_GROUP) \
+    $(wildcard include/config/DEBUG_ENTRY) \
   arch/arm/include/asm/page.h \
     $(wildcard include/config/CPU_COPY_V4WT) \
     $(wildcard include/config/CPU_COPY_V4WB) \
@@ -340,7 +318,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/CPU_XSCALE) \
     $(wildcard include/config/CPU_COPY_V6) \
     $(wildcard include/config/KUSER_HELPERS) \
-    $(wildcard include/config/VMAP_STACK) \
     $(wildcard include/config/HAVE_ARCH_PFN_VALID) \
   arch/arm/include/asm/glue.h \
   arch/arm/include/asm/pgtable-2level-types.h \
@@ -368,7 +345,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/uapi/linux/auxvec.h \
   arch/arm/include/asm/auxvec.h \
   arch/arm/include/uapi/asm/auxvec.h \
-  include/linux/kref.h \
   include/linux/spinlock.h \
     $(wildcard include/config/PREEMPTION) \
   include/linux/preempt.h \
@@ -383,11 +359,8 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/HAVE_ARCH_WITHIN_STACK_FRAMES) \
     $(wildcard include/config/HARDENED_USERCOPY) \
   include/linux/restart_block.h \
-  arch/arm/include/asm/current.h \
-    $(wildcard include/config/CURRENT_POINTER_IN_TPIDRURO) \
-    $(wildcard include/config/CC_IS_CLANG) \
-    $(wildcard include/config/CLANG_VERSION) \
   arch/arm/include/asm/thread_info.h \
+    $(wildcard include/config/STACKPROTECTOR_PER_TASK) \
     $(wildcard include/config/ARM_THUMBEE) \
   arch/arm/include/asm/fpstate.h \
     $(wildcard include/config/VFPv3) \
@@ -404,8 +377,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   arch/arm/include/generated/asm/mmiowb.h \
   include/asm-generic/mmiowb.h \
     $(wildcard include/config/MMIOWB) \
-  include/linux/spinlock_types.h \
-  include/linux/rwlock_types.h \
   arch/arm/include/asm/spinlock.h \
   include/linux/rwlock.h \
     $(wildcard include/config/PREEMPT) \
@@ -440,17 +411,14 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/INLINE_WRITE_UNLOCK_IRQ) \
     $(wildcard include/config/INLINE_READ_UNLOCK_IRQRESTORE) \
     $(wildcard include/config/INLINE_WRITE_UNLOCK_IRQRESTORE) \
-  include/linux/refcount.h \
   include/linux/rbtree.h \
   include/linux/rbtree_types.h \
   include/linux/rcupdate.h \
     $(wildcard include/config/PREEMPT_RCU) \
     $(wildcard include/config/TINY_RCU) \
-    $(wildcard include/config/RCU_STRICT_GRACE_PERIOD) \
     $(wildcard include/config/TASKS_RCU_GENERIC) \
     $(wildcard include/config/RCU_STALL_COMMON) \
     $(wildcard include/config/NO_HZ_FULL) \
-    $(wildcard include/config/KVM_XFER_TO_GUEST_WORK) \
     $(wildcard include/config/RCU_NOCB_CPU) \
     $(wildcard include/config/TASKS_RCU) \
     $(wildcard include/config/TASKS_TRACE_RCU) \
@@ -459,24 +427,25 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/DEBUG_OBJECTS_RCU_HEAD) \
     $(wildcard include/config/PROVE_RCU) \
     $(wildcard include/config/ARCH_WEAK_RELEASE_ACQUIRE) \
-  include/linux/context_tracking_irq.h \
-    $(wildcard include/config/CONTEXT_TRACKING_IDLE) \
   include/linux/rcutree.h \
-  include/linux/maple_tree.h \
-    $(wildcard include/config/MAPLE_RCU_DISABLED) \
-    $(wildcard include/config/DEBUG_MAPLE_TREE_VERBOSE) \
-    $(wildcard include/config/DEBUG_MAPLE_TREE) \
   include/linux/rwsem.h \
     $(wildcard include/config/RWSEM_SPIN_ON_OWNER) \
     $(wildcard include/config/DEBUG_RWSEMS) \
+  include/linux/err.h \
   include/linux/osq_lock.h \
   include/linux/completion.h \
   include/linux/swait.h \
   include/linux/wait.h \
+  arch/arm/include/generated/asm/current.h \
+  include/asm-generic/current.h \
   include/uapi/linux/wait.h \
   include/linux/uprobes.h \
     $(wildcard include/config/UPROBES) \
   include/linux/page-flags-layout.h \
+    $(wildcard include/config/KASAN_HW_TAGS) \
+  include/linux/numa.h \
+    $(wildcard include/config/NODES_SHIFT) \
+    $(wildcard include/config/NUMA_KEEP_MEMINFO) \
   include/generated/bounds.h \
   include/linux/workqueue.h \
     $(wildcard include/config/DEBUG_OBJECTS_WORK) \
@@ -484,6 +453,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/WQ_WATCHDOG) \
   include/linux/timer.h \
     $(wildcard include/config/DEBUG_OBJECTS_TIMERS) \
+    $(wildcard include/config/NO_HZ_COMMON) \
   include/linux/ktime.h \
   include/linux/jiffies.h \
   include/vdso/jiffies.h \
@@ -500,6 +470,10 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/MUTEX_SPIN_ON_OWNER) \
     $(wildcard include/config/DEBUG_MUTEXES) \
   include/linux/debug_locks.h \
+  include/linux/ww_mutex.h \
+    $(wildcard include/config/DEBUG_RT_MUTEXES) \
+    $(wildcard include/config/DEBUG_WW_MUTEX_SLOWPATH) \
+  include/linux/rtmutex.h \
   arch/arm/include/asm/mmu.h \
     $(wildcard include/config/CPU_HAS_ASID) \
     $(wildcard include/config/VDSO) \
@@ -512,11 +486,14 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/PM_SLEEP) \
     $(wildcard include/config/CONTIG_ALLOC) \
     $(wildcard include/config/CMA) \
+  include/linux/mmdebug.h \
+    $(wildcard include/config/DEBUG_VM) \
+    $(wildcard include/config/DEBUG_VM_PGFLAGS) \
   include/linux/mmzone.h \
-    $(wildcard include/config/ARCH_FORCE_MAX_ORDER) \
+    $(wildcard include/config/FORCE_MAX_ZONEORDER) \
     $(wildcard include/config/MEMORY_ISOLATION) \
     $(wildcard include/config/ZSMALLOC) \
-    $(wildcard include/config/LRU_GEN_STATS) \
+    $(wildcard include/config/SHADOW_CALL_STACK) \
     $(wildcard include/config/MEMORY_HOTPLUG) \
     $(wildcard include/config/COMPACTION) \
     $(wildcard include/config/PAGE_EXTENSION) \
@@ -524,41 +501,19 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/HAVE_MEMORYLESS_NODES) \
     $(wildcard include/config/SPARSEMEM_EXTREME) \
   include/linux/nodemask.h \
-  include/linux/random.h \
-    $(wildcard include/config/VMGENID) \
-  include/linux/once.h \
-  include/linux/jump_label.h \
-    $(wildcard include/config/HAVE_ARCH_JUMP_LABEL_RELATIVE) \
-  arch/arm/include/asm/jump_label.h \
-  include/uapi/linux/random.h \
-  include/uapi/linux/ioctl.h \
-  arch/arm/include/generated/uapi/asm/ioctl.h \
-  include/asm-generic/ioctl.h \
-  include/uapi/asm-generic/ioctl.h \
-  include/linux/irqnr.h \
-  include/uapi/linux/irqnr.h \
-  include/linux/prandom.h \
-  include/linux/percpu.h \
-    $(wildcard include/config/NEED_PER_CPU_EMBED_FIRST_CHUNK) \
-    $(wildcard include/config/NEED_PER_CPU_PAGE_FIRST_CHUNK) \
-  include/linux/mmdebug.h \
-    $(wildcard include/config/DEBUG_VM) \
-    $(wildcard include/config/DEBUG_VM_IRQSOFF) \
-    $(wildcard include/config/DEBUG_VM_PGFLAGS) \
-  arch/arm/include/asm/archrandom.h \
-  include/asm-generic/archrandom.h \
   include/linux/pageblock-flags.h \
     $(wildcard include/config/HUGETLB_PAGE_SIZE_VARIABLE) \
   include/linux/page-flags.h \
     $(wildcard include/config/ARCH_USES_PG_UNCACHED) \
     $(wildcard include/config/MEMORY_FAILURE) \
     $(wildcard include/config/PAGE_IDLE_FLAG) \
-    $(wildcard include/config/HUGETLB_PAGE_OPTIMIZE_VMEMMAP) \
+    $(wildcard include/config/THP_SWAP) \
+    $(wildcard include/config/KSM) \
   include/linux/local_lock.h \
   include/linux/local_lock_internal.h \
   include/linux/memory_hotplug.h \
-    $(wildcard include/config/HAVE_ARCH_NODEDATA_EXTENSION) \
     $(wildcard include/config/ARCH_HAS_ADD_PAGES) \
+    $(wildcard include/config/HAVE_ARCH_NODEDATA_EXTENSION) \
     $(wildcard include/config/MEMORY_HOTREMOVE) \
   include/linux/notifier.h \
   include/linux/srcu.h \
@@ -573,8 +528,10 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/USE_PERCPU_NUMA_NODE_ID) \
     $(wildcard include/config/SCHED_SMT) \
   include/linux/arch_topology.h \
-    $(wildcard include/config/ACPI_CPPC_LIB) \
     $(wildcard include/config/GENERIC_ARCH_TOPOLOGY) \
+  include/linux/percpu.h \
+    $(wildcard include/config/NEED_PER_CPU_EMBED_FIRST_CHUNK) \
+    $(wildcard include/config/NEED_PER_CPU_PAGE_FIRST_CHUNK) \
   arch/arm/include/asm/topology.h \
     $(wildcard include/config/ARM_CPU_TOPOLOGY) \
     $(wildcard include/config/BL_SWITCHER) \
@@ -617,19 +574,70 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/xarray.h \
     $(wildcard include/config/XARRAY_MULTI) \
   include/linux/kconfig.h \
-  include/linux/sched/mm.h \
-    $(wildcard include/config/ARCH_HAS_MEMBARRIER_CALLBACKS) \
+  include/linux/kobject_ns.h \
+  include/linux/kref.h \
+  include/linux/refcount.h \
+  include/linux/moduleparam.h \
+    $(wildcard include/config/ALPHA) \
+    $(wildcard include/config/IA64) \
+    $(wildcard include/config/PPC64) \
+  include/linux/jump_label.h \
+    $(wildcard include/config/HAVE_ARCH_JUMP_LABEL_RELATIVE) \
+  arch/arm/include/asm/jump_label.h \
+  include/linux/rbtree_latch.h \
+  include/linux/error-injection.h \
+  include/asm-generic/error-injection.h \
+  include/linux/tracepoint-defs.h \
+  include/linux/static_key.h \
+  include/linux/cfi.h \
+    $(wildcard include/config/CFI_CLANG_SHADOW) \
+  arch/arm/include/asm/module.h \
+    $(wildcard include/config/ARM_UNWIND) \
+    $(wildcard include/config/ARM_MODULE_PLTS) \
+  include/asm-generic/module.h \
+    $(wildcard include/config/HAVE_MOD_ARCH_SPECIFIC) \
+    $(wildcard include/config/MODULES_USE_ELF_REL) \
+    $(wildcard include/config/MODULES_USE_ELF_RELA) \
+  include/linux/gpio.h \
+    $(wildcard include/config/GPIOLIB) \
+    $(wildcard include/config/ARCH_HAVE_CUSTOM_GPIO_H) \
+  arch/arm/include/asm/gpio.h \
+  include/asm-generic/gpio.h \
+    $(wildcard include/config/ARCH_NR_GPIO) \
+  include/linux/gpio/driver.h \
+    $(wildcard include/config/IRQ_DOMAIN_HIERARCHY) \
+    $(wildcard include/config/GPIO_GENERIC) \
+    $(wildcard include/config/GPIOLIB_IRQCHIP) \
+    $(wildcard include/config/OF_GPIO) \
+    $(wildcard include/config/PINCTRL) \
+  include/linux/device.h \
+    $(wildcard include/config/ENERGY_MODEL) \
+    $(wildcard include/config/GENERIC_MSI_IRQ_DOMAIN) \
+    $(wildcard include/config/GENERIC_MSI_IRQ) \
+    $(wildcard include/config/DMA_OPS) \
+    $(wildcard include/config/DMA_DECLARE_COHERENT) \
+    $(wildcard include/config/DMA_CMA) \
+    $(wildcard include/config/SWIOTLB) \
+    $(wildcard include/config/ARCH_HAS_SYNC_DMA_FOR_DEVICE) \
+    $(wildcard include/config/ARCH_HAS_SYNC_DMA_FOR_CPU) \
+    $(wildcard include/config/ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) \
+    $(wildcard include/config/DMA_OPS_BYPASS) \
+    $(wildcard include/config/OF) \
+    $(wildcard include/config/DEVTMPFS) \
+    $(wildcard include/config/SYSFS_DEPRECATED) \
+  include/linux/dev_printk.h \
+  include/linux/ratelimit.h \
   include/linux/sched.h \
     $(wildcard include/config/VIRT_CPU_ACCOUNTING_NATIVE) \
     $(wildcard include/config/SCHED_INFO) \
     $(wildcard include/config/SCHEDSTATS) \
-    $(wildcard include/config/SCHED_CORE) \
     $(wildcard include/config/FAIR_GROUP_SCHED) \
     $(wildcard include/config/RT_GROUP_SCHED) \
     $(wildcard include/config/RT_MUTEXES) \
     $(wildcard include/config/UCLAMP_TASK) \
     $(wildcard include/config/UCLAMP_BUCKETS_COUNT) \
     $(wildcard include/config/KMAP_LOCAL) \
+    $(wildcard include/config/SCHED_CORE) \
     $(wildcard include/config/CGROUP_SCHED) \
     $(wildcard include/config/BLK_DEV_IO_TRACE) \
     $(wildcard include/config/PSI) \
@@ -638,8 +646,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/BLK_CGROUP) \
     $(wildcard include/config/PAGE_OWNER) \
     $(wildcard include/config/EVENTFD) \
-    $(wildcard include/config/CPU_SUP_INTEL) \
-    $(wildcard include/config/TASK_DELAY_ACCT) \
     $(wildcard include/config/STACKPROTECTOR) \
     $(wildcard include/config/ARCH_HAS_SCALED_CPUTIME) \
     $(wildcard include/config/VIRT_CPU_ACCOUNTING_GEN) \
@@ -653,6 +659,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/AUDITSYSCALL) \
     $(wildcard include/config/UBSAN) \
     $(wildcard include/config/UBSAN_TRAP) \
+    $(wildcard include/config/BLOCK) \
     $(wildcard include/config/TASK_XACCT) \
     $(wildcard include/config/CPUSETS) \
     $(wildcard include/config/X86_CPU_RESCTRL) \
@@ -660,21 +667,20 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/COMPAT) \
     $(wildcard include/config/PERF_EVENTS) \
     $(wildcard include/config/RSEQ) \
+    $(wildcard include/config/TASK_DELAY_ACCT) \
     $(wildcard include/config/FAULT_INJECTION) \
     $(wildcard include/config/LATENCYTOP) \
+    $(wildcard include/config/KUNIT) \
     $(wildcard include/config/FUNCTION_GRAPH_TRACER) \
     $(wildcard include/config/BCACHE) \
+    $(wildcard include/config/VMAP_STACK) \
     $(wildcard include/config/SECURITY) \
     $(wildcard include/config/BPF_SYSCALL) \
     $(wildcard include/config/GCC_PLUGIN_STACKLEAK) \
     $(wildcard include/config/X86_MCE) \
     $(wildcard include/config/KRETPROBES) \
-    $(wildcard include/config/RETHOOK) \
     $(wildcard include/config/ARCH_HAS_PARANOID_L1D_FLUSH) \
-    $(wildcard include/config/RV) \
     $(wildcard include/config/ARCH_TASK_STRUCT_ON_STACK) \
-    $(wildcard include/config/PREEMPT_NONE) \
-    $(wildcard include/config/PREEMPT_VOLUNTARY) \
     $(wildcard include/config/DEBUG_RSEQ) \
   include/uapi/linux/sched.h \
   include/linux/pid.h \
@@ -695,7 +701,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   arch/arm/include/generated/uapi/asm/shmbuf.h \
   include/uapi/asm-generic/shmbuf.h \
   arch/arm/include/asm/shmparam.h \
-  include/linux/kmsan_types.h \
   include/linux/plist.h \
     $(wildcard include/config/DEBUG_PLIST) \
   include/linux/hrtimer.h \
@@ -737,69 +742,17 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/posix-timers.h \
   include/linux/alarmtimer.h \
     $(wildcard include/config/RTC_CLASS) \
+  include/linux/task_work.h \
   include/uapi/linux/rseq.h \
   include/linux/kcsan.h \
-  include/linux/rv.h \
-    $(wildcard include/config/RV_REACTORS) \
   arch/arm/include/generated/asm/kmap_size.h \
   include/asm-generic/kmap_size.h \
     $(wildcard include/config/DEBUG_KMAP_LOCAL) \
-  include/linux/sync_core.h \
-    $(wildcard include/config/ARCH_HAS_SYNC_CORE_BEFORE_USERMODE) \
-  include/linux/ioasid.h \
-    $(wildcard include/config/IOASID) \
-  include/linux/kobject_ns.h \
-  include/linux/moduleparam.h \
-    $(wildcard include/config/ALPHA) \
-    $(wildcard include/config/IA64) \
-    $(wildcard include/config/PPC64) \
-  include/linux/rbtree_latch.h \
-  include/linux/error-injection.h \
-  include/asm-generic/error-injection.h \
-  include/linux/tracepoint-defs.h \
-  include/linux/static_key.h \
-  arch/arm/include/asm/module.h \
-    $(wildcard include/config/ARM_UNWIND) \
-  include/asm-generic/module.h \
-    $(wildcard include/config/HAVE_MOD_ARCH_SPECIFIC) \
-    $(wildcard include/config/MODULES_USE_ELF_REL) \
-    $(wildcard include/config/MODULES_USE_ELF_RELA) \
-  arch/arm/include/asm/unwind.h \
-  include/linux/gpio.h \
-    $(wildcard include/config/GPIOLIB) \
-    $(wildcard include/config/ARCH_HAVE_CUSTOM_GPIO_H) \
-  arch/arm/include/asm/gpio.h \
-  include/asm-generic/gpio.h \
-    $(wildcard include/config/ARCH_NR_GPIO) \
-  include/linux/gpio/driver.h \
-    $(wildcard include/config/GENERIC_MSI_IRQ_DOMAIN) \
-    $(wildcard include/config/IRQ_DOMAIN_HIERARCHY) \
-    $(wildcard include/config/GPIO_GENERIC) \
-    $(wildcard include/config/GPIOLIB_IRQCHIP) \
-    $(wildcard include/config/OF_GPIO) \
-    $(wildcard include/config/PINCTRL) \
-  include/linux/device.h \
-    $(wildcard include/config/GENERIC_MSI_IRQ) \
-    $(wildcard include/config/ENERGY_MODEL) \
-    $(wildcard include/config/DMA_OPS) \
-    $(wildcard include/config/DMA_DECLARE_COHERENT) \
-    $(wildcard include/config/DMA_CMA) \
-    $(wildcard include/config/SWIOTLB) \
-    $(wildcard include/config/ARCH_HAS_SYNC_DMA_FOR_DEVICE) \
-    $(wildcard include/config/ARCH_HAS_SYNC_DMA_FOR_CPU) \
-    $(wildcard include/config/ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) \
-    $(wildcard include/config/DMA_OPS_BYPASS) \
-    $(wildcard include/config/OF) \
-    $(wildcard include/config/DEVTMPFS) \
-    $(wildcard include/config/SYSFS_DEPRECATED) \
-  include/linux/dev_printk.h \
-  include/linux/ratelimit.h \
   include/linux/energy_model.h \
   include/linux/sched/cpufreq.h \
     $(wildcard include/config/CPU_FREQ) \
   include/linux/sched/topology.h \
     $(wildcard include/config/SCHED_DEBUG) \
-    $(wildcard include/config/SCHED_CLUSTER) \
     $(wildcard include/config/SCHED_MC) \
     $(wildcard include/config/CPU_FREQ_GOV_SCHEDUTIL) \
   include/linux/sched/idle.h \
@@ -808,7 +761,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/klist.h \
   include/linux/pm.h \
     $(wildcard include/config/VT_CONSOLE_SLEEP) \
-    $(wildcard include/config/CXL_SUSPEND) \
     $(wildcard include/config/PM) \
     $(wildcard include/config/PM_CLK) \
     $(wildcard include/config/PM_GENERIC_DOMAINS) \
@@ -818,13 +770,13 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/device/class.h \
   include/linux/device/driver.h \
   arch/arm/include/asm/device.h \
+    $(wildcard include/config/DMABOUNCE) \
     $(wildcard include/config/ARM_DMA_USE_IOMMU) \
     $(wildcard include/config/ARCH_OMAP) \
   include/linux/pm_wakeup.h \
   include/linux/irq.h \
     $(wildcard include/config/GENERIC_IRQ_EFFECTIVE_AFF_MASK) \
     $(wildcard include/config/GENERIC_IRQ_IPI) \
-    $(wildcard include/config/DEPRECATED_IRQ_CPU_ONOFFLINE) \
     $(wildcard include/config/GENERIC_IRQ_MIGRATION) \
     $(wildcard include/config/GENERIC_PENDING_IRQ) \
     $(wildcard include/config/HARDIRQS_SW_RESEND) \
@@ -832,19 +784,23 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/GENERIC_IRQ_MULTI_HANDLER) \
   include/linux/irqhandler.h \
   include/linux/irqreturn.h \
+  include/linux/irqnr.h \
+  include/uapi/linux/irqnr.h \
   include/linux/io.h \
     $(wildcard include/config/HAS_IOPORT_MAP) \
     $(wildcard include/config/PCI) \
   arch/arm/include/asm/io.h \
-    $(wildcard include/config/PCMCIA) \
     $(wildcard include/config/NEED_MACH_IO_H) \
+    $(wildcard include/config/PCMCIA_SOC_COMMON) \
+    $(wildcard include/config/ISA) \
+    $(wildcard include/config/PCCARD) \
   include/asm-generic/pci_iomap.h \
     $(wildcard include/config/NO_GENERIC_PCI_IOPORT_MAP) \
     $(wildcard include/config/GENERIC_PCI_IOMAP) \
   include/asm-generic/io.h \
     $(wildcard include/config/GENERIC_IOMAP) \
-    $(wildcard include/config/TRACE_MMIO_ACCESS) \
     $(wildcard include/config/GENERIC_IOREMAP) \
+    $(wildcard include/config/VIRT_TO_BUS) \
   include/linux/logic_pio.h \
     $(wildcard include/config/INDIRECT_PIO) \
   include/linux/fwnode.h \
@@ -856,15 +812,16 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/DEBUG_SLAB) \
     $(wildcard include/config/FAILSLAB) \
     $(wildcard include/config/MEMCG_KMEM) \
-    $(wildcard include/config/KFENCE) \
+    $(wildcard include/config/HAVE_HARDENED_USERCOPY_ALLOCATOR) \
     $(wildcard include/config/SLAB) \
     $(wildcard include/config/SLUB) \
     $(wildcard include/config/SLOB) \
+    $(wildcard include/config/CC_IS_GCC) \
+    $(wildcard include/config/CLANG_VERSION) \
   include/linux/percpu-refcount.h \
   include/linux/kasan.h \
     $(wildcard include/config/KASAN_STACK) \
     $(wildcard include/config/KASAN_INLINE) \
-  include/linux/kasan-enabled.h \
   arch/arm/include/asm/irq.h \
     $(wildcard include/config/SPARSE_IRQ) \
   arch/arm/include/generated/asm/irq_regs.h \
@@ -873,6 +830,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/PROC_FS) \
     $(wildcard include/config/GENERIC_IRQ_DEBUGFS) \
     $(wildcard include/config/IRQ_DOMAIN) \
+    $(wildcard include/config/HANDLE_DOMAIN_IRQ) \
   arch/arm/include/asm/hw_irq.h \
   include/linux/irqchip/chained_irq.h \
   include/linux/irqdomain.h \
@@ -891,8 +849,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/pinctrl/pinctrl.h \
     $(wildcard include/config/GENERIC_PINCONF) \
   include/linux/seq_file.h \
-  include/linux/string_helpers.h \
-  include/linux/ctype.h \
   include/linux/fs.h \
     $(wildcard include/config/READ_ONLY_THP_FOR_FS) \
     $(wildcard include/config/FS_POSIX_ACL) \
@@ -906,7 +862,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/UNICODE) \
     $(wildcard include/config/QUOTA) \
     $(wildcard include/config/FS_DAX) \
-    $(wildcard include/config/BLOCK) \
+    $(wildcard include/config/MIGRATION) \
   include/linux/wait_bit.h \
   include/linux/kdev_t.h \
   include/uapi/linux/kdev_t.h \
@@ -923,7 +879,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/path.h \
   include/linux/list_lru.h \
   include/linux/shrinker.h \
-    $(wildcard include/config/SHRINKER_DEBUG) \
   include/linux/capability.h \
   include/uapi/linux/capability.h \
   include/linux/semaphore.h \
@@ -942,14 +897,13 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/TASKSTATS) \
     $(wildcard include/config/STACK_GROWSUP) \
   include/linux/signal.h \
-    $(wildcard include/config/DYNAMIC_SIGFRAME) \
   include/linux/sched/jobctl.h \
   include/linux/sched/task.h \
     $(wildcard include/config/HAVE_EXIT_THREAD) \
     $(wildcard include/config/ARCH_WANTS_DYNAMIC_TASK_STRUCT) \
     $(wildcard include/config/HAVE_ARCH_THREAD_STRUCT_WHITELIST) \
   include/linux/uaccess.h \
-    $(wildcard include/config/ARCH_HAS_SUBPAGE_FAULTS) \
+    $(wildcard include/config/SET_FS) \
   include/linux/fault-inject-usercopy.h \
     $(wildcard include/config/FAULT_INJECTION_USERCOPY) \
   arch/arm/include/asm/uaccess.h \
@@ -965,8 +919,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/unaligned/packed_struct.h \
   arch/arm/include/generated/asm/extable.h \
   include/asm-generic/extable.h \
-  include/asm-generic/access_ok.h \
-    $(wildcard include/config/ALTERNATE_USER_ADDRESS_SPACE) \
   include/linux/cred.h \
     $(wildcard include/config/DEBUG_CREDENTIALS) \
   include/linux/key.h \
@@ -975,7 +927,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/assoc_array.h \
     $(wildcard include/config/ASSOCIATIVE_ARRAY) \
   include/linux/sched/user.h \
-    $(wildcard include/config/VFIO_PCI_ZDEV_KVM) \
     $(wildcard include/config/WATCH_QUEUE) \
   include/linux/percpu_counter.h \
   include/linux/rcu_sync.h \
@@ -984,12 +935,15 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/ioprio.h \
   include/linux/sched/rt.h \
   include/linux/iocontext.h \
-    $(wildcard include/config/BLK_ICQ) \
   include/uapi/linux/ioprio.h \
   include/linux/fs_types.h \
   include/linux/mount.h \
   include/linux/mnt_idmapping.h \
   include/uapi/linux/fs.h \
+  include/uapi/linux/ioctl.h \
+  arch/arm/include/generated/uapi/asm/ioctl.h \
+  include/asm-generic/ioctl.h \
+  include/uapi/asm-generic/ioctl.h \
   include/linux/quota.h \
     $(wildcard include/config/QUOTA_NETLINK_INTERFACE) \
   include/uapi/linux/dqblk_xfs.h \
@@ -1004,8 +958,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/linux/pinctrl/consumer.h \
   include/linux/pinctrl/pinconf-generic.h \
   include/linux/pinctrl/machine.h \
-  arch/arm/include/generated/asm/msi.h \
-  include/asm-generic/msi.h \
   include/linux/gpio/consumer.h \
     $(wildcard include/config/GPIO_SYSFS) \
   include/linux/miscdevice.h \
@@ -1016,7 +968,6 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
     $(wildcard include/config/IRQ_TIMINGS) \
   include/linux/hardirq.h \
   include/linux/context_tracking_state.h \
-    $(wildcard include/config/CONTEXT_TRACKING_USER) \
     $(wildcard include/config/CONTEXT_TRACKING) \
   include/linux/ftrace_irq.h \
     $(wildcard include/config/HWLAT_TRACER) \
@@ -1028,8 +979,7 @@ deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o := \
   include/asm-generic/hardirq.h \
   arch/arm/include/asm/sections.h \
   include/asm-generic/sections.h \
-    $(wildcard include/config/HAVE_FUNCTION_DESCRIPTORS) \
 
-/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o: $(deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o)
+/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o: $(deps_/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o)
 
-$(deps_/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o):
+$(deps_/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o):

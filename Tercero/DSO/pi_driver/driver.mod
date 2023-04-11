@@ -1,1 +1,2 @@
-/home/franpi/Universidad/Tercero/DSO/pi_driver/driver.o
+/home/dso/Universidad/Tercero/DSO/pi_driver/driver.o
+

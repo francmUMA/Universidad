@@ -14,19 +14,19 @@
 #define DRIVER_AUTHOR "Francisco Javier Cano Moreno"
 #define DRIVER_DESC "Driver de gestión de los GPIO para RaspberryPI"
 
-#define LED1 9
-#define LED2 10
-#define LED3 11
-#define LED4 17
-#define LED5 22
-#define LED6 27
+#define LED6 9
+#define LED5 10
+#define LED4 11
+#define LED3 17
+#define LED2 22
+#define LED1 27
 
 #define SPEAKER 4
 
 #define BUTTON1 2
 #define BUTTON2 3
 
-static int LED_GPIOS[] = {LED6, LED5, LED4, LED3, LED2, LED1};
+static int LED_GPIOS[] = {LED1, LED2, LED3, LED4, LED5, LED6};
 static char pulsaciones[100];
 static int pulsaciones_counter = 0;
 
@@ -70,21 +70,10 @@ static ssize_t leds_read(struct file *filp, char *buf, size_t count, loff_t *off
 }
 
 static ssize_t leds_write(struct file *filp, const char *buf, size_t count, loff_t *offset){
-	unsigned char ch;
-	if (copy_from_user(&ch, buf, 1)) return -EFAULT;
-	printk(KERN_INFO "Valor recibido: %d\n", (int) ch);
-    if ((ch >> 6) & 0x01){
-        byte2leds(ch, 1);
-    }
-    else if ((ch >> 6) & 0x02){
-        byte2leds(ch, 2);            
-    }
-    else if ((ch >> 6) & 0x03){
-        byte2leds(ch, 3);
-    } else {
-        byte2leds(ch, 0);
-    }
-        
+    unsigned char ch;
+    if (copy_from_user(&ch, buf, 1)) return -EFAULT;
+    printk(KERN_INFO "Valor recibido: %d\n", (int) ch);
+    byte2leds(ch, (ch >> 6));        
     return 1;
 }
 
@@ -134,13 +123,14 @@ static struct miscdevice speaker_miscdev = {
 static short int irq_BUTTON1 = 0;
 static short int irq_BUTTON2 = 0;
 static int time_waiting = 150;
-static short int allow_handler = 1;		//Permite el acceso al manejador de interrupciones
+static short int allow_handler_button1 = 1;		
+static short int allow_handler_button2 = 1;
 short int ocupado = 1;
 static unsigned long jiffies_default; 
 
 module_param(time_waiting, int, 0);
 
-static DEFINE_SEMAPHORE(semaforo);	
+static DEFINE_SEMAPHORE(mutex_read);
 static DECLARE_WAIT_QUEUE_HEAD(read_waiting_queue);
 
 static void tasklet_handler1(struct tasklet_struct *);
@@ -162,46 +152,60 @@ static DECLARE_TASKLET(tasklet_button1, tasklet_handler1);
 
 static DECLARE_TASKLET(tasklet_button2, tasklet_handler2);
 
-static void timer_handler(struct timer_list *);
+static void timer_handler_button1(struct timer_list *);
+static void timer_handler_button2(struct timer_list *);
 
-static DEFINE_TIMER(timer_int, timer_handler);
+static DEFINE_TIMER(timer_button1, timer_handler_button1);
+static DEFINE_TIMER(timer_button2, timer_handler_button2);
 
 static irqreturn_t irq_handler(int irq, void *dev_id, struct pt_regs *regs){
-    if (allow_handler == 1){
-	allow_handler = 0;
-   	if (irq == irq_BUTTON1) tasklet_schedule(&tasklet_button1);
-    	else if (irq == irq_BUTTON2) tasklet_schedule(&tasklet_button2);
-    
-    	jiffies_default = msecs_to_jiffies(time_waiting); 
-    	printk(KERN_NOTICE "Interrupciones deshabilitadas.\n");
-	mod_timer(&timer_int, jiffies + time_waiting);
+    jiffies_default = msecs_to_jiffies(time_waiting);
+    if (irq == irq_BUTTON1 && allow_handler_button1) {
+	allow_handler_button1 = 0;
+	tasklet_schedule(&tasklet_button1);
+	mod_timer(&timer_button1, jiffies + time_waiting);
+    }
+    else if (irq == irq_BUTTON2 && allow_handler_button2){
+	allow_handler_button2 = 0;
+    	tasklet_schedule(&tasklet_button2);
+    	mod_timer(&timer_button2, jiffies + time_waiting);
     }
     return IRQ_HANDLED;
 }
 
-static void timer_handler(struct timer_list *timer){     	
-    allow_handler = 1;
-    printk(KERN_NOTICE "Interrupciones habilitadas.\n");
+static void timer_handler_button1(struct timer_list *timer){
+    allow_handler_button1 = 1;
+}
+
+static void timer_handler_button2(struct timer_list *timer){
+    allow_handler_button2 = 1;
 }
 
 static ssize_t buttons_read(struct file *filp, char *buf, size_t count, loff_t *offset){
     char message[101];
     int len;
     if (*offset > 0) return 0;
-    if (down_interruptible(&semaforo)) {
-	    printk(KERN_ERR "Dispositivo Ocupado.\n");
+    if (down_interruptible(&mutex_read)) return -ERESTARTSYS;
+    if (ocupado){
+	ocupado = 0;
+	up(&mutex_read);
+    	//Bloqueo
+    	if(strlen(pulsaciones) == 0) if (wait_event_interruptible(read_waiting_queue,pulsaciones_counter > 0)){
+	    printk(KERN_ERR "Read canceled.\n");
 	    return -ERESTARTSYS;
+    	}
+	if (down_interruptible(&mutex_read)) return -ERESTARTSYS;
+	ocupado = 1;
+	up(&mutex_read);
+    	len = sprintf(message, "%s\n", pulsaciones);
+	int i;
+	for (i = 0; i < pulsaciones_counter; i++) pulsaciones[i] = '\0';
+    	pulsaciones_counter = 0;	
+    } else {
+	up(&mutex_read);
+	len = sprintf(message, "Dispositivo Ocupado\n");
     }
-    //Bloqueo
-    if(strlen(pulsaciones) == 0) if (wait_event_interruptible(read_waiting_queue,pulsaciones_counter > 0)){
-	printk(KERN_ERR "Read canceled.\n");
-	return -ERESTARTSYS;
-    }
-    len = sprintf(message, "%s\n", pulsaciones);
-    pulsaciones_counter = 0;
-    pulsaciones[0] = '\0';
     if (copy_to_user(buf, message, len)) return -EFAULT;
-    up(&semaforo);
     *offset += len;
     return len;
 }
@@ -266,7 +270,8 @@ static void r_cleanup(void) {
     tasklet_kill(&tasklet_button1);
     tasklet_kill(&tasklet_button2);
 
-    del_timer(&timer_int);
+    del_timer(&timer_button1);
+    del_timer(&timer_button2);
 
     printk(KERN_NOTICE "Removing %s module\n",KBUILD_MODNAME);
     return;
@@ -279,30 +284,23 @@ static int r_init(void) {
     }       
 
     //Request all GPIOs
-    if(gpio_is_valid(LED1) < 0) return -1;
-        if(gpio_request(LED1, "LED1") < 0) return -1;
+    if(gpio_request(LED1, "LED1") < 0) return -1;
     
-    if(gpio_is_valid(LED2) < 0) return -1;
-        if(gpio_request(LED2, "LED2") < 0) return -1;
+    if(gpio_request(LED2, "LED2") < 0) return -1;
     
-    if(gpio_is_valid(LED3) < 0) return -1;
-        if(gpio_request(LED3, "LED3") < 0) return -1;
+    if(gpio_request(LED3, "LED3") < 0) return -1;
     
-    if(gpio_is_valid(LED4) < 0) return -1;
-        if(gpio_request(LED4, "LED4") < 0) return -1;
+    if(gpio_request(LED4, "LED4") < 0) return -1;
     
-    if(gpio_is_valid(LED5) < 0) return -1;
-        if(gpio_request(LED5, "LED5") < 0) return -1;
+    if(gpio_request(LED5, "LED5") < 0) return -1;
     
-    if(gpio_is_valid(LED6) < 0) return -1;
-        if(gpio_request(LED6, "LED6") < 0) return -1;
+    if(gpio_request(LED6, "LED6") < 0) return -1;
 
-    if(gpio_is_valid(SPEAKER) < 0) return -1;
-        if(gpio_request(SPEAKER, "SPEAKER") < 0) return -1;
-    if(gpio_is_valid(BUTTON1) < 0) return -1;
-        if(gpio_request(BUTTON1, "BUTTON1") < 0) return -1;
-    if(gpio_is_valid(BUTTON2) < 0) return -1;
-        if(gpio_request(BUTTON2, "BUTTON2") < 0) return -1;  
+    if(gpio_request(SPEAKER, "SPEAKER") < 0) return -1;
+    
+    if(gpio_request(BUTTON1, "BUTTON1") < 0) return -1;
+    
+    if(gpio_request(BUTTON2, "BUTTON2") < 0) return -1;  
 
     //Set GPIO as output
     gpio_direction_output(LED1, 0 );
