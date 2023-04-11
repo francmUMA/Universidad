@@ -41,7 +41,7 @@ static void byte2leds(char ch, int mode){
         }
     } else if (mode == 2){
         for (i = 0; i<6; i++) {
-            if (!((val >> i) & 0x01)) gpio_set_value(LED_GPIOS[i], 0);
+            if (((val >> i) & 0x01)) gpio_set_value(LED_GPIOS[i], 0);
         }
     } else if (mode == 3){
         for (i = 0; i<6; i++) {
