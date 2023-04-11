@@ -16,10 +16,10 @@ enable
 configure terminal
 
 ip access-list extended admin-in
-permit tcp 192.168.1.2 0.0.0.0 host 192.168.1.1 eq 22
+permit tcp 192.168.1.22 0.0.0.0 host 192.168.1.1 eq 22
 exit
 ip access-list extended admin-out
-permit tcp host 192.168.1.1 eq 22 192.168.1.2 0.0.0.0 established
+permit tcp host 192.168.1.1 eq 22 192.168.1.22 0.0.0.0 established
 exit
 interface FastEthernet0/0.600
 encapsulation dot1Q 600
