@@ -56,7 +56,8 @@ while (distanceToGoal > goalRadius)
     [v, w] = controller(robotCurrentPose); 
  
     % kinematic model: computes the new robotCurrentPose from the old robotCurrent Pose (and velocities)
-    %robotCurrentPose = kinematicModel(robotCurrentPose,velocities)';
+    %robotCurrentPose = kinematicModel(robotCurrentPose, v, sampleTime)';
+    robotCurrentPose = diffDriveKinematics(robotCurrentPose(3), ur, ul, L, r)';
 
     % Re-compute the distance to the goal     
     distanceToGoal = norm(robotCurrentPose(1:2) - robotGoal(:));  
