@@ -4,7 +4,7 @@ KERNEL_SRC=/lib/modules/`uname -r`/build
 
 obj-m += $(MODULE).o
 
-time_waiting=
+time_waiting=70
 
 compile:
 	make -C $(KERNEL_SRC) M=${CURDIR} modules
