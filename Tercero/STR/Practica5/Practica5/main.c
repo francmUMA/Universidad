@@ -1,7 +1,7 @@
 /*
- * practica4.c
+ * Practica5.c
  *
- * Created: 23/03/2023 10:56:46
+ * Created: 17/04/2023 20:18:50
  * Author : Fran
  */ 
 
@@ -23,22 +23,11 @@ void initLEDS(){
 }
 
 void initTimers(){
-	//Timer 0 en modo FastPWM
-	TCCR0A = (1<<WGM01) | (1<<WGM00);						//FastPWM
-	TCCR0A |= (1<<COM0A1);									//Non-Inverted
-	//TCCR0B |= (1<<CS02);									//Preescalado de 256
-	OCR0A = 16;												//256 microsgs
+	//Timer 0 en modo CTC
+
 	
-	//Timer 1 en modo CTC
-	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);			//Preescalado = 1024 y top en OCR1A	
-	TIMSK1 = (1<<OCIE1A);
-	OCR1A = 46875;											//3s
-	
-	//Timer 2 en modo CTC
-	TCCR2A = (1<<WGM21);									//Modo CTC con top en OCRA
-	TIMSK2 = (1<<OCIE2A);
-	TCCR2B = (0<<CS22) | (0<<CS21) | (0<<CS20);
-	OCR2A = 157;											//10ms
+	//Timer 1 en modo FastPWM											
+
 }
 
 ISR(INT0_vect){
@@ -46,18 +35,8 @@ ISR(INT0_vect){
 }
 
 ISR(TIMER1_COMPA_vect){
-	//Apagar leds y deshabilitar timer 1
-	digitalWrite(0x00);
-	TCCR1B = (1<<WGM12);
-	
-	//Habilitar timer 2
-	TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20);				//Preescalado de 1024
-	
-}
 
-ISR(TIMER2_COMPA_vect){
-	counter += 1;
-	digitalWrite(counter);
+	
 }
 
 ISR(PCINT0_vect){
@@ -95,4 +74,3 @@ int main(void)
     
     while (1);
 }
-
