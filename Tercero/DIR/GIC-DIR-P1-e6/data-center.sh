@@ -197,3 +197,21 @@ exit
 copy running-config startup-config
 
 exit
+
+#Configuracion del enlace con router wan
+enable
+configure terminal
+
+interface FastEthernet 2/0
+no shutdown
+exit
+
+interface FastEthernet 2/0.509
+encapsulation dot1Q 509
+ip address 192.168.0.5 255.255.255.252
+exit
+exit
+copy running-config startup-config
+
+exit
+
