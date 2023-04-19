@@ -41,3 +41,19 @@ exit
 copy running-config startup-config
 
 exit
+
+#Routing dinamico
+enable
+configure terminal
+
+router eigrp 314
+no auto-summary
+network 192.168.0.8 0.0.0.3
+network 192.168.0.4 0.0.0.3
+network 192.168.2.0 0.0.0.3
+network 192.168.2.12 0.0.0.3
+exit
+exit
+copy running-config startup-config
+
+exit

@@ -116,11 +116,18 @@ exit
 enable
 configure terminal
 
-router rip
-version 2
+router eigrp 314
 no auto-summary
-network 10.0.0.0
-network 192.168.0.0
+network 10.0.48.0 0.0.3.255
+network 10.0.52.0 0.0.1.255
+network 10.0.54.0 0.0.1.255
+network 10.0.56.0 0.0.1.255
+network 10.0.58.0 0.0.1.255
+network 10.0.60.0 0.0.0.255
+network 10.0.61.0 0.0.0.255
+network 10.0.62.0 0.0.0.127
+network 192.168.0.8 0.0.0.3
+network 192.168.0.0 0.0.0.3   
 exit
 exit
 copy running-config startup-config
