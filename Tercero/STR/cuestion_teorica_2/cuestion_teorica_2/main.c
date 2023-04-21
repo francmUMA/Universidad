@@ -1,5 +1,5 @@
 /*
- * Practica5.c
+ * cuestion_teorica_2.c
  *
  * Created: 17/04/2023 20:18:50
  * Author : Fran
@@ -8,26 +8,12 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-static uint8_t toggle = 0;
-
-void digitalWrite(unsigned char data){
-	PORTB = ((data & 0x01) << PINB2)  | (((data & 0x04) >> 2) << PINB0);
-	PORTD = (((data & 0x10) >> 4) << PIND5) | (((data & 0x08) >> 3) << PIND7);
-	PORTC = (((data & 0x80) >> 7) << PINC3) | (((data & 0x40) >> 6) << PINC4);
-}
-
-void initLEDS(){
-	DDRB |= (1 << PINB2) | (1 << PINB0);
-	DDRC |= (1 << PINC3) | (1 << PINC4);
-	DDRD |= (1 << PIND5) | (1 << PIND7);
-}
-
 void initTimers(){
 	//Timer 0 en modo CTC usando la señal generada por la pwm como reloj.
 	TCCR0A = (1 << WGM01);
 	TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
 	TIMSK0 = (1 << OCIE0A);
-	OCR0A = 5; 
+	OCR0A = 250; 
 	 
 	
 	//Timer 1 en modo FastPWM, non inverted con canal A, preescalado de 8 y carga del valor 40000
@@ -37,6 +23,8 @@ void initTimers(){
 	TIMSK1 = (1 << OCIE1A);
 	ICR1H = (40000 >> 8) & 0xFF;
 	ICR1L = 40000 & 0x00FF;
+	
+	//Por defecto el ancho es 500 us
 	OCR1AL = 40;
 	
 	//Asignar salida de la señal pwm como reloj del timer0
@@ -48,13 +36,7 @@ ISR(INT0_vect){
 }
 
 ISR(TIMER0_COMPA_vect){
-	if (!toggle){
-		digitalWrite(0xFF);
-		toggle = 1;
-	} else {
-		digitalWrite(0x00);
-		toggle = 0;
-	}
+	;
 }
 
 ISR(PCINT0_vect){
@@ -80,7 +62,6 @@ int main(void)
     PCICR = (1<<PCIE0);
     PCMSK0 = (1<<PCINT4) | (1<<PCINT3);			//Boton B y A
 	
-    initLEDS();
 	initTimers();
     
     //Activar interrupciones

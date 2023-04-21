@@ -76,7 +76,7 @@ int main(void)
 	initADC();
 	initLEDS();
 	
-	digitalWrite(count);
+	digitalWrite(0x00);
 	
 	//Activar interrupciones
 	sei();

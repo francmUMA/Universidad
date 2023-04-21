@@ -9,6 +9,7 @@
 #include <avr/interrupt.h>
 
 static uint8_t counter = 0;
+static uint8_t mode = 1;
 
 void digitalWrite(unsigned char data){
 	PORTB = ((data & 0x01) << PINB2) | (((data & 0x02) >> 1) << PINB1) | (((data & 0x04) >> 2) << PINB0);
@@ -26,8 +27,8 @@ void initTimers(){
 	//Timer 0 en modo FastPWM
 	TCCR0A = (1<<WGM01) | (1<<WGM00);						//FastPWM
 	TCCR0A |= (1<<COM0A1);									//Non-Inverted
-	//TCCR0B |= (1<<CS02);									//Preescalado de 256
 	OCR0A = 16;												//256 microsgs
+	PORTD |= (1 << PIND6);									//Salida de la onda pwm
 	
 	//Timer 1 en modo CTC
 	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);			//Preescalado = 1024 y top en OCR1A	
@@ -37,21 +38,43 @@ void initTimers(){
 	//Timer 2 en modo CTC
 	TCCR2A = (1<<WGM21);									//Modo CTC con top en OCRA
 	TIMSK2 = (1<<OCIE2A);
-	TCCR2B = (0<<CS22) | (0<<CS21) | (0<<CS20);
 	OCR2A = 157;											//10ms
+	
 }
 
 ISR(INT0_vect){
-	;
+		mode = 3;
+		
+		digitalWrite(0x00);
+		
+		//Deshabilitar Timer 1 y volverlo a activar
+		TCCR1B = 0;
+		OCR2A = 0;
+		OCR2A = 157;
+		TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);
+		
+		//Deshabilitar timer 2
+		TCCR2B = 0;
+		
+		//Habilitar timer 0
+		TCCR0B |= (1<<CS02);									//Preescalado de 256
 }
 
 ISR(TIMER1_COMPA_vect){
-	//Apagar leds y deshabilitar timer 1
-	digitalWrite(0x00);
-	TCCR1B = (1<<WGM12);
-	
-	//Habilitar timer 2
-	TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20);				//Preescalado de 1024
+	if (mode == 1){
+		//Habilito timer 2
+		 TCCR2B = (1<<CS22) | (1<<CS21) | (1<<CS20);				//Preescalado de 1024
+		 mode = 2;
+	} else if (mode == 2) {
+		digitalWrite(0xFF);
+		//Deshabilitar timer 2
+		TCCR2B = 0;
+		mode = 1;
+	} else if (mode == 3){
+		mode = 1;
+		TCCR0B = 0;
+		digitalWrite(0xFF);
+	}
 	
 }
 
@@ -61,7 +84,21 @@ ISR(TIMER2_COMPA_vect){
 }
 
 ISR(PCINT0_vect){
-	;
+	mode = 3;
+	
+	digitalWrite(0x00);
+	
+	//Deshabilitar Timer 1 y volverlo a activar
+	TCCR1B = 0;
+	OCR2A = 0;
+	OCR2A = 157;
+	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);
+	
+	//Deshabilitar timer 2
+	TCCR2B = 0;
+	
+	//Habilitar timer 0
+	TCCR0B |= (1<<CS02);									//Preescalado de 256
 }
 
 int main(void)
@@ -88,8 +125,7 @@ int main(void)
     
     //Activar interrupciones
     sei();
-	//Activar timer 1
-	//TIMSK1 = (1<<OCIE1A);
+	
 	//Arrancan los LEDs 3 segundos
 	digitalWrite(0xFF);
     
