@@ -48,10 +48,7 @@ ISR(INT0_vect){
 		digitalWrite(0x00);
 		
 		//Deshabilitar Timer 1 y volverlo a activar
-		TCCR1B = 0;
-		OCR2A = 0;
-		OCR2A = 157;
-		TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);
+		TCNT1 = 0;
 		
 		//Deshabilitar timer 2
 		TCCR2B = 0;
@@ -88,11 +85,8 @@ ISR(PCINT0_vect){
 	
 	digitalWrite(0x00);
 	
-	//Deshabilitar Timer 1 y volverlo a activar
-	TCCR1B = 0;
-	OCR2A = 0;
-	OCR2A = 157;
-	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10);
+	//Reiniciar cuenta
+	TCNT1 = 0;
 	
 	//Deshabilitar timer 2
 	TCCR2B = 0;

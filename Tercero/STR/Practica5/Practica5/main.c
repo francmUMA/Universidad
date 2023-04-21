@@ -8,7 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-static uint8_t toggle = 0;
+static int toggle = 0;
 
 void digitalWrite(unsigned char data){
 	PORTB = ((data & 0x01) << PINB2)  | (((data & 0x04) >> 2) << PINB0);
@@ -27,7 +27,7 @@ void initTimers(){
 	TCCR0A = (1 << WGM01);
 	TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
 	TIMSK0 = (1 << OCIE0A);
-	OCR0A = 5; 
+	OCR0A = 100; 
 	 
 	
 	//Timer 1 en modo FastPWM, non inverted con canal A, preescalado de 8 y carga del valor 40000
@@ -37,28 +37,31 @@ void initTimers(){
 	TIMSK1 = (1 << OCIE1A);
 	ICR1H = (40000 >> 8) & 0xFF;
 	ICR1L = 40000 & 0x00FF;
-	OCR1AL = 40;
+	OCR1AH = (2000 >> 8) & 0xFF;
+	OCR1AL = 2000 & 0x00FF;
 	
 	//Asignar salida de la señal pwm como reloj del timer0
 	DDRB |= (1 << PINB1);										 											
 }
 
 ISR(INT0_vect){
-	;
-}
-
-ISR(TIMER0_COMPA_vect){
-	if (!toggle){
-		digitalWrite(0xFF);
-		toggle = 1;
-	} else {
-		digitalWrite(0x00);
+	if (toggle == 1){
 		toggle = 0;
+	} else {
+		toggle = 1;
 	}
 }
 
-ISR(PCINT0_vect){
+ISR(TIMER0_COMPA_vect){
 	;
+}
+
+ISR(PCINT0_vect){
+	if (toggle == 1){
+		PORTB = 0;
+	} else {
+		PORTB = (1 << PINB2);
+	}
 }
 
 int main(void)
