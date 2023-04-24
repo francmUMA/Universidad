@@ -1,17 +1,4 @@
-#include "i2c.h"
-
-/*
-HAL_I2C_Master_Transmit
-
-Function Name                   HAL_StatusTypeDef HAL_I2C_Master_Transmit (I2C_HandleTypeDef * hi2c, uint16_t DevAddress, uint8_t *pData, uint16_t Size, uint32_t Timeout)
-Function Description            Transmits in master mode an amount of data in blocking mode.
-Parameters  hi2c: :            Pointer to a I2C_HandleTypeDef structure that contains the configuration information for the specified I2C.
-DevAddress:                     Target device address
-pData:                          Pointer to data buffer
-Size:                           Amount of data to be sent
-Timeout:                        Timeout duration
-Return values HAL status
-*/
+#include "MMA_8451.h"
 
 void write_register(uint8_t reg, uint16_t value, I2C_HandleTypeDef hi2c1){
     uint8_t data[3];                    //[0] = reg, [1] = MSB, [2] = LSB
@@ -41,4 +28,22 @@ uint8_t *read_register(uint8_t reg, I2C_HandleTypeDef hi2c1){
     }
 
     return data;
+}
+
+void init_MMA8451(I2C_HandleTypeDef hi2c1){
+    //Inicialización del acelerómetro
+    write_register(MMA8451_REG_CTRL_REG2, 0x40, hi2c1);     //Reset
+
+    // Espera a que se resetee
+    while (read_register(MMA8451_REG_CTRL_REG2, hi2c1)[1] & 0x40);
+
+    // Se establece de rango 4G
+    write_register(MMA8451_REG_XYZ_DATA_CFG, MMA8451_RANGE_4_G, hi2c1);
+
+    // Se establece la frecuencia de muestreo a 200Hz
+    write_register(MMA8451_REG_CTRL_REG1, MMA8451_DATARATE_200_HZ, hi2c1);
+
+    // Data ready interrupt en INT1
+    write_register(MMA8451_REG_CTRL_REG4, 0x01, hi2c1);             // Activamos la interrupción
+    wirte_register(MMA8451_REG_CTRL_REG5, 0x01, hi2c1);             // Se establece la interrupción en INT1
 }
