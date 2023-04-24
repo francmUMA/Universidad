@@ -8,6 +8,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+static int mode = 0;
+
 void initTimers(){
 	//Timer 0 en modo CTC usando la señal generada por la pwm como reloj.
 	TCCR0A = (1 << WGM01);
@@ -25,22 +27,25 @@ void initTimers(){
 	ICR1L = 40000 & 0x00FF;
 	
 	//Por defecto el ancho es 500 us
-	OCR1AL = 40;
+	OCR1AH = (1000 >> 8) & 0xFF;
+	OCR1AL = 1000 & 0x00FF;
 	
 	//Asignar salida de la señal pwm como reloj del timer0
-	DDRB |= (1 << PINB1);										 											
+	DDRB |= (1 << PINB1) | (1 << PINB2);										 											
 }
 
-ISR(INT0_vect){
-	;
-}
 
 ISR(TIMER0_COMPA_vect){
-	;
-}
-
-ISR(PCINT0_vect){
-	;
+	PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
+	if (!mode){
+		mode = 1;
+		OCR1AH = (10000 >> 8) & 0xFF;
+		OCR1AL = 10000 & 0x00FF;
+	} else {
+		mode = 0;
+		OCR1AH = (1000 >> 8) & 0xFF;
+		OCR1AL = 1000 & 0x00FF;
+	}
 }
 
 int main(void)
@@ -48,20 +53,6 @@ int main(void)
     //Deshabilitar interrupciones
     cli(); 
     
-    /*--------------------------------- INTERRUPCION EXTERNA -----------------------------------------*/
-    //Mascara para INT0
-    EIMSK = 0x01;
-    
-    //Activacion por flanco de bajada
-    EICRA = 0x02;
-    
-    //Limpieza del registro de flag
-    EIFR = 0x00;
-    
-    /*---------------------------- INTERRUPCION POR CAMBIO DE PIN -------------------------------------*/
-    PCICR = (1<<PCIE0);
-    PCMSK0 = (1<<PCINT4) | (1<<PCINT3);			//Boton B y A
-	
 	initTimers();
     
     //Activar interrupciones
