@@ -42,6 +42,11 @@ encapsulation dot1Q 407
 ip address 10.0.62.1 255.255.255.128	
 exit
 
+interface FastEthernet3/0
+no shutdown
+ip address 192.168.0.14 255.255.255.252
+exit
+
 
 ip dhcp pool pool400
 network 10.0.48.0 255.255.252.0
