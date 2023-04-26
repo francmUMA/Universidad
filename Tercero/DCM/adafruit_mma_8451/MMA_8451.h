@@ -2,6 +2,7 @@
 #define _ADAFRUIT_MMA8451_H_
 
 #include <stdint.h>
+#include <string.h>
 
 /* Constants */
 #define SENSORS_GRAVITY_EARTH (9.80665F) /**< Earth's gravity in m/s^2 */
@@ -215,8 +216,9 @@ typedef enum {
 #define MMA8451_DEFAULT_ADDRESS 0x1D //!< Default MMA8451 I2C address, if A is GND, its 0x1C
 
 typedef struct{
-    int16_t x, y, z;        // Valor en cada eje
-    float x_g, y_g, z_g;    // Aceleración en cada eje
+    int16_t x, y, z;         // Valor en cada eje
+    float x_g, y_g, z_g;     // Aceleración en cada eje
+    char orientation[25];    // Orientación
 } mma8451_t;
 
 // Escritura en un registro del acelerometro
@@ -228,13 +230,20 @@ uint8_t *read_register(uint8_t , I2C_HandleTypeDef);
 // Inicializa el acelerometro con una configuración por defecto
 void init_mma8451(I2C_HandleTypeDef);
 
+
 // Actualiza los datos sobre la orientación
-void get_orientation(mma8451_t *data);
+void get_orientation(mma8451_t *data, I2C_HandleTypeDef);
 
 // Actualiza los datos sobre la aceleración
-void get_acceleration(mma8451_t *data);
+void read(mma8451_t *data, I2C_HandleTypeDef);
 
 // Cambia el rango de aceleración
-void set_range(mma8451_range_t range);
+void set_range(mma8451_range_t range, I2C_HandleTypeDef);
+
+// Devuelve el range actual
+mma8451_range_t get_range(I2C_HandleTypeDef);
+
+// Printea la información del acelerometro
+void print_info(mma8451_t data, UART_HandleTypeDef);
 
 #endif
