@@ -8,7 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-static int mode = 0;
+volatile unsigned char mode;
 
 void initTimers(){
 	//Timer 0 en modo CTC usando la señal generada por la pwm como reloj.
@@ -27,25 +27,24 @@ void initTimers(){
 	ICR1L = 40000 & 0x00FF;
 	
 	//Por defecto el ancho es 500 us
-	OCR1AH = (1000 >> 8) & 0xFF;
-	OCR1AL = 1000 & 0x00FF;
+	OCR1A = 1000;
 	
 	//Asignar salida de la señal pwm como reloj del timer0
-	DDRB |= (1 << PINB1) | (1 << PINB2);										 											
+	DDRB |= (1 << PINB1) | (1 << PINB2);	
+	
+	mode = 0;									 											
 }
 
 
 ISR(TIMER0_COMPA_vect){
-	PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
-	if (!mode){
+	if (mode == 0){
+		OCR1A = 10000;
 		mode = 1;
-		OCR1AH = (10000 >> 8) & 0xFF;
-		OCR1AL = 10000 & 0x00FF;
-	} else {
-		mode = 0;
-		OCR1AH = (1000 >> 8) & 0xFF;
-		OCR1AL = 1000 & 0x00FF;
-	}
+		PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
+	} //else {
+		//OCR1A = 1000;
+	//	mode = 0;
+	//}
 }
 
 int main(void)
@@ -54,9 +53,9 @@ int main(void)
     cli(); 
     
 	initTimers();
+	//PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
     
     //Activar interrupciones
     sei();
-    
     while (1);
 }
