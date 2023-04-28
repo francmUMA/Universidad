@@ -30,9 +30,7 @@ void initTimers(){
 	OCR1A = 1000;
 	
 	//Asignar salida de la señal pwm como reloj del timer0
-	DDRB |= (1 << PINB1) | (1 << PINB2);	
-	
-	mode = 0;									 											
+	DDRB |= (1 << PINB1) | (1 << PINB2);									 											
 }
 
 
@@ -54,7 +52,7 @@ int main(void)
     
 	initTimers();
 	//PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
-    
+    mode = 0;
     //Activar interrupciones
     sei();
     while (1);

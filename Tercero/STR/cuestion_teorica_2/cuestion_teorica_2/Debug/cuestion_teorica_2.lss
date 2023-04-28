@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 00000030  00000000  00000000  00000208  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000006d6  00000000  00000000  00000238  2**0
+  6 .debug_info   000006d7  00000000  00000000  00000238  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000649  00000000  00000000  0000090e  2**0
+  7 .debug_abbrev 0000064b  00000000  00000000  0000090f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000273  00000000  00000000  00000f57  2**0
+  8 .debug_line   00000273  00000000  00000000  00000f5a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000058  00000000  00000000  000011cc  2**2
+  9 .debug_frame  00000058  00000000  00000000  000011d0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000037e  00000000  00000000  00001224  2**0
+ 10 .debug_str    00000380  00000000  00000000  00001228  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000049  00000000  00000000  000015a2  2**0
+ 11 .debug_loc    00000049  00000000  00000000  000015a8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000020  00000000  00000000  000015eb  2**0
+ 12 .debug_ranges 00000020  00000000  00000000  000015f1  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -47,7 +47,7 @@ Disassembly of section .text:
   2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
-  38:	0c 94 6a 00 	jmp	0xd4	; 0xd4 <__vector_14>
+  38:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__vector_14>
   3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   40:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
   44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
@@ -81,7 +81,7 @@ Disassembly of section .text:
   7e:	a1 30       	cpi	r26, 0x01	; 1
   80:	b2 07       	cpc	r27, r18
   82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
-  84:	0e 94 8b 00 	call	0x116	; 0x116 <main>
+  84:	0e 94 89 00 	call	0x112	; 0x112 <main>
   88:	0c 94 90 00 	jmp	0x120	; 0x120 <_exit>
 
 0000008c <__bad_interrupt>:
@@ -89,7 +89,7 @@ Disassembly of section .text:
 
 00000090 <initTimers>:
 
-static volatile unsigned char mode;
+volatile unsigned char mode;
 
 void initTimers(){
 	//Timer 0 en modo CTC usando la señal generada por la pwm como reloj.
@@ -131,75 +131,73 @@ void initTimers(){
   c4:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 	
 	//Asignar salida de la señal pwm como reloj del timer0
-	DDRB |= (1 << PINB1) | (1 << PINB2);	
+	DDRB |= (1 << PINB1) | (1 << PINB2);									 											
   c8:	84 b1       	in	r24, 0x04	; 4
   ca:	86 60       	ori	r24, 0x06	; 6
   cc:	84 b9       	out	0x04, r24	; 4
-	
-	mode = 0;									 											
-  ce:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
-  d2:	08 95       	ret
+  ce:	08 95       	ret
 
-000000d4 <__vector_14>:
+000000d0 <__vector_14>:
 }
 
 
 ISR(TIMER0_COMPA_vect){
-  d4:	1f 92       	push	r1
+  d0:	1f 92       	push	r1
+  d2:	0f 92       	push	r0
+  d4:	0f b6       	in	r0, 0x3f	; 63
   d6:	0f 92       	push	r0
-  d8:	0f b6       	in	r0, 0x3f	; 63
-  da:	0f 92       	push	r0
-  dc:	11 24       	eor	r1, r1
-  de:	8f 93       	push	r24
-  e0:	9f 93       	push	r25
+  d8:	11 24       	eor	r1, r1
+  da:	8f 93       	push	r24
+  dc:	9f 93       	push	r25
 	if (mode == 0){
-  e2:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
-  e6:	81 11       	cpse	r24, r1
-  e8:	0f c0       	rjmp	.+30     	; 0x108 <__vector_14+0x34>
+  de:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <_edata>
+  e2:	81 11       	cpse	r24, r1
+  e4:	0f c0       	rjmp	.+30     	; 0x104 <__vector_14+0x34>
 		OCR1A = 10000;
-  ea:	80 e1       	ldi	r24, 0x10	; 16
-  ec:	97 e2       	ldi	r25, 0x27	; 39
-  ee:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
-  f2:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+  e6:	80 e1       	ldi	r24, 0x10	; 16
+  e8:	97 e2       	ldi	r25, 0x27	; 39
+  ea:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+  ee:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 		mode = 1;
-  f6:	81 e0       	ldi	r24, 0x01	; 1
-  f8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+  f2:	81 e0       	ldi	r24, 0x01	; 1
+  f4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <_edata>
 		PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
-  fc:	2a 99       	sbic	0x05, 2	; 5
-  fe:	02 c0       	rjmp	.+4      	; 0x104 <__vector_14+0x30>
- 100:	84 e0       	ldi	r24, 0x04	; 4
- 102:	01 c0       	rjmp	.+2      	; 0x106 <__vector_14+0x32>
- 104:	80 e0       	ldi	r24, 0x00	; 0
- 106:	85 b9       	out	0x05, r24	; 5
+  f8:	2a 99       	sbic	0x05, 2	; 5
+  fa:	02 c0       	rjmp	.+4      	; 0x100 <__vector_14+0x30>
+  fc:	84 e0       	ldi	r24, 0x04	; 4
+  fe:	01 c0       	rjmp	.+2      	; 0x102 <__vector_14+0x32>
+ 100:	80 e0       	ldi	r24, 0x00	; 0
+ 102:	85 b9       	out	0x05, r24	; 5
 	} //else {
 		//OCR1A = 1000;
 	//	mode = 0;
 	//}
 }
- 108:	9f 91       	pop	r25
- 10a:	8f 91       	pop	r24
+ 104:	9f 91       	pop	r25
+ 106:	8f 91       	pop	r24
+ 108:	0f 90       	pop	r0
+ 10a:	0f be       	out	0x3f, r0	; 63
  10c:	0f 90       	pop	r0
- 10e:	0f be       	out	0x3f, r0	; 63
- 110:	0f 90       	pop	r0
- 112:	1f 90       	pop	r1
- 114:	18 95       	reti
+ 10e:	1f 90       	pop	r1
+ 110:	18 95       	reti
 
-00000116 <main>:
+00000112 <main>:
 
 int main(void)
 {
     //Deshabilitar interrupciones
     cli(); 
- 116:	f8 94       	cli
+ 112:	f8 94       	cli
     
 	initTimers();
- 118:	0e 94 48 00 	call	0x90	; 0x90 <initTimers>
+ 114:	0e 94 48 00 	call	0x90	; 0x90 <initTimers>
 	//PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
-    
+    mode = 0;
+ 118:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <_edata>
     //Activar interrupciones
     sei();
  11c:	78 94       	sei
- 11e:	ff cf       	rjmp	.-2      	; 0x11e <main+0x8>
+ 11e:	ff cf       	rjmp	.-2      	; 0x11e <main+0xc>
 
 00000120 <_exit>:
  120:	f8 94       	cli
