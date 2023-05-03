@@ -27,29 +27,25 @@ void initLEDS(){
 
 void initTimers(){
 	//Timer 0 en modo CTC usando la señal generada por la pwm como reloj.
-	//TCCR0A = (1 << WGM01); 
-	//TIMSK0 = (1 << OCIE0A);
-	//OCR0A = 5;											//0.1s
+	TCCR0A = (1 << WGM01); 
+	OCR0A = 5;											//0.1s
 	 
 	
 	//Timer 1 en modo FastPWM, non inverted con canal A, preescalado de 8 y carga del valor 40000
 	//Se carga por defecto 1ms
 	TCCR1A = (1 << COM1A1) | (1 << WGM11);
 	TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS11);
-	TIMSK1 = (1 << OCIE1A);
 	ICR1H = (40000 >> 8) & 0xFF;
 	ICR1L = 40000 & 0x00FF;
 	OCR1AH = (2000 >> 8) & 0xFF;
 	OCR1AL = 2000 & 0x00FF;
 	
 	//Asignar salida de la señal pwm como reloj del timer0
-	//DDRB |= (1 << PINB1);										 											
+	DDRB |= (1 << PINB1);										 											
 }
 
 ISR(INT0_vect){
-	PORTC &= ~((1 << PINC3) | (1 << PINC4));
-	counter += 1;
-	print(counter);
+	;
 }
 
 ISR(TIMER0_COMPA_vect){
@@ -57,51 +53,80 @@ ISR(TIMER0_COMPA_vect){
 }
 
 ISR(PCINT0_vect){
-	//if (PINB & (1 << PINB3)){			//Boton A
-	//	if (reposo) {
-		//	reposo = 0;
-			//entra_coche = 1;
+	if (PINB & (1 << PINB3)){			//Boton A
+		if (reposo && counter < 7) {
+			reposo = 0;
+			entra_coche = 1;
 			
 			//Apagar semaforo
-			//PORTC &= ~((1 << PINC3) | (1 << PINC4));
-			//counter += 1;
-			//print(counter);
-			;
+			PORTC &= ~((1 << PINC3) | (1 << PINC4));
+			
+
 			//Activo parpadeo y levanto barrera
-			//TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
-			//OCR1AH = (3000 >> 8) & 0xFF;
-			//OCR1AL = 3000 & 0x00FF;
-		//} 
-	//} //else if (PINB & (1<<PINB4)){		//Boton B
-		//if (reposo) {
-			//reposo = 0;
-			//sale_coche = 1;
+			TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
+			TIMSK0 = (1 << OCIE0A);
+			OCR1AH = (3000 >> 8) & 0xFF;
+			OCR1AL = 3000 & 0x00FF;
+			
+		} else if (sale_coche){
+			reposo = 1;
+			sale_coche = 0;
+		
+			//Enciendo semaforo
+			PORTC = (1 << PINC3) | (1 << PINC4);						//LED6 y LED7
+		
+			//Apagar luz parpadeante
+			TCCR0B = 0;
+			TIMSK0 = 0;
+			TCNT0 = 0;
+			PORTB &= ~(1 << PINB2);
+		
+			//Bajar barrera
+			OCR1AH = (2000 >> 8) & 0xFF;
+			OCR1AL = 2000 & 0x00FF;
+		
+			counter -= 1;
+			print(counter);
+		}
+		
+	} else if (PINB & (1<<PINB4)){		//Boton B
+		if (reposo && counter > 0) {
+			reposo = 0;
+			sale_coche = 1;
 			
 			//Apagar led7 y led6
-			//PORTC = 0;
+			PORTC &= ~((1 << PINC3) | (1 << PINC4));
 			
 			//Activo parpadeo y levanto barrera
-			//TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
-			//OCR1AH = (3000 >> 8) & 0xFF;
-			//OCR1AL = 3000 & 0x00FF;
-		//} else if (entra_coche){
-			//reposo = 1;
-			//entra_coche = 0;
+			TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
+			TIMSK0 = (1 << OCIE0A);
+			OCR1AH = (3000 >> 8) & 0xFF;
+			OCR1AL = 3000 & 0x00FF;
+			
+		} else if (entra_coche){
+			reposo = 1;
+			entra_coche = 0;
 			
 			//Enciendo semaforo
-			//PORTC = (1 << PINC3) | (1 << PINC4);						//LED6 y LED7
+			PORTC |= (1 << PINC3) | (1 << PINC4);						//LED6 y LED7
 			
 			//Apagar luz parpadeante
-			//TCCR0B = 0;
+			TCCR0B = 0;
+			TIMSK0 = 0;
+			TCNT0 = 0;
+			PORTB &= ~(1 << PINB2);
 			
 			//Bajar barrera
-			//OCR1AH = (3000 >> 8) & 0xFF;
-			//OCR1AL = 3000 & 0x00FF;
+			OCR1AH = (3000 >> 8) & 0xFF;
+			OCR1AL = 3000 & 0x00FF;
 			
-			//counter += 1;
-			//print(counter);
-		//}
-	//}
+			counter += 1;
+			print(counter);
+		}
+	}
+	for (int i = 0; i < 32000; i++){
+		;
+	}
 }
 
 int main(void)
