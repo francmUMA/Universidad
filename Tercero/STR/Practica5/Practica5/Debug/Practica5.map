@@ -262,14 +262,14 @@ END GROUP
                 0x00000120       0x2c main.o
                 0x00000120                initTimers
  .text.__vector_1
-                0x0000014c       0x14 main.o
+                0x0000014c       0x58 main.o
                 0x0000014c                __vector_1
  .text.__vector_14
-                0x00000160       0x24 main.o
-                0x00000160                __vector_14
+                0x000001a4       0x24 main.o
+                0x000001a4                __vector_14
  .text.__vector_3
-                0x00000184       0x58 main.o
-                0x00000184                __vector_3
+                0x000001c8       0x14 main.o
+                0x000001c8                __vector_3
  .text.main     0x000001dc       0x2a main.o
                 0x000001dc                main
                 0x00000206                . = ALIGN (0x2)

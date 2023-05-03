@@ -47,7 +47,9 @@ void initTimers(){
 }
 
 ISR(INT0_vect){
-	;
+	PORTC &= ~((1 << PINC3) | (1 << PINC4));
+	counter += 1;
+	print(counter);
 }
 
 ISR(TIMER0_COMPA_vect){
@@ -61,10 +63,10 @@ ISR(PCINT0_vect){
 			//entra_coche = 1;
 			
 			//Apagar semaforo
-			PORTC &= ~((1 << PINC3) | (1 << PINC4));
-			counter += 1;
-			print(counter);
-			
+			//PORTC &= ~((1 << PINC3) | (1 << PINC4));
+			//counter += 1;
+			//print(counter);
+			;
 			//Activo parpadeo y levanto barrera
 			//TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
 			//OCR1AH = (3000 >> 8) & 0xFF;

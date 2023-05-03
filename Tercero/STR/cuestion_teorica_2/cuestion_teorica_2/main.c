@@ -39,10 +39,10 @@ ISR(TIMER0_COMPA_vect){
 		OCR1A = 10000;
 		mode = 1;
 		PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
-	} //else {
-		//OCR1A = 1000;
-	//	mode = 0;
-	//}
+	} else {
+		OCR1A = 1000;
+		mode = 0;
+	}
 }
 
 int main(void)
