@@ -157,6 +157,42 @@ copy running-config startup-config
 
 exit
 
+# Configuracion de servidor dns
+enable
+configure terminal
+
+ip dhcp pool pool400
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool401
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool402
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool403
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool404
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool405
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool406
+dns-server 10.3.12.2
+exit
+
+ip dhcp pool pool407
+dns-server 10.3.12.2
+exit
+
 
 
 
