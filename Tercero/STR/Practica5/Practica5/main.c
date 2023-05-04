@@ -13,6 +13,7 @@ static uint8_t sale_coche = 0;
 static uint8_t reposo = 1;
 static uint8_t configuracion = 0;
 static uint8_t counter = 0;
+static const float factor_conversion = 45.0 / 255.0;
 
 void print(unsigned char data){
 	PORTB = (((PORTB >> PINB1) & 0x01) << PINB1) | (((PORTB >> PINB2) & 0x01) << PINB2) | ((data & 0x01) << PINB0);
@@ -23,6 +24,11 @@ void initLEDS(){
 	DDRB |= (1 << PINB2) | (1 << PINB0);
 	DDRC |= (1 << PINC3) | (1 << PINC4);
 	DDRD |= (1 << PIND5) | (1 << PIND7);
+}
+
+void init_ADC(){
+	ADMUX = (1 << REFS0) | (1<<ADLAR) | (5 & 0x0F);				
+	ADCSRA = (1<<ADEN) | (1<<ADPS2);	
 }
 
 void initTimers(){
@@ -45,7 +51,38 @@ void initTimers(){
 }
 
 ISR(INT0_vect){
-	;
+	if (reposo){
+		reposo = 0;
+		configuracion = 1;
+		
+		//Activar parpadeo
+		TCCR0B = (1 << CS02) | (1 << CS01) | (1 << CS00);
+		TIMSK0 = (1 << OCIE0A);
+		
+		//Enable ADC interrupt
+		ADCSRA |= (1 << ADSC); 
+		
+	} else if (configuracion){
+		reposo = 1;
+		configuracion = 0;
+		
+		//Desactivar ADC
+		ADCSRA &= ~(1 << ADSC);
+		
+		//Apagar parpadeo
+		TCCR0B = 0;
+		TIMSK0 = 0;
+		TCNT0 = 0;
+		PORTB &= ~(1 << PINB2);
+	}
+}
+
+ISR(ADC_vect){
+	//Escritura del resultado de la conversion
+	OCR0A = (ADCH * factor_conversion) + 5;
+	
+	//Inicio la conversion
+	ADCSRA |= (1<<ADSC);
 }
 
 ISR(TIMER0_COMPA_vect){
@@ -87,6 +124,8 @@ ISR(PCINT0_vect){
 		
 			counter -= 1;
 			print(counter);
+		} else if (configuracion){
+			counter = 0;
 		}
 		
 	} else if (PINB & (1<<PINB4)){		//Boton B
@@ -124,9 +163,6 @@ ISR(PCINT0_vect){
 			print(counter);
 		}
 	}
-	for (int i = 0; i < 32000; i++){
-		;
-	}
 }
 
 int main(void)
@@ -150,6 +186,7 @@ int main(void)
 	
     initLEDS();
 	initTimers();
+	init_ADC();
     
     //Activar interrupciones
     sei();
