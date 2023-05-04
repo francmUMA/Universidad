@@ -12,6 +12,7 @@
  * 
 */
 #include <asm-generic/errno-base.h>
+#include <asm-generic/errno.h>
 #define FUSE_USE_VERSION 26
 
 #include "basicFUSE_lib.h"
@@ -199,12 +200,10 @@ static int mi_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 static int mi_open(const char *path, struct fuse_file_info *fi)
 {
 	/* completar */
-    int res = 0;
+    int res;
     struct structura_mis_datos *mis_datos= (struct structura_mis_datos *) fuse_get_context()->private_data;
-    if (strcmp(path, "/") == 0){
-        res = buscar_fichero(path, mis_datos);
-        if (res < 0) return -ENOENT;
-        else if ((fi->flags & O_ACCMODE) != O_RDONLY) return -EACCES;
+    if ((res = buscar_fichero(path, mis_datos)) >= 0){
+        if ((fi->flags & O_ACCMODE) != O_RDONLY) return -EACCES;
         fi -> fh = res;
     } else if (strncmp(path+1, "BIG", 3) == 0){
         if ((res = buscar_fichero(path+4, mis_datos)) < 0) return -ENOENT;
@@ -216,8 +215,10 @@ static int mi_open(const char *path, struct fuse_file_info *fi)
         else if (strlen(mis_datos ->contenido_ficheros[res]) >= 256) return -ENOENT;
         else if ((fi->flags & O_ACCMODE) != O_RDONLY) return -EACCES;
         fi -> fh = res;
+    } else {
+        return -ENOENT;
     }
-    return res;
+    return 0;
 }
 
 
@@ -228,11 +229,9 @@ static int mi_read(const char *path, char *buf, size_t size, off_t offset,
 {
     size_t len ;
     (void) fi;
-    int res = 0;
+    int res;
     struct structura_mis_datos *mis_datos= (struct structura_mis_datos *) fuse_get_context()->private_data;
-    if (strcmp(path, "/") == 0){
-        res = buscar_fichero(path, mis_datos);
-        if (res < 0) return -ENOENT;
+    if ((res = buscar_fichero(path, mis_datos)) >= 0){
         len = strlen(mis_datos -> contenido_ficheros[res]);
         if (offset < len) {
             size = len - offset;
@@ -258,6 +257,8 @@ static int mi_read(const char *path, char *buf, size_t size, off_t offset,
         }else{
             size = 0;
         }
+    } else {
+        return -ENOENT;
     } 
     return size;
 }
