@@ -9,7 +9,7 @@ int main() {
     strcpy(data -> fichero_inicial, "proverbiosycantares.txt");
     leer_fichero(data);
 
-    int pos = buscar_fichero("/XL", data);
-    printf("Titulo: %s\n", data -> nombre_ficheros[pos]);
-    printf("%s\n", data -> contenido_ficheros[pos]);
+    int pos = buscar_fichero("/BIG/XL", data);
+    //printf("Titulo: %s\n", data -> nombre_ficheros[pos]);
+    //printf("%s\n", data -> contenido_ficheros[pos]);
 }
