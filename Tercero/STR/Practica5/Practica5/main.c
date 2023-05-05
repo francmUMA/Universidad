@@ -60,20 +60,20 @@ ISR(INT0_vect){
 		TIMSK0 = (1 << OCIE0A);
 		
 		//Enable ADC interrupt
-		ADCSRA |= (1 << ADSC); 
+		ADCSRA |= (1 << ADSC) | (1<<ADIE); 
 		
 	} else if (configuracion){
 		reposo = 1;
 		configuracion = 0;
 		
 		//Desactivar ADC
-		ADCSRA &= ~(1 << ADSC);
+		ADCSRA &= ~((1 << ADSC) | (1<<ADIE));
 		
 		//Apagar parpadeo
 		TCCR0B = 0;
 		TIMSK0 = 0;
 		TCNT0 = 0;
-		PORTB &= ~(1 << PINB2);
+		PORTB = (((PORTB >> PINB0) & 0x01) << PINB0);
 	}
 }
 
@@ -86,7 +86,7 @@ ISR(ADC_vect){
 }
 
 ISR(TIMER0_COMPA_vect){
-	PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2);
+	PORTB = (!((PORTB >> PINB2) & 0x01) << PINB2) | (((PORTB >> PINB0) & 0x01) << PINB0);
 }
 
 ISR(PCINT0_vect){
@@ -116,7 +116,7 @@ ISR(PCINT0_vect){
 			TCCR0B = 0;
 			TIMSK0 = 0;
 			TCNT0 = 0;
-			PORTB &= ~(1 << PINB2);
+			PORTB = (((PORTB >> PINB0) & 0x01) << PINB0);
 		
 			//Bajar barrera
 			OCR1AH = (2000 >> 8) & 0xFF;
@@ -126,6 +126,7 @@ ISR(PCINT0_vect){
 			print(counter);
 		} else if (configuracion){
 			counter = 0;
+			print(counter);
 		}
 		
 	} else if (PINB & (1<<PINB4)){		//Boton B
