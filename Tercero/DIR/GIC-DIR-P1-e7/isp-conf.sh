@@ -52,4 +52,4 @@ ip nat inside source static tcp 10.3.0.2 80 80.1.1.128 80
 ip nat inside source static tcp 10.3.0.2 443 80.1.1.128 443
 ip nat inside source static tcp 10.3.6.2 80 80.1.1.129 80
 ip nat inside source static tcp 10.3.6.2 443 80.1.1.129 443
-ip nat inside source static udp 10.3.14.2 443 80.1.1.128 53
+ip nat inside source static udp 10.3.14.2 53 80.1.1.128 53
