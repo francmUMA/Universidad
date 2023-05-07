@@ -28,7 +28,7 @@ function[newPose] = diffDriveKinematics(tita, ur, ul, L, r)
 end
 
 % Funcion que calcula implanta el modelo de la bicicleta en el robot.
-function[newPose] = bikeKinematics(tita, v, L, gamma);
+function[newPose] = bikeKinematics(tita, v, L, gamma)
     % tita: Orientación del robot
     % v: Velocidad lineal del robot
     % L: Distancia entre ruedas
