@@ -22,6 +22,7 @@ volatile uint8_t target_floor = STOPPED;
 volatile uint8_t doors = STOPPED;
 volatile uint8_t people = 0;				//hay gente dentro del ascensor
 volatile uint8_t elevator = 0;				//Parado = 0, Moviendose = 1
+volatile uint8_t is_free = 1;
 
 void print_open_doors(unsigned char data){		
 	PORTB = ((data & 0x01) << PINB2) | (((PORTB >> PINB1) & 0x01) << PINB1) | (((data & 0x02) >> 1) << PINB0);
@@ -73,41 +74,46 @@ void stop_timer0(){
 
 //Boton C
 ISR(INT0_vect){
-	target_floor = FLOOR_2;
-	if (people){
-		if (target_floor == current_floor){
-			//NO SE HACE NADA
-			;
-		} else{
-			// Sabemos que solo se puede ascender
+	if (!elevator){
+		if (people && doors == STOPPED){
 			target_floor = FLOOR_2;
-			print_target_floor(target_floor);
-			OCR1AH = (ASCIENDE >> 8) & 0xFF;
-			OCR1AL = ASCIENDE & 0x00FF;
+			stop_timer0();
+			if (target_floor == current_floor){
+				//NO SE HACE NADA
+				;
+			} else{
+				// Sabemos que solo se puede ascender
+				target_floor = FLOOR_2;
+				print_target_floor(target_floor);
+				OCR1AH = (ASCIENDE >> 8) & 0xFF;
+				OCR1AL = ASCIENDE & 0x00FF;
 			
-			// Se carga el delay correspondiente
-			OCR0A  = 50 * (target_floor - current_floor);
-			elevator = 1;
-			start_timer0();
-		}
-	}else{
-		if (target_floor == current_floor){
-			// El ascensor se abre para que entre gente
-			people = 1;
-			doors = FLOOR_2;
-			print_open_doors(doors);
-			start_timer0();
-		} else{
-			// Sabemos que solo se puede ascender
+				// Se carga el delay correspondiente
+				OCR0A  = 50 * (target_floor - current_floor);
+				elevator = 1;
+				start_timer0();
+			}
+		}else if(is_free){
 			target_floor = FLOOR_2;
-			print_target_floor(target_floor);
-			OCR1AH = (ASCIENDE >> 8) & 0xFF;
-			OCR1AL = ASCIENDE & 0x00FF;
+			is_free = 0;
+			if (target_floor == current_floor){
+				// El ascensor se abre para que entre gente
+				people = 1;
+				doors = FLOOR_2;
+				print_open_doors(doors);
+				start_timer0();
+			} else{
+				// Sabemos que solo se puede ascender
+				target_floor = FLOOR_2;
+				print_target_floor(target_floor);
+				OCR1AH = (ASCIENDE >> 8) & 0xFF;
+				OCR1AL = ASCIENDE & 0x00FF;
 			
-			// Se carga el delay correspondiente
-			OCR0A  = 50 * (target_floor - current_floor);
-			elevator = 1;
-			start_timer0();
+				// Se carga el delay correspondiente
+				OCR0A  = 50 * (target_floor - current_floor);
+				elevator = 1;
+				start_timer0();
+			}
 		}
 	}
 }
@@ -117,9 +123,9 @@ ISR(TIMER0_COMPA_vect){
 		if (doors != STOPPED) {
 			doors = STOPPED;
 			print_open_doors(doors);
-			stop_timer0();
 		} else {
-			;//stop_timer0();
+			stop_timer0();
+			is_free = 1;
 		}
 	} else {
 		current_floor = target_floor;
@@ -142,91 +148,99 @@ ISR(TIMER0_COMPA_vect){
 }
 
 ISR(PCINT0_vect){
-	if (PINB & (1 << PINB3)){			//Boton A
-		target_floor = FLOOR_0;
-		if (people){
-			if (target_floor == current_floor){
-				//NO SE HACE NADA
-				;
-			} else{
-				// Sabemos que solo se puede descender
-				print_target_floor(target_floor);
-				OCR1AH = (DESCIENDE >> 8) & 0xFF;
-				OCR1AL = DESCIENDE & 0x00FF;
-				
-				// Se carga el delay correspondiente
-				OCR0A  = 50 * (current_floor - target_floor);
-				elevator = 1;
-				start_timer0();
-			}
-		}else{
-			if (target_floor == current_floor){
-				// El ascensor se abre para que entre gente
-				people = 1;
-				doors = FLOOR_0;
-				print_open_doors(doors);
-				start_timer0();
-			} else{
-				// Sabemos que solo se puede descender
+	if (!elevator){
+		if (PINB & (1 << PINB3)){			//Boton A
+			if (people && doors == STOPPED){
 				target_floor = FLOOR_0;
-				print_target_floor(target_floor);
-				OCR1AH = (DESCIENDE >> 8) & 0xFF;
-				OCR1AL = DESCIENDE & 0x00FF;
+				stop_timer0();
+				if (target_floor == current_floor){
+					//NO SE HACE NADA
+					;
+				} else{
+					// Sabemos que solo se puede descender
+					print_target_floor(target_floor);
+					OCR1AH = (DESCIENDE >> 8) & 0xFF;
+					OCR1AL = DESCIENDE & 0x00FF;
 				
-				// Se carga el delay correspondiente
-				OCR0A  = 50 * (current_floor - target_floor);
-				elevator = 1;
-				start_timer0();
+					// Se carga el delay correspondiente
+					OCR0A  = 50 * (current_floor - target_floor);
+					elevator = 1;
+					start_timer0();
+				}
+			}else if(is_free){
+				target_floor = FLOOR_0;
+				is_free = 0;
+				if (target_floor == current_floor){
+					// El ascensor se abre para que entre gente
+					people = 1;
+					doors = FLOOR_0;
+					print_open_doors(doors);
+					start_timer0();
+				} else{
+					// Sabemos que solo se puede descender
+					target_floor = FLOOR_0;
+					print_target_floor(target_floor);
+					OCR1AH = (DESCIENDE >> 8) & 0xFF;
+					OCR1AL = DESCIENDE & 0x00FF;
+				
+					// Se carga el delay correspondiente
+					OCR0A  = 50 * (current_floor - target_floor);
+					elevator = 1;
+					start_timer0();
+				}
 			}
 		}
-	}
 	
 	
-	else if (PINB & (1<<PINB4)){		//Boton B
-		target_floor = FLOOR_1;
-		if (people){
-			if (target_floor == current_floor){
-				//NO SE HACE NADA
-				;
-			} else{
-				// Tenemos que averiguar si hay que ascender o descender
-				print_target_floor(target_floor);
-				if (target_floor > current_floor){
-					OCR1AH = (ASCIENDE >> 8) & 0xFF;
-					OCR1AL = ASCIENDE & 0x00FF;
-				} else {
-					OCR1AH = (DESCIENDE >> 8) & 0xFF;
-					OCR1AL = DESCIENDE & 0x00FF;
-				}
-				
-				// Se carga el delay correspondiente
-				OCR0A  = 50;
-				elevator = 1;
-				start_timer0();
-			}
-			}else{
-			if (target_floor == current_floor){
-				// El ascensor se abre para que entre gente
-				people = 1;
-				doors = FLOOR_1;
-				print_open_doors(doors);
-				start_timer0();
-			} else{
-				// Tenemos que averiguar si hay que subir o bajar
+		else if (PINB & (1<<PINB4)){		//Boton B
+			if (people && doors == STOPPED){
 				target_floor = FLOOR_1;
-				print_target_floor(target_floor);
-				if (target_floor > current_floor){
-					OCR1AH = (ASCIENDE >> 8) & 0xFF;
-					OCR1AL = ASCIENDE & 0x00FF;
-				} else {
-					OCR1AH = (DESCIENDE >> 8) & 0xFF;
-					OCR1AL = DESCIENDE & 0x00FF;
-				}
+				stop_timer0();
+				if (target_floor == current_floor){
+					//NO SE HACE NADA
+					;
+				} else{
+					// Tenemos que averiguar si hay que ascender o descender
+					print_target_floor(target_floor);
+					if (target_floor > current_floor){
+						OCR1AH = (ASCIENDE >> 8) & 0xFF;
+						OCR1AL = ASCIENDE & 0x00FF;
+					} else {
+						OCR1AH = (DESCIENDE >> 8) & 0xFF;
+						OCR1AL = DESCIENDE & 0x00FF;
+					}
 				
-				// Se carga el delay correspondiente
-				OCR0A  = 50 * (target_floor - current_floor);
-				elevator = 1;
-				start_timer0();
+					// Se carga el delay correspondiente
+					OCR0A  = 50;
+					elevator = 1;
+					start_timer0();
+				}
+			}else if (is_free){
+				target_floor = FLOOR_1;
+				is_free = 0;
+				if (target_floor == current_floor){
+					// El ascensor se abre para que entre gente
+					people = 1;
+					doors = FLOOR_1;
+					print_open_doors(doors);
+					start_timer0();
+				} else{
+					// Tenemos que averiguar si hay que subir o bajar
+					target_floor = FLOOR_1;
+					print_target_floor(target_floor);
+					if (target_floor > current_floor){
+						OCR1AH = (ASCIENDE >> 8) & 0xFF;
+						OCR1AL = ASCIENDE & 0x00FF;
+					} else {
+						OCR1AH = (DESCIENDE >> 8) & 0xFF;
+						OCR1AL = DESCIENDE & 0x00FF;
+					}
+				
+					// Se carga el delay correspondiente
+					OCR0A  = 50 * (target_floor - current_floor);
+					elevator = 1;
+					start_timer0();
+				}
 			}
 		}
 	}
