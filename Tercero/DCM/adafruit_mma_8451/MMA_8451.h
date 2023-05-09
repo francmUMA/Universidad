@@ -222,26 +222,26 @@ typedef struct{
 } mma8451_t;
 
 // Escritura en un registro del acelerometro
-void write_register(uint8_t , uint16_t , I2C_HandleTypeDef);
+void write_register(uint8_t , uint16_t , I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Lectura de un registro del acelerometro
-uint8_t *read_register(uint8_t , I2C_HandleTypeDef);
+uint8_t *read_register(uint8_t , I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Inicializa el acelerometro con una configuración por defecto
 void init_mma8451(I2C_HandleTypeDef);
 
 
 // Actualiza los datos sobre la orientación
-void get_orientation(mma8451_t *data, I2C_HandleTypeDef);
+void get_orientation(mma8451_t *data, I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Actualiza los datos sobre la aceleración
-void read(mma8451_t *data, I2C_HandleTypeDef);
+void read(mma8451_t *data, I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Cambia el rango de aceleración
-void set_range(mma8451_range_t range, I2C_HandleTypeDef);
+void set_range(mma8451_range_t range, I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Devuelve el range actual
-mma8451_range_t get_range(I2C_HandleTypeDef);
+mma8451_range_t get_range(I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Printea la información del acelerometro
 void print_info(mma8451_t data, UART_HandleTypeDef);
