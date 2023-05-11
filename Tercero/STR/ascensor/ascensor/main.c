@@ -126,6 +126,7 @@ ISR(TIMER0_COMPA_vect){
 		} else {
 			stop_timer0();
 			is_free = 1;
+			people = 0;
 		}
 	} else {
 		current_floor = target_floor;

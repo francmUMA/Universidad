@@ -3,31 +3,31 @@ ascensor.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000002  00800100  000005d0  00000664  2**0
+  0 .data         00000002  00800100  000005d4  00000668  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000005d0  00000000  00000000  00000094  2**1
+  1 .text         000005d4  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000004  00800102  00800102  00000666  2**0
+  2 .bss          00000004  00800102  00800102  0000066a  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000666  2**0
+  3 .comment      00000030  00000000  00000000  0000066a  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000698  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000069c  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000070  00000000  00000000  000006d8  2**0
+  5 .debug_aranges 00000070  00000000  00000000  000006dc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000092a  00000000  00000000  00000748  2**0
+  6 .debug_info   0000092a  00000000  00000000  0000074c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000685  00000000  00000000  00001072  2**0
+  7 .debug_abbrev 00000685  00000000  00000000  00001076  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000005e6  00000000  00000000  000016f7  2**0
+  8 .debug_line   000005ec  00000000  00000000  000016fb  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001a0  00000000  00000000  00001ce0  2**2
+  9 .debug_frame  000001a0  00000000  00000000  00001ce8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000003e9  00000000  00000000  00001e80  2**0
+ 10 .debug_str    000003e9  00000000  00000000  00001e88  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000002b0  00000000  00000000  00002269  2**0
+ 11 .debug_loc    000002b0  00000000  00000000  00002271  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000060  00000000  00000000  00002519  2**0
+ 12 .debug_ranges 00000060  00000000  00000000  00002521  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -36,7 +36,7 @@ Disassembly of section .text:
    0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
    4:	0c 94 d1 00 	jmp	0x1a2	; 0x1a2 <__vector_1>
    8:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
-   c:	0c 94 bf 01 	jmp	0x37e	; 0x37e <__vector_3>
+   c:	0c 94 c1 01 	jmp	0x382	; 0x382 <__vector_3>
   10:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   14:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   18:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
@@ -72,7 +72,7 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e0 ed       	ldi	r30, 0xD0	; 208
+  7a:	e4 ed       	ldi	r30, 0xD4	; 212
   7c:	f5 e0       	ldi	r31, 0x05	; 5
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
@@ -94,8 +94,8 @@ Disassembly of section .text:
   94:	a6 30       	cpi	r26, 0x06	; 6
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
-  9a:	0e 94 c8 02 	call	0x590	; 0x590 <main>
-  9e:	0c 94 e6 02 	jmp	0x5cc	; 0x5cc <_exit>
+  9a:	0e 94 ca 02 	call	0x594	; 0x594 <main>
+  9e:	0c 94 e8 02 	jmp	0x5d0	; 0x5d0 <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -460,7 +460,7 @@ ISR(TIMER0_COMPA_vect){
 	if (elevator == 0){
  2de:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
  2e2:	81 11       	cpse	r24, r1
- 2e4:	11 c0       	rjmp	.+34     	; 0x308 <__vector_14+0x4c>
+ 2e4:	13 c0       	rjmp	.+38     	; 0x30c <__vector_14+0x50>
 		if (doors != STOPPED) {
  2e6:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
  2ea:	88 23       	and	r24, r24
@@ -470,423 +470,425 @@ ISR(TIMER0_COMPA_vect){
 			print_open_doors(doors);
  2f2:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
  2f6:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
- 2fa:	30 c0       	rjmp	.+96     	; 0x35c <__vector_14+0xa0>
+ 2fa:	32 c0       	rjmp	.+100    	; 0x360 <__vector_14+0xa4>
 		} else {
 			stop_timer0();
  2fc:	0e 94 cc 00 	call	0x198	; 0x198 <stop_timer0>
 			is_free = 1;
  300:	81 e0       	ldi	r24, 0x01	; 1
  302:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
- 306:	2a c0       	rjmp	.+84     	; 0x35c <__vector_14+0xa0>
+			people = 0;
+ 306:	10 92 03 01 	sts	0x0103, r1	; 0x800103 <people>
+ 30a:	2a c0       	rjmp	.+84     	; 0x360 <__vector_14+0xa4>
 		}
 	} else {
 		current_floor = target_floor;
- 308:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 30c:	80 93 01 01 	sts	0x0101, r24	; 0x800101 <current_floor>
+ 30c:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 310:	80 93 01 01 	sts	0x0101, r24	; 0x800101 <current_floor>
 		print_current_floor(current_floor);
- 310:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 314:	0e 94 69 00 	call	0xd2	; 0xd2 <print_current_floor>
+ 314:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 318:	0e 94 69 00 	call	0xd2	; 0xd2 <print_current_floor>
 		target_floor = STOPPED;
- 318:	10 92 05 01 	sts	0x0105, r1	; 0x800105 <target_floor>
+ 31c:	10 92 05 01 	sts	0x0105, r1	; 0x800105 <target_floor>
 		print_target_floor(target_floor);
- 31c:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 320:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
+ 320:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 324:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
 		
 		//Parar ascensor
 		OCR1AH = (PARADO >> 8) & 0xFF;
- 324:	87 e2       	ldi	r24, 0x27	; 39
- 326:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 328:	87 e2       	ldi	r24, 0x27	; 39
+ 32a:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 		OCR1AL = PARADO & 0x00FF;
- 32a:	80 e1       	ldi	r24, 0x10	; 16
- 32c:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 32e:	80 e1       	ldi	r24, 0x10	; 16
+ 330:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 		
 		//Abrir puertas
 		elevator = 0;
- 330:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
+ 334:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
 		doors = current_floor;
- 334:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 338:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <doors>
+ 338:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 33c:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <doors>
 		print_open_doors(doors);
- 33c:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
- 340:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
+ 340:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
+ 344:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
 		OCR0A = 250;
- 344:	8a ef       	ldi	r24, 0xFA	; 250
- 346:	87 bd       	out	0x27, r24	; 39
+ 348:	8a ef       	ldi	r24, 0xFA	; 250
+ 34a:	87 bd       	out	0x27, r24	; 39
 		if (people) people = 0;
- 348:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <people>
- 34c:	88 23       	and	r24, r24
- 34e:	19 f0       	breq	.+6      	; 0x356 <__vector_14+0x9a>
- 350:	10 92 03 01 	sts	0x0103, r1	; 0x800103 <people>
- 354:	03 c0       	rjmp	.+6      	; 0x35c <__vector_14+0xa0>
+ 34c:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <people>
+ 350:	88 23       	and	r24, r24
+ 352:	19 f0       	breq	.+6      	; 0x35a <__vector_14+0x9e>
+ 354:	10 92 03 01 	sts	0x0103, r1	; 0x800103 <people>
+ 358:	03 c0       	rjmp	.+6      	; 0x360 <__vector_14+0xa4>
 		else people = 1;
- 356:	81 e0       	ldi	r24, 0x01	; 1
- 358:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <people>
+ 35a:	81 e0       	ldi	r24, 0x01	; 1
+ 35c:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <people>
 	}
 }
- 35c:	ff 91       	pop	r31
- 35e:	ef 91       	pop	r30
- 360:	bf 91       	pop	r27
- 362:	af 91       	pop	r26
- 364:	9f 91       	pop	r25
- 366:	8f 91       	pop	r24
- 368:	7f 91       	pop	r23
- 36a:	6f 91       	pop	r22
- 36c:	5f 91       	pop	r21
- 36e:	4f 91       	pop	r20
- 370:	3f 91       	pop	r19
- 372:	2f 91       	pop	r18
- 374:	0f 90       	pop	r0
- 376:	0f be       	out	0x3f, r0	; 63
+ 360:	ff 91       	pop	r31
+ 362:	ef 91       	pop	r30
+ 364:	bf 91       	pop	r27
+ 366:	af 91       	pop	r26
+ 368:	9f 91       	pop	r25
+ 36a:	8f 91       	pop	r24
+ 36c:	7f 91       	pop	r23
+ 36e:	6f 91       	pop	r22
+ 370:	5f 91       	pop	r21
+ 372:	4f 91       	pop	r20
+ 374:	3f 91       	pop	r19
+ 376:	2f 91       	pop	r18
  378:	0f 90       	pop	r0
- 37a:	1f 90       	pop	r1
- 37c:	18 95       	reti
+ 37a:	0f be       	out	0x3f, r0	; 63
+ 37c:	0f 90       	pop	r0
+ 37e:	1f 90       	pop	r1
+ 380:	18 95       	reti
 
-0000037e <__vector_3>:
+00000382 <__vector_3>:
 
 ISR(PCINT0_vect){
- 37e:	1f 92       	push	r1
- 380:	0f 92       	push	r0
- 382:	0f b6       	in	r0, 0x3f	; 63
+ 382:	1f 92       	push	r1
  384:	0f 92       	push	r0
- 386:	11 24       	eor	r1, r1
- 388:	2f 93       	push	r18
- 38a:	3f 93       	push	r19
- 38c:	4f 93       	push	r20
- 38e:	5f 93       	push	r21
- 390:	6f 93       	push	r22
- 392:	7f 93       	push	r23
- 394:	8f 93       	push	r24
- 396:	9f 93       	push	r25
- 398:	af 93       	push	r26
- 39a:	bf 93       	push	r27
- 39c:	cf 93       	push	r28
- 39e:	ef 93       	push	r30
- 3a0:	ff 93       	push	r31
+ 386:	0f b6       	in	r0, 0x3f	; 63
+ 388:	0f 92       	push	r0
+ 38a:	11 24       	eor	r1, r1
+ 38c:	2f 93       	push	r18
+ 38e:	3f 93       	push	r19
+ 390:	4f 93       	push	r20
+ 392:	5f 93       	push	r21
+ 394:	6f 93       	push	r22
+ 396:	7f 93       	push	r23
+ 398:	8f 93       	push	r24
+ 39a:	9f 93       	push	r25
+ 39c:	af 93       	push	r26
+ 39e:	bf 93       	push	r27
+ 3a0:	cf 93       	push	r28
+ 3a2:	ef 93       	push	r30
+ 3a4:	ff 93       	push	r31
 	if (!elevator){
- 3a2:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
- 3a6:	81 11       	cpse	r24, r1
- 3a8:	e1 c0       	rjmp	.+450    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 3a6:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
+ 3aa:	81 11       	cpse	r24, r1
+ 3ac:	e1 c0       	rjmp	.+450    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 		if (PINB & (1 << PINB3)){			//Boton A
- 3aa:	1b 9b       	sbis	0x03, 3	; 3
- 3ac:	66 c0       	rjmp	.+204    	; 0x47a <__EEPROM_REGION_LENGTH__+0x7a>
+ 3ae:	1b 9b       	sbis	0x03, 3	; 3
+ 3b0:	66 c0       	rjmp	.+204    	; 0x47e <__EEPROM_REGION_LENGTH__+0x7e>
 			if (people && doors == STOPPED){
- 3ae:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <people>
- 3b2:	88 23       	and	r24, r24
- 3b4:	51 f1       	breq	.+84     	; 0x40a <__EEPROM_REGION_LENGTH__+0xa>
- 3b6:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
- 3ba:	81 11       	cpse	r24, r1
- 3bc:	26 c0       	rjmp	.+76     	; 0x40a <__EEPROM_REGION_LENGTH__+0xa>
+ 3b2:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <people>
+ 3b6:	88 23       	and	r24, r24
+ 3b8:	51 f1       	breq	.+84     	; 0x40e <__EEPROM_REGION_LENGTH__+0xe>
+ 3ba:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
+ 3be:	81 11       	cpse	r24, r1
+ 3c0:	26 c0       	rjmp	.+76     	; 0x40e <__EEPROM_REGION_LENGTH__+0xe>
 				target_floor = FLOOR_0;
- 3be:	81 e0       	ldi	r24, 0x01	; 1
- 3c0:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
+ 3c2:	81 e0       	ldi	r24, 0x01	; 1
+ 3c4:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
 				stop_timer0();
- 3c4:	0e 94 cc 00 	call	0x198	; 0x198 <stop_timer0>
+ 3c8:	0e 94 cc 00 	call	0x198	; 0x198 <stop_timer0>
 				if (target_floor == current_floor){
- 3c8:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 3cc:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 3d0:	98 17       	cp	r25, r24
- 3d2:	09 f4       	brne	.+2      	; 0x3d6 <__vector_3+0x58>
- 3d4:	cb c0       	rjmp	.+406    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 3cc:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 3d0:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 3d4:	98 17       	cp	r25, r24
+ 3d6:	09 f4       	brne	.+2      	; 0x3da <__vector_3+0x58>
+ 3d8:	cb c0       	rjmp	.+406    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 					//NO SE HACE NADA
 					;
 				} else{
 					// Sabemos que solo se puede descender
 					print_target_floor(target_floor);
- 3d6:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 3da:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
+ 3da:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 3de:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
 					OCR1AH = (DESCIENDE >> 8) & 0xFF;
- 3de:	8e e4       	ldi	r24, 0x4E	; 78
- 3e0:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 3e2:	8e e4       	ldi	r24, 0x4E	; 78
+ 3e4:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 					OCR1AL = DESCIENDE & 0x00FF;
- 3e4:	80 e2       	ldi	r24, 0x20	; 32
- 3e6:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 3e8:	80 e2       	ldi	r24, 0x20	; 32
+ 3ea:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 				
 					// Se carga el delay correspondiente
 					OCR0A  = 50 * (current_floor - target_floor);
- 3ea:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 3ee:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 3f2:	89 1b       	sub	r24, r25
- 3f4:	92 e3       	ldi	r25, 0x32	; 50
- 3f6:	89 9f       	mul	r24, r25
- 3f8:	80 2d       	mov	r24, r0
- 3fa:	11 24       	eor	r1, r1
- 3fc:	87 bd       	out	0x27, r24	; 39
+ 3ee:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 3f2:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 3f6:	89 1b       	sub	r24, r25
+ 3f8:	92 e3       	ldi	r25, 0x32	; 50
+ 3fa:	89 9f       	mul	r24, r25
+ 3fc:	80 2d       	mov	r24, r0
+ 3fe:	11 24       	eor	r1, r1
+ 400:	87 bd       	out	0x27, r24	; 39
 					elevator = 1;
- 3fe:	81 e0       	ldi	r24, 0x01	; 1
- 400:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
+ 402:	81 e0       	ldi	r24, 0x01	; 1
+ 404:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
 					start_timer0();
- 404:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
- 408:	b1 c0       	rjmp	.+354    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 408:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
+ 40c:	b1 c0       	rjmp	.+354    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				}
 			}else if(is_free){
- 40a:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 40e:	88 23       	and	r24, r24
- 410:	09 f4       	brne	.+2      	; 0x414 <__EEPROM_REGION_LENGTH__+0x14>
- 412:	ac c0       	rjmp	.+344    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 40e:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 412:	88 23       	and	r24, r24
+ 414:	09 f4       	brne	.+2      	; 0x418 <__EEPROM_REGION_LENGTH__+0x18>
+ 416:	ac c0       	rjmp	.+344    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				target_floor = FLOOR_0;
- 414:	81 e0       	ldi	r24, 0x01	; 1
- 416:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
+ 418:	81 e0       	ldi	r24, 0x01	; 1
+ 41a:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
 				is_free = 0;
- 41a:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 41e:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
 				if (target_floor == current_floor){
- 41e:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 422:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 426:	98 13       	cpse	r25, r24
- 428:	0c c0       	rjmp	.+24     	; 0x442 <__EEPROM_REGION_LENGTH__+0x42>
+ 422:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 426:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 42a:	98 13       	cpse	r25, r24
+ 42c:	0c c0       	rjmp	.+24     	; 0x446 <__EEPROM_REGION_LENGTH__+0x46>
 					// El ascensor se abre para que entre gente
 					people = 1;
- 42a:	81 e0       	ldi	r24, 0x01	; 1
- 42c:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <people>
+ 42e:	81 e0       	ldi	r24, 0x01	; 1
+ 430:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <people>
 					doors = FLOOR_0;
- 430:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <doors>
+ 434:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <doors>
 					print_open_doors(doors);
- 434:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
- 438:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
+ 438:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
+ 43c:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
 					start_timer0();
- 43c:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
- 440:	95 c0       	rjmp	.+298    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 440:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
+ 444:	95 c0       	rjmp	.+298    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				} else{
 					// Sabemos que solo se puede descender
 					target_floor = FLOOR_0;
- 442:	c1 e0       	ldi	r28, 0x01	; 1
- 444:	c0 93 05 01 	sts	0x0105, r28	; 0x800105 <target_floor>
+ 446:	c1 e0       	ldi	r28, 0x01	; 1
+ 448:	c0 93 05 01 	sts	0x0105, r28	; 0x800105 <target_floor>
 					print_target_floor(target_floor);
- 448:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 44c:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
+ 44c:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 450:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
 					OCR1AH = (DESCIENDE >> 8) & 0xFF;
- 450:	8e e4       	ldi	r24, 0x4E	; 78
- 452:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 454:	8e e4       	ldi	r24, 0x4E	; 78
+ 456:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 					OCR1AL = DESCIENDE & 0x00FF;
- 456:	80 e2       	ldi	r24, 0x20	; 32
- 458:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 45a:	80 e2       	ldi	r24, 0x20	; 32
+ 45c:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 				
 					// Se carga el delay correspondiente
 					OCR0A  = 50 * (current_floor - target_floor);
- 45c:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 460:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 464:	89 1b       	sub	r24, r25
- 466:	92 e3       	ldi	r25, 0x32	; 50
- 468:	89 9f       	mul	r24, r25
- 46a:	80 2d       	mov	r24, r0
- 46c:	11 24       	eor	r1, r1
- 46e:	87 bd       	out	0x27, r24	; 39
+ 460:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 464:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 468:	89 1b       	sub	r24, r25
+ 46a:	92 e3       	ldi	r25, 0x32	; 50
+ 46c:	89 9f       	mul	r24, r25
+ 46e:	80 2d       	mov	r24, r0
+ 470:	11 24       	eor	r1, r1
+ 472:	87 bd       	out	0x27, r24	; 39
 					elevator = 1;
- 470:	c0 93 02 01 	sts	0x0102, r28	; 0x800102 <__data_end>
+ 474:	c0 93 02 01 	sts	0x0102, r28	; 0x800102 <__data_end>
 					start_timer0();
- 474:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
- 478:	79 c0       	rjmp	.+242    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 478:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
+ 47c:	79 c0       	rjmp	.+242    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				}
 			}
 		}
 	
 	
 		else if (PINB & (1<<PINB4)){		//Boton B
- 47a:	1c 9b       	sbis	0x03, 4	; 3
- 47c:	77 c0       	rjmp	.+238    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 47e:	1c 9b       	sbis	0x03, 4	; 3
+ 480:	77 c0       	rjmp	.+238    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 			if (people && doors == STOPPED){
- 47e:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <people>
- 482:	88 23       	and	r24, r24
- 484:	71 f1       	breq	.+92     	; 0x4e2 <__EEPROM_REGION_LENGTH__+0xe2>
- 486:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
- 48a:	81 11       	cpse	r24, r1
- 48c:	2a c0       	rjmp	.+84     	; 0x4e2 <__EEPROM_REGION_LENGTH__+0xe2>
+ 482:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <people>
+ 486:	88 23       	and	r24, r24
+ 488:	71 f1       	breq	.+92     	; 0x4e6 <__EEPROM_REGION_LENGTH__+0xe6>
+ 48a:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
+ 48e:	81 11       	cpse	r24, r1
+ 490:	2a c0       	rjmp	.+84     	; 0x4e6 <__EEPROM_REGION_LENGTH__+0xe6>
 				target_floor = FLOOR_1;
- 48e:	82 e0       	ldi	r24, 0x02	; 2
- 490:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
+ 492:	82 e0       	ldi	r24, 0x02	; 2
+ 494:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
 				stop_timer0();
- 494:	0e 94 cc 00 	call	0x198	; 0x198 <stop_timer0>
+ 498:	0e 94 cc 00 	call	0x198	; 0x198 <stop_timer0>
 				if (target_floor == current_floor){
- 498:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 49c:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 4a0:	98 17       	cp	r25, r24
- 4a2:	09 f4       	brne	.+2      	; 0x4a6 <__EEPROM_REGION_LENGTH__+0xa6>
- 4a4:	63 c0       	rjmp	.+198    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 49c:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 4a0:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 4a4:	98 17       	cp	r25, r24
+ 4a6:	09 f4       	brne	.+2      	; 0x4aa <__EEPROM_REGION_LENGTH__+0xaa>
+ 4a8:	63 c0       	rjmp	.+198    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 					//NO SE HACE NADA
 					;
 				} else{
 					// Tenemos que averiguar si hay que ascender o descender
 					print_target_floor(target_floor);
- 4a6:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 4aa:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
+ 4aa:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 4ae:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
 					if (target_floor > current_floor){
- 4ae:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 4b2:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 4b6:	89 17       	cp	r24, r25
- 4b8:	30 f4       	brcc	.+12     	; 0x4c6 <__EEPROM_REGION_LENGTH__+0xc6>
+ 4b2:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 4b6:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 4ba:	89 17       	cp	r24, r25
+ 4bc:	30 f4       	brcc	.+12     	; 0x4ca <__EEPROM_REGION_LENGTH__+0xca>
 						OCR1AH = (ASCIENDE >> 8) & 0xFF;
- 4ba:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 4be:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 						OCR1AL = ASCIENDE & 0x00FF;
- 4be:	88 ec       	ldi	r24, 0xC8	; 200
- 4c0:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
- 4c4:	06 c0       	rjmp	.+12     	; 0x4d2 <__EEPROM_REGION_LENGTH__+0xd2>
+ 4c2:	88 ec       	ldi	r24, 0xC8	; 200
+ 4c4:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 4c8:	06 c0       	rjmp	.+12     	; 0x4d6 <__EEPROM_REGION_LENGTH__+0xd6>
 					} else {
 						OCR1AH = (DESCIENDE >> 8) & 0xFF;
- 4c6:	8e e4       	ldi	r24, 0x4E	; 78
- 4c8:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 4ca:	8e e4       	ldi	r24, 0x4E	; 78
+ 4cc:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 						OCR1AL = DESCIENDE & 0x00FF;
- 4cc:	80 e2       	ldi	r24, 0x20	; 32
- 4ce:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 4d0:	80 e2       	ldi	r24, 0x20	; 32
+ 4d2:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 					}
 				
 					// Se carga el delay correspondiente
 					OCR0A  = 50;
- 4d2:	82 e3       	ldi	r24, 0x32	; 50
- 4d4:	87 bd       	out	0x27, r24	; 39
+ 4d6:	82 e3       	ldi	r24, 0x32	; 50
+ 4d8:	87 bd       	out	0x27, r24	; 39
 					elevator = 1;
- 4d6:	81 e0       	ldi	r24, 0x01	; 1
- 4d8:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
+ 4da:	81 e0       	ldi	r24, 0x01	; 1
+ 4dc:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
 					start_timer0();
- 4dc:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
- 4e0:	45 c0       	rjmp	.+138    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 4e0:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
+ 4e4:	45 c0       	rjmp	.+138    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				}
 			}else if (is_free){
- 4e2:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 4e6:	88 23       	and	r24, r24
- 4e8:	09 f4       	brne	.+2      	; 0x4ec <__EEPROM_REGION_LENGTH__+0xec>
- 4ea:	40 c0       	rjmp	.+128    	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 4e6:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 4ea:	88 23       	and	r24, r24
+ 4ec:	09 f4       	brne	.+2      	; 0x4f0 <__EEPROM_REGION_LENGTH__+0xf0>
+ 4ee:	40 c0       	rjmp	.+128    	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				target_floor = FLOOR_1;
- 4ec:	82 e0       	ldi	r24, 0x02	; 2
- 4ee:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
+ 4f0:	82 e0       	ldi	r24, 0x02	; 2
+ 4f2:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
 				is_free = 0;
- 4f2:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 4f6:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
 				if (target_floor == current_floor){
- 4f6:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 4fa:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 4fe:	98 13       	cpse	r25, r24
- 500:	0d c0       	rjmp	.+26     	; 0x51c <__EEPROM_REGION_LENGTH__+0x11c>
+ 4fa:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 4fe:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 502:	98 13       	cpse	r25, r24
+ 504:	0d c0       	rjmp	.+26     	; 0x520 <__EEPROM_REGION_LENGTH__+0x120>
 					// El ascensor se abre para que entre gente
 					people = 1;
- 502:	81 e0       	ldi	r24, 0x01	; 1
- 504:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <people>
+ 506:	81 e0       	ldi	r24, 0x01	; 1
+ 508:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <people>
 					doors = FLOOR_1;
- 508:	82 e0       	ldi	r24, 0x02	; 2
- 50a:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <doors>
+ 50c:	82 e0       	ldi	r24, 0x02	; 2
+ 50e:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <doors>
 					print_open_doors(doors);
- 50e:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
- 512:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
+ 512:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
+ 516:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
 					start_timer0();
- 516:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
- 51a:	28 c0       	rjmp	.+80     	; 0x56c <__EEPROM_REGION_LENGTH__+0x16c>
+ 51a:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
+ 51e:	28 c0       	rjmp	.+80     	; 0x570 <__EEPROM_REGION_LENGTH__+0x170>
 				} else{
 					// Tenemos que averiguar si hay que subir o bajar
 					target_floor = FLOOR_1;
- 51c:	82 e0       	ldi	r24, 0x02	; 2
- 51e:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
+ 520:	82 e0       	ldi	r24, 0x02	; 2
+ 522:	80 93 05 01 	sts	0x0105, r24	; 0x800105 <target_floor>
 					print_target_floor(target_floor);
- 522:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 526:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
+ 526:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 52a:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
 					if (target_floor > current_floor){
- 52a:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
- 52e:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 532:	89 17       	cp	r24, r25
- 534:	30 f4       	brcc	.+12     	; 0x542 <__EEPROM_REGION_LENGTH__+0x142>
+ 52e:	90 91 05 01 	lds	r25, 0x0105	; 0x800105 <target_floor>
+ 532:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 536:	89 17       	cp	r24, r25
+ 538:	30 f4       	brcc	.+12     	; 0x546 <__EEPROM_REGION_LENGTH__+0x146>
 						OCR1AH = (ASCIENDE >> 8) & 0xFF;
- 536:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 53a:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 						OCR1AL = ASCIENDE & 0x00FF;
- 53a:	88 ec       	ldi	r24, 0xC8	; 200
- 53c:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
- 540:	06 c0       	rjmp	.+12     	; 0x54e <__EEPROM_REGION_LENGTH__+0x14e>
+ 53e:	88 ec       	ldi	r24, 0xC8	; 200
+ 540:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 544:	06 c0       	rjmp	.+12     	; 0x552 <__EEPROM_REGION_LENGTH__+0x152>
 					} else {
 						OCR1AH = (DESCIENDE >> 8) & 0xFF;
- 542:	8e e4       	ldi	r24, 0x4E	; 78
- 544:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+ 546:	8e e4       	ldi	r24, 0x4E	; 78
+ 548:	80 93 89 00 	sts	0x0089, r24	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
 						OCR1AL = DESCIENDE & 0x00FF;
- 548:	80 e2       	ldi	r24, 0x20	; 32
- 54a:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+ 54c:	80 e2       	ldi	r24, 0x20	; 32
+ 54e:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
 					}
 				
 					// Se carga el delay correspondiente
 					OCR0A  = 50 * (target_floor - current_floor);
- 54e:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 552:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <current_floor>
- 556:	89 1b       	sub	r24, r25
- 558:	92 e3       	ldi	r25, 0x32	; 50
- 55a:	89 9f       	mul	r24, r25
- 55c:	80 2d       	mov	r24, r0
- 55e:	11 24       	eor	r1, r1
- 560:	87 bd       	out	0x27, r24	; 39
+ 552:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 556:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <current_floor>
+ 55a:	89 1b       	sub	r24, r25
+ 55c:	92 e3       	ldi	r25, 0x32	; 50
+ 55e:	89 9f       	mul	r24, r25
+ 560:	80 2d       	mov	r24, r0
+ 562:	11 24       	eor	r1, r1
+ 564:	87 bd       	out	0x27, r24	; 39
 					elevator = 1;
- 562:	81 e0       	ldi	r24, 0x01	; 1
- 564:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
+ 566:	81 e0       	ldi	r24, 0x01	; 1
+ 568:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
 					start_timer0();
- 568:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
+ 56c:	0e 94 c6 00 	call	0x18c	; 0x18c <start_timer0>
 				}
 			}
 		}
 	}
 }
- 56c:	ff 91       	pop	r31
- 56e:	ef 91       	pop	r30
- 570:	cf 91       	pop	r28
- 572:	bf 91       	pop	r27
- 574:	af 91       	pop	r26
- 576:	9f 91       	pop	r25
- 578:	8f 91       	pop	r24
- 57a:	7f 91       	pop	r23
- 57c:	6f 91       	pop	r22
- 57e:	5f 91       	pop	r21
- 580:	4f 91       	pop	r20
- 582:	3f 91       	pop	r19
- 584:	2f 91       	pop	r18
- 586:	0f 90       	pop	r0
- 588:	0f be       	out	0x3f, r0	; 63
+ 570:	ff 91       	pop	r31
+ 572:	ef 91       	pop	r30
+ 574:	cf 91       	pop	r28
+ 576:	bf 91       	pop	r27
+ 578:	af 91       	pop	r26
+ 57a:	9f 91       	pop	r25
+ 57c:	8f 91       	pop	r24
+ 57e:	7f 91       	pop	r23
+ 580:	6f 91       	pop	r22
+ 582:	5f 91       	pop	r21
+ 584:	4f 91       	pop	r20
+ 586:	3f 91       	pop	r19
+ 588:	2f 91       	pop	r18
  58a:	0f 90       	pop	r0
- 58c:	1f 90       	pop	r1
- 58e:	18 95       	reti
+ 58c:	0f be       	out	0x3f, r0	; 63
+ 58e:	0f 90       	pop	r0
+ 590:	1f 90       	pop	r1
+ 592:	18 95       	reti
 
-00000590 <main>:
+00000594 <main>:
 
 int main(void)
 {
 	//Deshabilitar interrupciones
 	cli();
- 590:	f8 94       	cli
+ 594:	f8 94       	cli
 	
 	/*--------------------------------- INTERRUPCION EXTERNA -----------------------------------------*/
 	//Mascara para INT0
 	EIMSK = 0x01;
- 592:	81 e0       	ldi	r24, 0x01	; 1
- 594:	8d bb       	out	0x1d, r24	; 29
+ 596:	81 e0       	ldi	r24, 0x01	; 1
+ 598:	8d bb       	out	0x1d, r24	; 29
 	
 	//Activacion por flanco de bajada
 	EICRA = 0x02;
- 596:	92 e0       	ldi	r25, 0x02	; 2
- 598:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <__TEXT_REGION_LENGTH__+0x7f8069>
+ 59a:	92 e0       	ldi	r25, 0x02	; 2
+ 59c:	90 93 69 00 	sts	0x0069, r25	; 0x800069 <__TEXT_REGION_LENGTH__+0x7f8069>
 	
 	//Limpieza del registro de flag
 	EIFR = 0x00;
- 59c:	1c ba       	out	0x1c, r1	; 28
+ 5a0:	1c ba       	out	0x1c, r1	; 28
 	
 	/*---------------------------- INTERRUPCION POR CAMBIO DE PIN -------------------------------------*/
 	PCICR = (1<<PCIE0);
- 59e:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <__TEXT_REGION_LENGTH__+0x7f8068>
+ 5a2:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <__TEXT_REGION_LENGTH__+0x7f8068>
 	PCMSK0 = (1<<PCINT4) | (1<<PCINT3);							//Boton B y A
- 5a2:	88 e1       	ldi	r24, 0x18	; 24
- 5a4:	80 93 6b 00 	sts	0x006B, r24	; 0x80006b <__TEXT_REGION_LENGTH__+0x7f806b>
+ 5a6:	88 e1       	ldi	r24, 0x18	; 24
+ 5a8:	80 93 6b 00 	sts	0x006B, r24	; 0x80006b <__TEXT_REGION_LENGTH__+0x7f806b>
 	
 	initLEDS();
- 5a8:	0e 94 a2 00 	call	0x144	; 0x144 <initLEDS>
+ 5ac:	0e 94 a2 00 	call	0x144	; 0x144 <initLEDS>
 	initTimers();
- 5ac:	0e 94 ac 00 	call	0x158	; 0x158 <initTimers>
+ 5b0:	0e 94 ac 00 	call	0x158	; 0x158 <initTimers>
 	
 	//Activar interrupciones
 	sei();
- 5b0:	78 94       	sei
+ 5b4:	78 94       	sei
 	
 	// Estado por defecto
 	print_current_floor(current_floor);
- 5b2:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
- 5b6:	0e 94 69 00 	call	0xd2	; 0xd2 <print_current_floor>
+ 5b6:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <current_floor>
+ 5ba:	0e 94 69 00 	call	0xd2	; 0xd2 <print_current_floor>
 	print_target_floor(target_floor);
- 5ba:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
- 5be:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
+ 5be:	80 91 05 01 	lds	r24, 0x0105	; 0x800105 <target_floor>
+ 5c2:	0e 94 8b 00 	call	0x116	; 0x116 <print_target_floor>
 	print_open_doors(doors);
- 5c2:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
- 5c6:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
- 5ca:	ff cf       	rjmp	.-2      	; 0x5ca <main+0x3a>
+ 5c6:	80 91 04 01 	lds	r24, 0x0104	; 0x800104 <doors>
+ 5ca:	0e 94 53 00 	call	0xa6	; 0xa6 <print_open_doors>
+ 5ce:	ff cf       	rjmp	.-2      	; 0x5ce <main+0x3a>
 
-000005cc <_exit>:
- 5cc:	f8 94       	cli
+000005d0 <_exit>:
+ 5d0:	f8 94       	cli
 
-000005ce <__stop_program>:
- 5ce:	ff cf       	rjmp	.-2      	; 0x5ce <__stop_program>
+000005d2 <__stop_program>:
+ 5d2:	ff cf       	rjmp	.-2      	; 0x5d2 <__stop_program>
