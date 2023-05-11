@@ -24,8 +24,8 @@ static void T4_func(void* pvParameters);
 TaskHandle_t * tasklist[3];
 
 unsigned char num_tasks=3;
-TickType_t taskPeriod[]={350,280,250};
-unsigned int computationTime[]={190,170,150};
+TickType_t taskPeriod[]={200,280,300};
+unsigned int computationTime[]={100,100,250};
 unsigned int start[]={0,0,0};
 //there is not a priority lists. Tasks have the same priority at the begining 
 //and it is changed acording to their dealines
@@ -43,7 +43,8 @@ int main(void)
 	 // Initialize HW
 
 	InitHW();
-	xSemaphore = xSemaphoreCreateBinary();
+	//xSemaphore = xSemaphoreCreateBinary();
+	xSemaphore = xSemaphoreCreateMutex();
 	xSemaphoreGive(xSemaphore);
 	
 	//The taks handles are neccessary to change their priorities on runtime	
