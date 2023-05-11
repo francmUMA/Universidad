@@ -23,8 +23,8 @@ static void T4_func(void* pvParameters);
 TaskHandle_t * tasklist[3];
 
 unsigned char num_tasks=3;
-TickType_t taskPeriod[]={500,250,400};
-unsigned int computationTime[]={120,200,90};
+TickType_t taskPeriod[]={200,250,400};
+unsigned int computationTime[]={120,200,250};
 unsigned int start[]={0,0,0};
 //there is not a priority lists. Tasks have the same priority at the begining 
 //and it is changed acording to their dealines

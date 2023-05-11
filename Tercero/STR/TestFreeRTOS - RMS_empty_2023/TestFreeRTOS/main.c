@@ -6,21 +6,21 @@
  * Problem data.
  ******************************************************************************/
 // Num tasks
-unsigned char num_tasks=3;
+unsigned char num_tasks=4;
 
 // Tasks periods for each task
 //TickType_t taskPeriod[]={400,200,100};
-TickType_t taskPeriod[]={800,600,1200};
+TickType_t taskPeriod[]={800,600,600,600};
 
 //Computation times for each task 
 //unsigned int computationTime[]={120,70,30};
-unsigned int computationTime[]={200,100,100};
+unsigned int computationTime[]={200,100,50,50};
 	 
 //priorities for each task, the highest the more priority. Starting from 1.
-unsigned char taskPrio[]={2,1,3};
+unsigned char taskPrio[]={1,2,3,3};
 	 
 //first_activations (phase) for each task, the highest the more priority. Starting from 1.
-unsigned int start[]={0,0,0};
+unsigned int start[]={0,0,0,0};
 
 
 	 

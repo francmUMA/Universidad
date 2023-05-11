@@ -779,7 +779,7 @@ END GROUP
  *(.fini0)
                 0x00002b28                _etext = .
 
-.data           0x00800100       0x60 load address 0x00002b28
+.data           0x00800100       0x64 load address 0x00002b28
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -789,101 +789,100 @@ END GROUP
                 0x00800102        0x1 main.o
                 0x00800102                num_tasks
  .data.taskPeriod
-                0x00800103        0x6 main.o
+                0x00800103        0x8 main.o
                 0x00800103                taskPeriod
  .data.computationTime
-                0x00800109        0x6 main.o
-                0x00800109                computationTime
+                0x0080010b        0x8 main.o
+                0x0080010b                computationTime
  .data.taskPrio
-                0x0080010f        0x3 main.o
-                0x0080010f                taskPrio
+                0x00800113        0x4 main.o
+                0x00800113                taskPrio
  .data.rs232bufferstate
-                0x00800112        0x1 rs232atmega.o
+                0x00800117        0x1 rs232atmega.o
  *(.gnu.linkonce.d*)
  *(.rodata)
- .rodata        0x00800113        0x5 FreeRTOS Source/source/tasks.o
- .rodata        0x00800118        0x9 main.o
- .rodata        0x00800121       0x3e utils_planif.o
+ .rodata        0x00800118        0x5 FreeRTOS Source/source/tasks.o
+ .rodata        0x0080011d        0x9 main.o
+ .rodata        0x00800126       0x3e utils_planif.o
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x00800160                . = ALIGN (0x2)
- *fill*         0x0080015f        0x1 
-                0x00800160                _edata = .
-                0x00800160                PROVIDE (__data_end, .)
+                0x00800164                . = ALIGN (0x2)
+                0x00800164                _edata = .
+                0x00800164                PROVIDE (__data_end, .)
 
-.bss            0x00800160      0x673
-                0x00800160                PROVIDE (__bss_start, .)
+.bss            0x00800164      0x675
+                0x00800164                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.ucHeap    0x00800160      0x5dc FreeRTOS Source/source/portable/heap_2.o
- .bss.xStart    0x0080073c        0x4 FreeRTOS Source/source/portable/heap_2.o
- .bss.xEnd      0x00800740        0x4 FreeRTOS Source/source/portable/heap_2.o
+ .bss.ucHeap    0x00800164      0x5dc FreeRTOS Source/source/portable/heap_2.o
+ .bss.xStart    0x00800740        0x4 FreeRTOS Source/source/portable/heap_2.o
+ .bss.xEnd      0x00800744        0x4 FreeRTOS Source/source/portable/heap_2.o
  .bss.xHeapHasBeenInitialised.2340
-                0x00800744        0x1 FreeRTOS Source/source/portable/heap_2.o
+                0x00800748        0x1 FreeRTOS Source/source/portable/heap_2.o
  .bss.pxCurrentTCB
-                0x00800745        0x2 FreeRTOS Source/source/tasks.o
-                0x00800745                pxCurrentTCB
+                0x00800749        0x2 FreeRTOS Source/source/tasks.o
+                0x00800749                pxCurrentTCB
  .bss.pxReadyTasksLists
-                0x00800747       0x36 FreeRTOS Source/source/tasks.o
+                0x0080074b       0x36 FreeRTOS Source/source/tasks.o
  .bss.xDelayedTaskList1
-                0x0080077d        0x9 FreeRTOS Source/source/tasks.o
+                0x00800781        0x9 FreeRTOS Source/source/tasks.o
  .bss.xDelayedTaskList2
-                0x00800786        0x9 FreeRTOS Source/source/tasks.o
+                0x0080078a        0x9 FreeRTOS Source/source/tasks.o
  .bss.pxDelayedTaskList
-                0x0080078f        0x2 FreeRTOS Source/source/tasks.o
+                0x00800793        0x2 FreeRTOS Source/source/tasks.o
  .bss.pxOverflowDelayedTaskList
-                0x00800791        0x2 FreeRTOS Source/source/tasks.o
+                0x00800795        0x2 FreeRTOS Source/source/tasks.o
  .bss.xPendingReadyList
-                0x00800793        0x9 FreeRTOS Source/source/tasks.o
+                0x00800797        0x9 FreeRTOS Source/source/tasks.o
  .bss.uxCurrentNumberOfTasks
-                0x0080079c        0x1 FreeRTOS Source/source/tasks.o
- .bss.xTickCount
-                0x0080079d        0x2 FreeRTOS Source/source/tasks.o
- .bss.uxTopReadyPriority
-                0x0080079f        0x1 FreeRTOS Source/source/tasks.o
- .bss.xSchedulerRunning
                 0x008007a0        0x1 FreeRTOS Source/source/tasks.o
- .bss.uxPendedTicks
-                0x008007a1        0x1 FreeRTOS Source/source/tasks.o
- .bss.xYieldPending
-                0x008007a2        0x1 FreeRTOS Source/source/tasks.o
- .bss.xNumOfOverflows
+ .bss.xTickCount
+                0x008007a1        0x2 FreeRTOS Source/source/tasks.o
+ .bss.uxTopReadyPriority
                 0x008007a3        0x1 FreeRTOS Source/source/tasks.o
- .bss.uxTaskNumber
+ .bss.xSchedulerRunning
                 0x008007a4        0x1 FreeRTOS Source/source/tasks.o
+ .bss.uxPendedTicks
+                0x008007a5        0x1 FreeRTOS Source/source/tasks.o
+ .bss.xYieldPending
+                0x008007a6        0x1 FreeRTOS Source/source/tasks.o
+ .bss.xNumOfOverflows
+                0x008007a7        0x1 FreeRTOS Source/source/tasks.o
+ .bss.uxTaskNumber
+                0x008007a8        0x1 FreeRTOS Source/source/tasks.o
  .bss.xNextTaskUnblockTime
-                0x008007a5        0x2 FreeRTOS Source/source/tasks.o
+                0x008007a9        0x2 FreeRTOS Source/source/tasks.o
  .bss.xIdleTaskHandle
-                0x008007a7        0x2 FreeRTOS Source/source/tasks.o
+                0x008007ab        0x2 FreeRTOS Source/source/tasks.o
  .bss.uxSchedulerSuspended
-                0x008007a9        0x1 FreeRTOS Source/source/tasks.o
- .bss.start     0x008007aa        0x6 main.o
-                0x008007aa                start
+                0x008007ad        0x1 FreeRTOS Source/source/tasks.o
+ .bss.start     0x008007ae        0x8 main.o
+                0x008007ae                start
  .bss.rs232buffer
-                0x008007b0        0x2 rs232atmega.o
+                0x008007b6        0x2 rs232atmega.o
  .bss.rs232buffersize
-                0x008007b2        0x1 rs232atmega.o
+                0x008007b8        0x1 rs232atmega.o
  .bss.rs232bufferpos
-                0x008007b3        0x1 rs232atmega.o
+                0x008007b9        0x1 rs232atmega.o
  .bss.rs232endchar
-                0x008007b4        0x1 rs232atmega.o
+                0x008007ba        0x1 rs232atmega.o
  .bss.rs232inputreport
-                0x008007b5        0x4 rs232atmega.o
+                0x008007bb        0x4 rs232atmega.o
  .bss.mem_pointer.2345
-                0x008007b9        0x2 utils_planif.o
+                0x008007bf        0x2 utils_planif.o
  *(COMMON)
- COMMON         0x008007bb       0x18 utils_planif.o
-                0x008007bb                trama
-                0x008007cb                ev
-                0x008007d3                PROVIDE (__bss_end, .)
+ COMMON         0x008007c1       0x18 utils_planif.o
+                0x008007c1                trama
+                0x008007d1                ev
+                0x008007d9                PROVIDE (__bss_end, .)
                 0x00002b28                __data_load_start = LOADADDR (.data)
-                0x00002b88                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00002b8c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008007d3        0x0
+.noinit         0x008007d9        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x008007d3                _end = .
+                0x008007d9                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
