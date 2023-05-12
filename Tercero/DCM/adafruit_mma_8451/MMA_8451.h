@@ -213,7 +213,7 @@ typedef enum {
   MMA8451_DATARATE_MASK = 0b111
 } mma8451_dataRate_t;
 
-#define MMA8451_DEFAULT_ADDRESS 0x1D //!< Default MMA8451 I2C address, if A is GND, its 0x1C
+#define MMA8451_DEFAULT_ADDRESS 0x1D << 1 //!< Default MMA8451 I2C address, if A is GND, its 0x1C
 
 typedef struct{
     int16_t x, y, z;         // Valor en cada eje
@@ -222,10 +222,10 @@ typedef struct{
 } mma8451_t;
 
 // Escritura en un registro del acelerometro
-void write_register(uint8_t , uint16_t , I2C_HandleTypeDef, UART_HandleTypeDef);
+void write_register(uint8_t , uint8_t , I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Lectura de un registro del acelerometro
-uint8_t *read_register(uint8_t , I2C_HandleTypeDef, UART_HandleTypeDef);
+uint8_t read_register(uint8_t , I2C_HandleTypeDef, UART_HandleTypeDef);
 
 // Inicializa el acelerometro con una configuración por defecto
 void init_mma8451(I2C_HandleTypeDef);
