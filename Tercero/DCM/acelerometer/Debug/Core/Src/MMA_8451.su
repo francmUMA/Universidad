@@ -1,0 +1,8 @@
+../Core/Src/MMA_8451.c:3:6:write_register	56	static
+../Core/Src/MMA_8451.c:18:9:read_register	72	static
+../Core/Src/MMA_8451.c:34:6:init_MMA8451	216	static
+../Core/Src/MMA_8451.c:60:6:get_orientation	240	static
+../Core/Src/MMA_8451.c:91:17:get_range	216	static
+../Core/Src/MMA_8451.c:96:6:read	240	static
+../Core/Src/MMA_8451.c:139:6:set_range	240	static
+../Core/Src/MMA_8451.c:147:6:print_info	280	static
