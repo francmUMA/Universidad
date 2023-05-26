@@ -70,7 +70,7 @@ plot(x_real(1),x_real(2),'bo'); % estado real inicial
 xlabel('Posicion');
 ylabel('Velocidad');
 title('Filtro de Kalman');
-for k=1:fin,
+for k=1:fin
     plot([x_est{k}(1) x_trans{k}(1)],[x_est{k}(2) x_trans{k}(2)],'c-');
     plot(x_est{k}(1),x_est{k}(2),'g.'); % estado estimado
     plot(x_trans{k}(1),x_trans{k}(2),'ms'); % estado del robot al moverse
