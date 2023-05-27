@@ -33,6 +33,12 @@ void taskLedOFF(void* arguments)
 
 int main(void)
 {
+	// Comentario ejercicio2:
+	/* Si ambas tareas tienen la misma prioridad, lo que sucede es que el led no llega a verse encendido
+	   ya que está todo el rato entrando el la tarea de apagar el led, por lo que no se ve el led encendido	
+	*/
+
+
 	// CREATE ON TASK
 	xTaskCreate(taskLedON,
 				"ON",
@@ -45,7 +51,7 @@ int main(void)
 				"OFF",
 				configMINIMAL_STACK_SIZE,
 				NULL,
-				tskIDLE_PRIORITY+2,
+				tskIDLE_PRIORITY+1,
 				NULL);
 	// START SCHEDULER
 	vTaskStartScheduler();
