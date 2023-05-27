@@ -200,3 +200,185 @@ permit tcp any 10.3.0.0 0.0.1.255 eq www
 permit tcp any 10.3.6.0 0.0.1.255 eq www
 end
 write
+
+#Acls del data center
+
+#Entrada al servidor de logica 1
+enable
+
+configure terminal
+
+
+no ip access-list extended logic1-out
+ip access-list extended logic1-out
+permit ip 10.3.0.2 0.0.1.255 10.3.2.2 0.0.1.255
+permit ip 10.3.4.2 0.0.1.255 10.3.2.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.502
+ip access-group logic1-out out
+end
+write
+
+exit
+
+#Salida del servidor de logica 1
+enable
+
+configure terminal
+
+
+no ip access-list extended logic1-in
+ip access-list extended logic1-in
+permit ip 10.3.2.2 0.0.1.255 10.3.0.2 0.0.1.255
+permit ip 10.3.2.2 0.0.1.255 10.3.4.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.502
+ip access-group logic1-in in
+end
+write
+
+exit
+
+#Entrada al servidor de logica 2
+enable
+
+configure terminal
+
+
+no ip access-list extended logic2-out
+ip access-list extended logic2-out
+permit ip 10.3.6.2 0.0.1.255 10.3.8.2 0.0.1.255
+permit ip 10.3.10.2 0.0.1.255 10.3.8.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.505
+ip access-group logic2-out out
+end
+write
+
+exit
+
+#Salida del servidor de logica 2
+enable
+
+configure terminal
+
+
+no ip access-list extended logic2-in
+ip access-list extended logic2-in
+permit ip 10.3.8.2 0.0.1.255 10.3.6.2 0.0.1.255
+permit ip 10.3.8.2 0.0.1.255 10.3.10.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.505
+ip access-group logic2-in in
+end
+write
+
+exit
+
+#Entrada al servidor de base de datos 1
+enable
+
+configure terminal
+
+
+no ip access-list extended DB1-out
+ip access-list extended DB1-out
+permit ip 10.3.2.2 0.0.1.255 10.3.4.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.503
+ip access-group DB1-out out
+end
+write
+
+exit
+
+#Salida del servidor de base de datos 1
+enable
+
+configure terminal
+
+
+no ip access-list extended DB1-in
+ip access-list extended DB1-in
+permit ip 10.3.4.2 0.0.1.255 10.3.2.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.503
+ip access-group DB1-in in
+end
+write
+
+exit
+
+#Entrada al servidor de base de datos 2
+enable
+
+configure terminal
+
+
+no ip access-list extended DB2-out
+ip access-list extended DB2-out
+permit ip 10.3.8.2 0.0.1.255 10.3.10.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.506
+ip access-group DB2-out out
+end
+write
+
+exit
+
+#Salida del servidor de base de datos 2
+enable
+
+configure terminal
+
+
+no ip access-list extended DB2-in
+ip access-list extended DB2-in
+permit ip 10.3.10.2 0.0.1.255 10.3.8.2 0.0.1.255
+end
+
+configure terminal
+
+
+
+interface FastEthernet0/0.506
+ip access-group DB2-in in
+end
+write
+
+exit
