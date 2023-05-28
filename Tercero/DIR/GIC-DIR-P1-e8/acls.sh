@@ -1,6 +1,13 @@
 # Acl del router de la oficina
 
 # VLAN 400--Solo dispositivos que esten en esa vlan pueden acceder a los servidores de la oficina
+
+enable
+
+configure terminal
+
+
+
 no ip access-list extended vlan400-in
 ip access-list extended vlan400-in
 permit udp 10.0.48.0 0.0.3.255 10.3.12.0 0.0.1.255 eq domain
@@ -9,13 +16,15 @@ permit tcp 10.0.48.0 0.0.3.255 10.3.6.0 0.0.1.255 eq www
 end
 write
 
-exit
-
+configure terminal
 
 interface FastEthernet0/0.400
 ip access-group vlan400-in in
 end
 write
+
+exit
+
 
 # VLAN 401--Solo dispositivos que esten en esa vlan pueden acceder a los servidores de la oficina
 
@@ -192,14 +201,52 @@ write
 
 exit
 
-#VLAN DNS-INT
+#VLAN DNS-INT~
+#Salida del DNS-INT
+enable
+
+configure terminal
+
+
 no ip access-list extended vlanDNS-INT-in
 ip access-list extended vlanDNS-INT-in
 permit udp 10.3.12.0 0.0.1.255 eq domain 10.0.48.0 0.0.15.255
-permit tcp any 10.3.0.0 0.0.1.255 eq www
-permit tcp any 10.3.6.0 0.0.1.255 eq www
 end
 write
+
+configure terminal
+
+
+
+interface FastEthernet0/0.507
+ip access-group vlanDNS-INT-in in
+end
+write
+
+exit
+
+#Entrada al DNS-INT
+enable
+
+configure terminal
+
+
+no ip access-list extended vlanDNS-INT-out
+ip access-list extended vlanDNS-INT-out
+permit udp 10.0.48.0 0.0.15.255 10.3.12.0 0.0.1.255 eq domain
+end
+write
+
+configure terminal
+
+
+
+interface FastEthernet0/0.507
+ip access-group vlanDNS-INT-out out
+end
+write
+
+exit
 
 #Acls del data center
 
