@@ -24,9 +24,10 @@ unsigned int start[]={0,0,0,0};
 
 
 	 
- static void T1_func(void* pvParameters);
- static void T2_func(void* pvParameters);
- static void T3_func(void* pvParameters);
+static void T1_func(void* pvParameters);
+static void T2_func(void* pvParameters);
+static void T3_func(void* pvParameters);
+static void T4_func(void* pvParameters);
 
 int main(void)
  {
@@ -46,6 +47,9 @@ int main(void)
 
 	xTaskCreate
 	(	 T3_func,	 (char*)"T3",	 configMINIMAL_STACK_SIZE,	 NULL,	 tskIDLE_PRIORITY+taskPrio[2],	 NULL);
+	
+	xTaskCreate
+	(	 T4_func,	 (char*)"T4",	 configMINIMAL_STACK_SIZE,	 NULL,	 tskIDLE_PRIORITY+taskPrio[3],	 NULL);
 
 	// Start scheduler.
 	  vTaskStartScheduler();
@@ -99,5 +103,19 @@ static void T3_func(void* pvParameters)
 	{
 		consumeCPU(3,computationTime[2]);
 		vTaskDelayUntil( &xLastWakeTime, taskPeriod[2] );
+	}
+}
+
+static void T4_func(void* pvParameters)
+{
+	vTaskSetApplicationTaskTag( NULL, ( void * ) 4 );
+	TickType_t xLastWakeTime;
+	xLastWakeTime = 0;
+	//delay to fulfill the first activation of the task. It can be neglected if it is 0
+	vTaskDelayUntil( &xLastWakeTime, start[3] );
+	for ( ;; )
+	{
+		consumeCPU(3,computationTime[3]);
+		vTaskDelayUntil( &xLastWakeTime, taskPeriod[3] );
 	}
 }
