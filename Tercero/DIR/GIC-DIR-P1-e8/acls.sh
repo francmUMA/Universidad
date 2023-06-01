@@ -184,11 +184,7 @@ configure terminal
 
 
 no ip access-list extended vlanD-in
-ip access-list extended vlanD-in
-permit udp 10.0.62.0 0.0.0.127 10.3.12.0 0.0.1.255 eq domain
-permit tcp 10.0.62.0 0.0.0.127 10.3.0.0 0.0.1.255 eq www
-permit tcp 10.0.62.0 0.0.0.127 10.3.6.0 0.0.1.255 eq www
-end
+
 
 configure terminal
 
