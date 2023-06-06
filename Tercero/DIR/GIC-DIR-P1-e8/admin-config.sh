@@ -15,17 +15,17 @@ exit
 enable
 configure terminal
 
-ip access-list extended admin-in
+ip access-list extended admin-oficce-in
 permit tcp 192.168.1.22 0.0.0.0 host 192.168.1.1 eq 22
 exit
-ip access-list extended admin-out
+ip access-list extended admin-office-out
 permit tcp host 192.168.1.1 eq 22 192.168.1.22 0.0.0.0 established
 exit
 interface FastEthernet0/0.600
 encapsulation dot1Q 600
 ip address 192.168.1.1 255.255.255.0
-ip access-group admin-in in
-ip access-group admin-out out
+ip access-group admin-office-in in
+ip access-group admin-office-out out
 exit
 exit
 
@@ -33,10 +33,10 @@ exit
 enable
 configure terminal
 
-ip access-list extended admin-in
+ip access-list extended admin-DC-in
 permit tcp 192.168.1.2 0.0.0.0 host 192.168.1.11 eq 22
 exit
-ip access-list extended admin-out
+ip access-list extended admin-DC-out
 permit tcp host 192.168.1.11 eq 22 192.168.1.2 0.0.0.0 established
 exit
 interface FastEthernet0/0.600
@@ -65,9 +65,9 @@ exit
 enable
 configure terminal
 
-enable secret password_enable
+enable secret vc0910$$
 line vty 0 15
-password password_enable
+password vc0910$$
 login
 exit
 service password-encryption
@@ -75,7 +75,7 @@ ip domain-name paconet.com
 crypto key generate rsa
 1024
 
-username admin secret password_admin
+username admin secret vc0910$$
 line vty 0 15
 transport input ssh
 login local
