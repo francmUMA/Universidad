@@ -2,8 +2,10 @@
 enable
 configure terminal
 
-interface vlan600
-ip address 192.168.1.16 255.255.255.0
+no interface vlan 600
+
+interface vlan 601
+ip address 192.168.2.10 255.255.255.0
 
 exit
 exit
@@ -16,14 +18,14 @@ enable
 configure terminal
 
 ip access-list extended admin-oficce-in
-permit tcp 192.168.1.22 0.0.0.0 host 192.168.1.1 eq 22
+permit tcp host 192.168.2.2 192.168.2.0 0.0.0.255 eq 22
 exit
 ip access-list extended admin-office-out
-permit tcp host 192.168.1.1 eq 22 192.168.1.22 0.0.0.0 established
+permit tcp 192.168.2.0 0.0.0.255 eq 22 host 192.168.2.2 established
 exit
-interface FastEthernet0/0.600
-encapsulation dot1Q 600
-ip address 192.168.1.1 255.255.255.0
+interface FastEthernet0/0.601
+encapsulation dot1Q 601
+ip address 192.168.2.1 255.255.255.0
 ip access-group admin-office-in in
 ip access-group admin-office-out out
 exit
@@ -33,17 +35,17 @@ exit
 enable
 configure terminal
 
-ip access-list extended admin-DC-in
-permit tcp 192.168.1.2 0.0.0.0 host 192.168.1.11 eq 22
+ip access-list extended admin-dc-in
+permit tcp host 192.168.1.2 192.168.1.0 0.0.0.255 eq 22
 exit
-ip access-list extended admin-DC-out
-permit tcp host 192.168.1.11 eq 22 192.168.1.2 0.0.0.0 established
+ip access-list extended admin-dc-out
+permit tcp 192.168.1.0 0.0.0.255 eq 22 host 192.168.1.2 established
 exit
 interface FastEthernet0/0.600
 encapsulation dot1Q 600
-ip address 192.168.1.11 255.255.255.0
-ip access-group admin-in in
-ip access-group admin-out out
+ip address 192.168.1.1 255.255.255.0
+ip access-group admin-dc-in in
+ip access-group admin-dc-out out
 exit
 exit
 
@@ -52,7 +54,7 @@ enable
 configure terminal
 
 ip access-list extended ssh-in
-permit tcp 192.168.1.0 0.0.0.255 any eq 22
+permit tcp 192.168.2.0 0.0.0.255 any eq 22
 exit
 line vty 0 4
 access-class ssh-in in
@@ -73,7 +75,12 @@ exit
 service password-encryption
 ip domain-name paconet.com
 crypto key generate rsa
+
+yes
+
 1024
+
+
 
 username admin secret vc0910$$
 line vty 0 15

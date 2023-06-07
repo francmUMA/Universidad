@@ -13,6 +13,7 @@ ip access-list extended vlan400-in
 permit udp 10.0.48.0 0.0.3.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.48.0 0.0.3.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.48.0 0.0.3.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
 write
 
@@ -38,7 +39,9 @@ ip access-list extended vlan401-in
 permit udp 10.0.52.0 0.0.1.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.52.0 0.0.1.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.52.0 0.0.1.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
+write
 
 configure terminal
 
@@ -63,7 +66,9 @@ ip access-list extended vlan402-in
 permit udp 10.0.54.0 0.0.1.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.54.0 0.0.1.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.54.0 0.0.1.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
+write
 
 configure terminal
 
@@ -88,7 +93,9 @@ ip access-list extended vlan403-in
 permit udp 10.0.56.0 0.0.1.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.56.0 0.0.1.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.56.0 0.0.1.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
+write
 
 configure terminal
 
@@ -113,7 +120,9 @@ ip access-list extended vlanH-in
 permit udp 10.0.58.0 0.0.1.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.58.0 0.0.1.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.58.0 0.0.1.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
+write
 
 configure terminal
 
@@ -138,7 +147,9 @@ ip access-list extended vlanB-in
 permit udp 10.0.60.0 0.0.0.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.60.0 0.0.0.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.60.0 0.0.0.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
+write
 
 configure terminal
 
@@ -163,7 +174,9 @@ ip access-list extended vlanG-in
 permit udp 10.0.61.0 0.0.0.255 10.3.12.0 0.0.1.255 eq domain
 permit tcp 10.0.61.0 0.0.0.255 10.3.0.0 0.0.1.255 eq www
 permit tcp 10.0.61.0 0.0.0.255 10.3.6.0 0.0.1.255 eq www
+permit udp 0.0.0.0 255.255.255.255 255.255.255.255 255.255.255.255 eq 67
 end
+write
 
 configure terminal
 
