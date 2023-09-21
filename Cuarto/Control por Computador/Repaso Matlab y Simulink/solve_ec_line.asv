@@ -1,7 +1,0 @@
-function [solutions] = solve_ec_line(a,e)
-    for i = 1:size(a, 1)
-        for j = 1:size(a(i), 1)
-            fprintf('%i')
-    solutions = 0
-end
-
