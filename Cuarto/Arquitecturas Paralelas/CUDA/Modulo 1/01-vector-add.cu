@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 void initWith(float num, float *a, int N)
 {
@@ -8,10 +9,11 @@ void initWith(float num, float *a, int N)
   }
 }
 
-__global__ void addVectorsInto(float *result, float *a, float *b, int N)
+__global__
+void addVectorsInto(float *result, float *a, float *b, int N)
 {
-    int idx = blockIdx.x + blockDim.x + threadIdx.x;
-    if (idx < N) result[idx] = a[idx] + b[idx];
+  int index = threadIdx.x + blockIdx.x * blockDim.x;
+  result[index] = a[index] + b[index];
 }
 
 void checkElementsAre(float target, float *array, int N)
@@ -36,20 +38,27 @@ int main()
   float *b;
   float *c;
 
-  a = (float *)malloc(size);
-  b = (float *)malloc(size);
-  c = (float *)malloc(size);
+  cudaMallocManaged(&a, size);
+  cudaMallocManaged(&b, size);
+  cudaMallocManaged(&c, size);
 
   initWith(3, a, N);
   initWith(4, b, N);
   initWith(0, c, N);
 
-  addVectorsInto<<<N/256, 256>>>(c, a, b, N);
+  size_t threadsPerBlock;
+  size_t numberOfBlocks;
+
+  threadsPerBlock = 256;
+  numberOfBlocks = N/256;
+
+  addVectorsInto<<<numberOfBlocks, threadsPerBlock>>>(c, a, b, N);
+  
   cudaDeviceSynchronize();
 
   checkElementsAre(7, c, N);
-
-  free(a);
-  free(b);
-  free(c);
+    
+  cudaFree(a);
+  cudaFree(b);
+  cudaFree(c);
 }
