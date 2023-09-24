@@ -8,12 +8,14 @@ __global__ void matrixMulGPU( int * a, int * b, int * c )
    * Build out this kernel.
    */
    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-   int result = 0;
-   int row = idx / N;
-   int colum = idx % N;
-   
-   //TO-DO -- Calculo de cij
-   
+   if (idx < N * N){
+       int row = idx / N;
+       int column = idx % N;
+
+       for (int i = 0; i < N; i++){
+           c[row * N + column] += (a[row * N + i] * b[i * N + column]);
+       }
+   }
 }
 
 /*
@@ -62,10 +64,7 @@ int main()
    * that can be used in matrixMulGPU above.
    */
 
-  dim3 threads_per_block;
-  dim3 number_of_blocks;
-
-  matrixMulGPU <<< number_of_blocks, threads_per_block >>> ( a, b, c_gpu );
+  matrixMulGPU <<<N * N/256, 256>>> ( a, b, c_gpu );
 
   cudaDeviceSynchronize();
 
@@ -78,7 +77,7 @@ int main()
     for( int col = 0; col < N && !error; ++col )
       if (c_cpu[row * N + col] != c_gpu[row * N + col])
       {
-        printf("FOUND ERROR at c[%d][%d]\n", row, col);
+        printf("FOUND ERROR at c[%d][%d] -> c_gpu = %d, c_cpu = %d\n", row, col, c_gpu[row * N + col], c_cpu[row * N + col]);
         error = true;
         break;
       }
