@@ -45,18 +45,24 @@ void step_kernel_ref(int ni, int nj, float fact, float* temp_in, float* temp_out
   // loop over all points in domain (except boundary)
       // find indices into linear memory
       // for central point and neighbours
-      i00 = I2D(ni, i, j);
-      im10 = I2D(ni, i-1, j);
-      ip10 = I2D(ni, i+1, j);
-      i0m1 = I2D(ni, i, j-1);
-      i0p1 = I2D(ni, i, j+1);
+      int idx = blockDim.x * blockIdx.x + threadIdx.x;
+      int i = idx / (ni - 1) + 1;
+      int j = idx % (nj - 1) + 1;
+      
+      if (i < (nj - 1) && j < (ni - 1)){
+          i00 = I2D(ni, i, j);
+          im10 = I2D(ni, i-1, j);
+          ip10 = I2D(ni, i+1, j);
+          i0m1 = I2D(ni, i, j-1);
+          i0p1 = I2D(ni, i, j+1);
 
-      // evaluate derivatives
-      d2tdx2 = temp_in[im10]-2*temp_in[i00]+temp_in[ip10];
-      d2tdy2 = temp_in[i0m1]-2*temp_in[i00]+temp_in[i0p1];
+          // evaluate derivatives
+          d2tdx2 = temp_in[im10]-2*temp_in[i00]+temp_in[ip10];
+          d2tdy2 = temp_in[i0m1]-2*temp_in[i00]+temp_in[i0p1];
 
-      // update temperatures
-      temp_out[i00] = temp_in[i00]+fact*(d2tdx2 + d2tdy2);
+          // update temperatures
+          temp_out[i00] = temp_in[i00]+fact*(d2tdx2 + d2tdy2);
+      }
 }
 
 int main()
