@@ -9,7 +9,7 @@
  * `step_kernel_ref` below. Accelerate it to run as a CUDA kernel.
  */
 
-void step_kernel_mod(int ni, int nj, float fact, float* temp_in, float* temp_out)
+void step_kernel_ref(int ni, int nj, float fact, float* temp_in, float* temp_out)
 {
   int i00, im10, ip10, i0m1, i0p1;
   float d2tdx2, d2tdy2;
@@ -36,7 +36,7 @@ void step_kernel_mod(int ni, int nj, float fact, float* temp_in, float* temp_out
   }
 }
 
-void step_kernel_ref(int ni, int nj, float fact, float* temp_in, float* temp_out)
+__global__ void step_kernel_mod(int ni, int nj, float fact, float* temp_in, float* temp_out)
 {
   int i00, im10, ip10, i0m1, i0p1;
   float d2tdx2, d2tdy2;
@@ -46,10 +46,10 @@ void step_kernel_ref(int ni, int nj, float fact, float* temp_in, float* temp_out
       // find indices into linear memory
       // for central point and neighbours
       int idx = blockDim.x * blockIdx.x + threadIdx.x;
-      int i = idx / (ni - 1) + 1;
-      int j = idx % (nj - 1) + 1;
+      int i = idx % ni;
+      int j = idx / ni;
       
-      if (i < (nj - 1) && j < (ni - 1)){
+      if (i > 0 && j > 0 && i < (ni - 1) && j < (nj - 1)){
           i00 = I2D(ni, i, j);
           im10 = I2D(ni, i-1, j);
           ip10 = I2D(ni, i+1, j);
@@ -79,8 +79,8 @@ int main()
 
   const int size = ni * nj * sizeof(float);
 
-  cudaMallocManaged(&temp1_ref, size);
-  cudaMallocManaged(&temp2_ref, size);
+  temp1_ref = (float*)malloc(size);
+  temp2_ref = (float*)malloc(size);
   cudaMallocManaged(&temp1, size);
   cudaMallocManaged(&temp2, size);
 
@@ -99,9 +99,11 @@ int main()
     temp2_ref= temp_tmp;
   }
 
+  int threads = nj*ni;
+  
   // Execute the modified version using same data
   for (istep=0; istep < nstep; istep++) {
-    step_kernel_mod(ni, nj, tfac, temp1, temp2);
+    step_kernel_mod<<<threads/256,256>>>(ni, nj, tfac, temp1, temp2);
 
     // swap the temperature pointers
     temp_tmp = temp1;
@@ -121,8 +123,8 @@ int main()
   else
     printf("The Max Error of %.5f is within acceptable bounds.\n", maxError);
 
-  cudaFree( temp1_ref );
-  cudaFree( temp2_ref );
+  free( temp1_ref );
+  free( temp2_ref );
   cudaFree( temp1 );
   cudaFree( temp2 );
 
