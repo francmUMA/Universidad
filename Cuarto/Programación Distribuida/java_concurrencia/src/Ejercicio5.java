@@ -1,44 +1,35 @@
 public class Ejercicio5 {
-    public static class WriterThread extends Thread {
-        String text;
-        int id;
 
-        public WriterThread(String text, int id){
-            this.text = text;
-            this.id = id;
+    public static class WriterThread extends Thread{
+        private String message;
+
+        public WriterThread(String message){
+            this.message = message;
         }
 
         @Override
         public void run() {
-            for (int i = 0; i < 5; i++) {
-                if (turno && id == 1){
-                    System.out.print(text);
-                    turno = false;
-                    notifyAll();
+            for(int i = 0; i < 5; i++){
+                synchronized(lock){
+                    System.out.print(message);
+                    lock.notify();
                     try {
-                        wait();
+                        lock.wait();
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                } else if(!turno &&  id == 2) {
-                    System.out.print(text);
-                    turno = true;
-                    notifyAll();
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                 }
             }
         }
     }
-    static boolean turno = true;
+
+    private static Object lock = new Object();
 
     public static void main(String[] args) {
-        Thread t_hola = new WriterThread("Hola", 1);
-        Thread t_mundo = new WriterThread(" Mundo\n", 2);
-        t_hola.start();
-        t_mundo.start();
+        Thread t1 = new WriterThread("Hola ");
+        Thread t2 = new WriterThread(" Mundo\n");
+        t1.start();
+        t2.start();
     }
+
 }
