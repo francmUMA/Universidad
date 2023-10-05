@@ -1,12 +1,14 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ejercicio7 {
+public class ejercicio8 {
     
     public static class Data {
         private double pi;
@@ -38,7 +40,7 @@ public class ejercicio7 {
             }
         }
         try {
-            Thread.sleep(rand.nextInt(500, 2000));
+            Thread.sleep(rand.nextInt(500, 4000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -50,19 +52,27 @@ public class ejercicio7 {
         int nThreads = 10;
         ExecutorService exec = Executors.newFixedThreadPool(nThreads);
         int puntos = 1000000;
-        List<Future<Data>> futures = new ArrayList<>();
+        
+        Collection<Callable<Data>> callables = new ArrayList<>();
         for (int i = 0; i < nThreads; i++) {
             final int id = i;
-            futures.add(exec.submit(() -> calcPi(puntos, id)));
+            callables.add(() -> calcPi(puntos, id));
         }
 
-        for (Future<Data> future : futures) {
-            try {
-                Data data = future.get();
-                System.out.println("Pi: " + data.getPi() + " Error: " + data.getError());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+        try {
+            List<Future<Data>> futures;
+            futures = exec.invokeAll(callables);
+
+            for (Future<Data> future : futures) {
+                try {
+                    Data data = future.get();
+                    System.out.println("Pi: " + data.getPi() + " Error: " + data.getError());
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
