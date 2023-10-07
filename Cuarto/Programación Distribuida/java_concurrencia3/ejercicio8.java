@@ -1,9 +1,9 @@
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
 import java.util.Random;
-import java.util.concurrent.Callable;
+
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -53,26 +53,20 @@ public class ejercicio8 {
         ExecutorService exec = Executors.newFixedThreadPool(nThreads);
         int puntos = 1000000;
         
-        Collection<Callable<Data>> callables = new ArrayList<>();
+        CompletionService<Data> completionService = new ExecutorCompletionService<>(exec);
         for (int i = 0; i < nThreads; i++) {
             final int id = i;
-            callables.add(() -> calcPi(puntos, id));
+            completionService.submit(() -> calcPi(puntos, id));
         }
 
-        try {
-            List<Future<Data>> futures;
-            futures = exec.invokeAll(callables);
-
-            for (Future<Data> future : futures) {
-                try {
-                    Data data = future.get();
-                    System.out.println("Pi: " + data.getPi() + " Error: " + data.getError());
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+        for (int i = 0; i < nThreads; i++) {
+            try {
+                Future<Data> future = completionService.take();
+                Data data = future.get();
+                System.out.println("Pi: " + data.getPi() + " Error: " + data.getError());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }
