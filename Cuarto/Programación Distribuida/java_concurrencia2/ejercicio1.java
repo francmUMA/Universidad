@@ -40,8 +40,6 @@ public class ejercicio1 {
         }
     }
 
-
-
     public static class Productor extends Thread {
         public Productor() {}
 
