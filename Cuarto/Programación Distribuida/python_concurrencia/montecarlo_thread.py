@@ -1,7 +1,6 @@
 import math
 import random
 import threading
-import numpy as np
 
 
 total_points = 100000
