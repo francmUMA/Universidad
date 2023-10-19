@@ -5,6 +5,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+
 public class ServerCalculator extends UnicastRemoteObject implements CalculatorInterface{
     private static final long serialVersionUID = 1L;
 
@@ -12,18 +13,22 @@ public class ServerCalculator extends UnicastRemoteObject implements CalculatorI
         super();
     }
 
+    @Override
     public int add(int a, int b) throws RemoteException {
         return a + b;
     }
 
+    @Override
     public int substract(int a, int b) throws RemoteException {
         return a - b;
     }
 
+    @Override
     public int multiply(int a, int b) throws RemoteException {
         return a * b;
     }
 
+    @Override
     public int divide(int a, int b) throws RemoteException {
         return a / b;
     }
