@@ -5,7 +5,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ServerCalculator extends UnicastRemoteObject{
+public class ServerCalculator extends UnicastRemoteObject implements CalculatorInterface{
     private static final long serialVersionUID = 1L;
 
     protected ServerCalculator() throws RemoteException {
