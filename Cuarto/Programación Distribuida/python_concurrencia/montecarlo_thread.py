@@ -1,50 +1,38 @@
-import math
-import random
 import threading
+import random
+import math
+
+class pithread (threading.Thread):
+    def __init__(self, totalPoints):
+        super().__init__()
+        self.totalPoints = totalPoints
+        self.pointsInside = 0
+    
+    def run(self):
+        super().run()
+        for _ in range(self.totalPoints):
+            x = random.uniform(-1, 1)
+            y = random.uniform(-1, 1)
+            if (x*x + y*y <= 1):
+                self.pointsInside += 1
+    
+    def getPointsInside(self):
+        return self.pointsInside
+
+totalPoints = 10000000
+pointsInside = 0
+
+thread = pithread(totalPoints)
+thread.start()
 
 
-total_points = 100000
-HEBRAS = 16
-results_list = []
-hebras_array = []
-N_POINTS = total_points / HEBRAS
+thread.join()
+pointsInside = thread.getPointsInside()
 
-def montecarlo(puntos_totales, results):
-  inside_points = 0
-  x = 0.0
-  y = 0.0
-
-  for i in range(0, puntos_totales):
-    x = random.uniform(-1.00, 1.00)
-    y = random.uniform(-1.00, 1.00)
-    if (x*x + y*y <= 1):
-      inside_points += 1
-
-  pi = (4.0 * inside_points / puntos_totales)
-  error = math.pi - pi
-
-  results = [pi, error]
-
-for i in range(0, HEBRAS):
-  results_list.insert(i, [0.0, 0.0])
-  hebras_array.append(threading.Thread(target=montecarlo, args=(total_points,i,results_list[i])))
-  hebras_array[i].start()
-
-for i in range(0, HEBRAS):
-  hebras_array[i].join()
-
-pi = 0.0
-for i in range(0, HEBRAS):
-  pi += results_list[i][0]
+pi = 4.0 * pointsInside / totalPoints
+error = math.pi - pi
 
 print("Pi: ",pi)
-pi = pi / HEBRAS
-
-error = 0.0
-for i in range(0, HEBRAS):
-  error += results_list[i][1]
-
-error = error / HEBRAS
-
-print("Error: ",error,"\n" + "Pi: ",pi)
+print("Error: ",error)
+        
 
