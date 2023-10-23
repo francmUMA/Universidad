@@ -7,9 +7,9 @@ import java.rmi.server.UnicastRemoteObject;
 
 
 public class ServerCalculator extends UnicastRemoteObject implements CalculatorInterface{
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
-    protected ServerCalculator() throws RemoteException {
+    public ServerCalculator() throws RemoteException {
         super();
     }
 
@@ -36,8 +36,8 @@ public class ServerCalculator extends UnicastRemoteObject implements CalculatorI
     public static void main(String[] args) {
         try{
             ServerCalculator server = new ServerCalculator();
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind("Calculator", server);
+            Registry registry = LocateRegistry.getRegistry(); // default port is 1099 (optional
+            registry.bind("Calculator", server);
             System.err.println("Calculator server ready");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.getMessage());
