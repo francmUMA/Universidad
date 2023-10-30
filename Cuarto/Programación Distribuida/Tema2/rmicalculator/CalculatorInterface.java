@@ -5,9 +5,9 @@ import java.rmi.RemoteException;
 
 public interface CalculatorInterface extends Remote{
     
-    int add(int a, int b) throws RemoteException;
-    int substract(int a, int b) throws RemoteException;
-    int multiply(int a, int b) throws RemoteException;
-    int divide(int a, int b) throws RemoteException;
-
+    float add(float a, float b) throws RemoteException;
+    float substract(float a, float b) throws RemoteException;
+    float multiply(float a, float b) throws RemoteException;
+    float divide(float a, float b) throws RemoteException;
+    float power(float a, int b) throws RemoteException;
 }

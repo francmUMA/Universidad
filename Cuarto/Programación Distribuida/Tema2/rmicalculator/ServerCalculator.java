@@ -14,29 +14,34 @@ public class ServerCalculator extends UnicastRemoteObject implements CalculatorI
     }
 
     @Override
-    public int add(int a, int b) throws RemoteException {
+    public float add(float a, float b) throws RemoteException {
         return a + b;
     }
 
     @Override
-    public int substract(int a, int b) throws RemoteException {
+    public float substract(float a, float b) throws RemoteException {
         return a - b;
     }
 
     @Override
-    public int multiply(int a, int b) throws RemoteException {
+    public float multiply(float a, float b) throws RemoteException {
         return a * b;
     }
 
     @Override
-    public int divide(int a, int b) throws RemoteException {
+    public float divide(float a, float b) throws RemoteException {
         return a / b;
+    }
+
+    @Override
+    public float power(float a, int b) throws RemoteException {
+        return (float) Math.pow(a, b);
     }
 
     public static void main(String[] args) {
         try{
             ServerCalculator server = new ServerCalculator();
-            Registry registry = LocateRegistry.getRegistry(); // default port is 1099 (optional
+            Registry registry = LocateRegistry.createRegistry(1099);
             registry.bind("Calculator", server);
             System.err.println("Calculator server ready");
         } catch (Exception e) {
@@ -44,4 +49,6 @@ public class ServerCalculator extends UnicastRemoteObject implements CalculatorI
             e.printStackTrace();
         }
     }
+
+    
 }
