@@ -23,6 +23,7 @@ public class ChatClient {
             while(!stop){
                 try {
                     this.messages = this.chatService.receiveMessage();
+                    
                     sleep(1000);
                 } catch (Exception e) {
                     System.out.println("Lector error: " + e.getMessage());
@@ -61,6 +62,7 @@ public class ChatClient {
                 chatService.sendMessage(name, message);
 
                 //Imprime por pantalla los mensajes recibidos
+                //De esta forma no se corta lo que estas escribiendo hasta que se envia
                 System.out.println("-------MENSAJES ENVIADOS-------");
                 messages = lector.getMessages();
                 for(String m : messages){
