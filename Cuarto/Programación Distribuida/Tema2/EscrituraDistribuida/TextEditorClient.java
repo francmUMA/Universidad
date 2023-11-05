@@ -26,11 +26,12 @@ public class TextEditorClient {
 
             document = server.getDocument(id);
             System.out.println(document);
-            server.deleteText(5, 1, id);
+            server.deleteText(5, 5, id);
             server.saveDocument(id);
 
             document = server.getDocument(id);
             System.out.println(document);
+            server.saveDocument(id);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }

@@ -4,26 +4,35 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.Semaphore;
 
 public class TextEditorServer extends UnicastRemoteObject implements TextEditorService{
 
     private String document;
     private boolean writing;
     private String writerID;
+    private Semaphore semaphore;
 
     public TextEditorServer() throws RemoteException {
         super();
         this.document = "";
         this.writing = false;
         this.writerID = "";
+        this.semaphore = new Semaphore(1);
     }
 
     @Override
     public String getDocument(String id) throws RemoteException {
-        if(!writing){
-            writing = true;
-            writerID = id;
-        } 
+        try {
+            semaphore.acquire();
+            if(!writing){
+                writing = true;
+                writerID = id;
+            }
+            semaphore.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return document;
     }
 
@@ -44,9 +53,18 @@ public class TextEditorServer extends UnicastRemoteObject implements TextEditorS
     @Override
     public void saveDocument(String id) throws RemoteException {
         if (writerID.equals(id)){
-            writing = false;
-            writerID = "";
+            try {
+                semaphore.acquire();
+                writing = false;
+                semaphore.release();
+                writerID = "";
+                System.out.println("Document saved. ID: " + writerID);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.out.println("Error: Cant save document. ID: " + writerID);
+            }
         }
+        
     }
     
     public static void main(String[] args) {
