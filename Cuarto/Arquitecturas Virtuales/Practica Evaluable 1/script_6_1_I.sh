@@ -12,7 +12,7 @@
 
 
 #Directorio donde se ubicará la maquina
-DATASTOREPATH=/vmfs/volumes/datastore1/myfolder
+DATASTOREPATH=/vmfs/volumes/datastore1/mv-dest
 DISK_SIZE="1M"
 NUM_NICS=0
 NAME=""
@@ -22,9 +22,9 @@ NAME=""
 if [ ! "$#" -gt "0" ]; then
     echo "Para poder ejecutar el script es necesario introducir algunos parámetros"
     echo "sh script_6_1.sh -name <nombre_maquina> -t <tipo_maquina> -d <disk_size> -nics <num_NICs>"
-    echo "-t: tipo de máquina (new, clone, linkedclone)"
-    echo "-d: tamaño del disco duro. Example: 6G, 10M ..."
-    echo "-nics: número de tarjetas de red"
+    echo "  -t: tipo de máquina (new, clone, linkedclone)"
+    echo "  -d: tamaño del disco duro. Example: 6G, 10M ..."
+    echo "  -nics: número de tarjetas de red"
     exit 0
 fi
 
