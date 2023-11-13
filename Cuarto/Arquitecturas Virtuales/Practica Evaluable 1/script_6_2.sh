@@ -1,12 +1,10 @@
 #!/bin/sh
-#!/bin/sh
 #Arquitecturas virtuales: prácticas con vSphere 5.x ESXi
 #Script 6.2:
 #Creación de un full clone de una VM existente en cli
 #Directorio donde se ubican las máquinas
 #Sustituir por el directorio de trabajo en cada caso
 DATASTOREPATH=/vmfs/volumes/datastore1/mv-dest
-
 #Imprimir su uso
 if [ ! "$#" -gt "0" ]; then
     echo "Para poder ejecutar el script es necesario introducir algunos parámetros"
@@ -64,6 +62,14 @@ if ! mv "$DATASTOREPATH/$2/$1.vmsd" "$DATASTOREPATH/$2/$2.vmsd"; then
 fi
 echo "Ficheros renombrados correctamente"
 
+#Modificar archivo .vmx
+echo "Modificando el fichero .vmx..."
+#Hay que cambiar el displayName, scsi0:0.fileName y nvram
+if ! sed -i "s/$1/$2/g" "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido modificar el fichero .vmx"
+    exit 1
+fi
+echo "Fichero .vmx modificado correctamente"
 
 #Registar la máquina clon (ESTO ES IMPRESCINDIBLE)
 echo "Registrando la máquina..."
@@ -86,10 +92,12 @@ vim-cmd vmsvc/getallvms
 #Comprobar que arranca el clon
 echo "Arrancando la máquina..."
 ID=$(vim-cmd vmsvc/getallvms | grep "$2" | cut -d " " -f 1)
-if ! vim-cmd vmsvc/power.on "$ID" >> /dev/null; then
+if ! vim-cmd vmsvc/message "$ID" 2 | vim-cmd vmsvc/power.on "$ID" >> /dev/null; then
     echo "ERROR: No se ha podido arrancar la máquina"
     exit 1
 fi
+# Responder a la pregunta de si se ha movido o copiado
+vim-cmd vmsvc/message "$ID" 2
 echo "Máquina arrancada correctamente"
 
 #Apagar el clon
