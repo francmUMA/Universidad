@@ -34,6 +34,36 @@ if ! cp -r "$DATASTOREPATH/$1" "$DATASTOREPATH/$2"; then
     echo "ERROR: No se ha podido clonar la máquina"
     exit 1
 fi
+echo "Máquina clonada correctamente"
+
+# Renombrar los ficheros de la máquina clon
+echo "Renombrando ficheros..."
+if ! mv "$DATASTOREPATH/$2/$1.vmx" "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido renombrar el fichero .vmx"
+    exit 1
+fi
+
+if ! mv "$DATASTOREPATH/$2/$1.vmdk" "$DATASTOREPATH/$2/$2.vmdk"; then
+    echo "ERROR: No se ha podido renombrar el fichero .vmdk"
+    exit 1
+fi
+
+if ! mv "$DATASTOREPATH/$2/$1-flat.vmdk" "$DATASTOREPATH/$2/$2-flat.vmdk"; then
+    echo "ERROR: No se ha podido renombrar el fichero -flat.vmdk"
+    exit 1
+fi
+
+if ! mv "$DATASTOREPATH/$2/$1.nvram" "$DATASTOREPATH/$2/$2.nvram"; then
+    echo "ERROR: No se ha podido renombrar el fichero .nvram"
+    exit 1
+fi
+
+if ! mv "$DATASTOREPATH/$2/$1.vmsd" "$DATASTOREPATH/$2/$2.vmsd"; then
+    echo "ERROR: No se ha podido renombrar el fichero .vmsd"
+    exit 1
+fi
+echo "Ficheros renombrados correctamente"
+
 
 #Registar la máquina clon (ESTO ES IMPRESCINDIBLE)
 echo "Registrando la máquina..."
@@ -45,8 +75,10 @@ if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
         echo "ERROR: No se ha podido borrar la máquina"
         exit 1
     fi
+    echo "Máquina borrada correctamente"
     exit 1
 fi
+echo "Máquina registrada correctamente"
 
 #Listar todas las máquinas para comprobar que el clon está disponible
 vim-cmd vmsvc/getallvms
@@ -54,14 +86,16 @@ vim-cmd vmsvc/getallvms
 #Comprobar que arranca el clon
 echo "Arrancando la máquina..."
 ID=$(vim-cmd vmsvc/getallvms | grep "$2" | cut -d " " -f 1)
-if ! vim-cmd vmsvc/power.on "$ID"; then
+if ! vim-cmd vmsvc/power.on "$ID" >> /dev/null; then
     echo "ERROR: No se ha podido arrancar la máquina"
     exit 1
 fi
+echo "Máquina arrancada correctamente"
 
 #Apagar el clon
 echo "Apagando la máquina..."
-if ! vim-cmd vmsvc/power.off "$ID"; then
+if ! vim-cmd vmsvc/power.off "$ID" >> /dev/null; then
     echo "ERROR: No se ha podido apagar la máquina"
     exit 1
 fi
+echo "Máquina apagada correctamente"
