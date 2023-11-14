@@ -12,12 +12,11 @@ if [ ! "$#" -gt "0" ]; then
 fi
 
 #Comprobar si existe la máquina en cuestión
-if ! vim-cmd vmsvc/getallvms | grep "$1"; then
+if ! vim-cmd vmsvc/getallvms | grep -w "$1"; then
     echo "ERROR: No existe ninguna máquina con ese nombre"
     exit 1
 fi
-ID=$(vim-cmd vmsvc/getallvms | grep "$1" | cut -d " " -f 1)
-echo "$ID"
+ID=$(vim-cmd vmsvc/getallvms | grep -w "$1" | cut -d " " -f 1)
 
 #Solicitar confirmación de borrado
 echo "¿Está seguro de que desea borrar la máquina $1? (s/n)"

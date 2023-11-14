@@ -64,10 +64,9 @@ elif [ "$7" = "-nics" ]; then
     NUM_NICS="$8"
 fi
 
-#Crear la nueva máquina (sugerencia: usar vim-cmd vmsvc/createdummyvm) 
 
 # Comprobar que no exista una con el mismo nombre
-if vim-cmd vmsvc/getallvms | grep "$NAME"; then
+if vim-cmd vmsvc/getallvms | grep -w "$NAME"; then
     echo "ERROR: Ya existe una máquina con ese nombre"
     exit 1
 fi
@@ -77,7 +76,7 @@ fi
 # Crear la máquina
 echo "Creando la máquina..."
 vim-cmd vmsvc/createdummyvm "$NAME" "$DATASTOREPATH"
-ID=$(vim-cmd vmsvc/getallvms | grep "$NAME" | cut -d " " -f 1)
+ID=$(vim-cmd vmsvc/getallvms | grep -w "$NAME" | cut -d " " -f 1)
 
 # Modificar el espacio de disco si es necesario
 if [ ! "$DISK_SIZE" = "1M" ]; then
@@ -88,7 +87,9 @@ fi
 # Modificar el número de tarjetas de red si es necesario
 if [ "$NUM_NICS" -ne "0" ]; then
     echo "Modificando el número de tarjetas de red..."
-    # TO-DO
+    for i in $(seq 1 "$NUM_NICS"); do
+        vim-cmd vmsvc/devices.createnic "$ID" "$i" "vmxnet2" "Priv-VLAN$i"
+    done
 fi
 
 #Listar todas las máquinas para comprobar que se ha creado
@@ -96,14 +97,14 @@ vim-cmd vmsvc/getallvms
 
 #SÓLO SI FALLARA EL ARRANQUE
 echo "Arrancando la máquina..."
-if ! vim-cmd vmsvc/power.on "$ID" >> /dev/null; then
+if ! vim-cmd vmsvc/power.on "$ID" > /dev/null; then
     echo "Error al arrancar la máquina. Revisa el fichero de log"
     exit 1
 else
     echo "La máquina ha arrancado correctamente"
 fi
 echo "Apagando máquina"
-vim-cmd vmsvc/power.off "$ID"
+vim-cmd vmsvc/power.off "$ID" > /dev/null
 exit 0
 
 #¿Hay que añadir al fichero de configuración (.vmx) algún(os) campo(s) que es(son) 

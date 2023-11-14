@@ -15,13 +15,13 @@ if [ ! "$#" -gt "0" ]; then
 fi
 
 #Comprobar que existe la máquina a clonar
-if ! vim-cmd vmsvc/getallvms | grep "$1"; then
+if ! vim-cmd vmsvc/getallvms | grep -w "$1"; then
     echo "ERROR: No existe ninguna máquina con ese nombre"
     exit 1
 fi
 
 #Comprobar que no existe la maquina clon
-if vim-cmd vmsvc/getallvms | grep "$2"; then
+if vim-cmd vmsvc/getallvms | grep -w "$2"; then
     echo "ERROR: Ya existe una máquina con ese nombre"
     exit 1
 fi
@@ -91,14 +91,12 @@ vim-cmd vmsvc/getallvms
 
 #Comprobar que arranca el clon
 echo "Arrancando la máquina..."
-ID=$(vim-cmd vmsvc/getallvms | grep "$2" | cut -d " " -f 1)
-if ! vim-cmd vmsvc/message "$ID" 2 | vim-cmd vmsvc/power.on "$ID" >> /dev/null; then
-    echo "ERROR: No se ha podido arrancar la máquina"
-    exit 1
-fi
+ID=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
+
+vim-cmd vmsvc/power.on "$ID"
+
 # Responder a la pregunta de si se ha movido o copiado
 vim-cmd vmsvc/message "$ID" 2
-echo "Máquina arrancada correctamente"
 
 #Apagar el clon
 echo "Apagando la máquina..."
