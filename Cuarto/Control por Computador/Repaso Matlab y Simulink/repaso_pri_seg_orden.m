@@ -32,3 +32,13 @@ ceros_poli = poly(ceros);
 sis = tf(ceros_poli,polos_poli);
 pzmap(sis);
 step(sis);
+%% -- Ejercicio de paso de diagrama de bloque a función de transferencia -- %%
+syms C D A x s;
+M = [1 0 0 0 -D;
+     0 1 0 0 0;
+     0 -1 0 -1 1;
+     0 0 -C 0 0;
+     0 0 1 0 0
+    ];
+E = [0; x*A; 0; 0; x/s];
+I = M \ E;
