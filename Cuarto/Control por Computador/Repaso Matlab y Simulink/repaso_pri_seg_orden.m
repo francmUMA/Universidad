@@ -1,5 +1,5 @@
 %% -- Primer orden sencillo -- %%
-root = 1;
+root = -12;
 polinomio = poly(root);
 sis = tf(1,polinomio);
 pzmap(sis);
