@@ -6,7 +6,7 @@
 #Sustituir por el directorio de trabajo en cada caso
 DATASTOREPATH=/vmfs/volumes/datastore1/mv-dest
 #Imprimir su uso
-if [ ! "$#" -gt "0" ]; then
+if [ ! "$#" -gt "1" ]; then
     echo "Para poder ejecutar el script es necesario introducir algunos parámetros"
     echo "sh script_6_2.sh <nombre_maquina> <nombre_maquina_clon>"
     echo "  nombre_maquina: nombre de la máquina a clonar"
@@ -28,6 +28,7 @@ fi
 
 #Copiar recursivamente el directorio de la máquina origen a su destino (clon)
 echo "Clonando la máquina..."
+mkdir "$DATASTOREPATH/$2"
 if ! cp -r "$DATASTOREPATH/$1" "$DATASTOREPATH/$2"; then
     echo "ERROR: No se ha podido clonar la máquina"
     exit 1

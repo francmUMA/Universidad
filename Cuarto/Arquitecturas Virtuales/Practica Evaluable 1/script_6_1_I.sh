@@ -88,7 +88,7 @@ fi
 if [ "$NUM_NICS" -ne "0" ]; then
     echo "Modificando el número de tarjetas de red..."
     for i in $(seq 1 "$NUM_NICS"); do
-        vim-cmd vmsvc/devices.createnic "$ID" "$i" "vmxnet2" "Priv-VLAN$i"
+        vim-cmd vmsvc/devices.createnic "$ID" "$i" "vmxnet2" "Priv-VLAN1"
     done
 fi
 
