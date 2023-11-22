@@ -48,6 +48,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.json.bind</groupId>
+            <artifactId>jakarta.json.bind-api</artifactId>
+            <version>3.0.0</version> <!-- Versión específica -->
+            <scope>provideds</scope>
+        </dependency>
     </dependencies>
 
     <build>
