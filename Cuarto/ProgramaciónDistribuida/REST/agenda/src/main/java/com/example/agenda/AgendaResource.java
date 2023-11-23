@@ -2,11 +2,14 @@ package com.example.agenda;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import netscape.javascript.JSObject;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.util.LinkedList;
 import java.util.List;
 @Path("/data")
@@ -17,10 +20,15 @@ public class AgendaResource {
         private String apellidos;
         private int number;
         private int id;
-        public Contacto(String nombre, String apellidos, int number, int id){
+
+        public Contacto(String nombre, String apellidos, int number){
             this.nombre = nombre;
             this.apellidos = apellidos;
             this.number = number;
+            id = 1;
+        }
+
+        public void setId(int id) {
             this.id = id;
         }
 
@@ -66,9 +74,23 @@ public class AgendaResource {
 
     @POST
     @Consumes("application/json")
-    public void newRegister(String json){
-        Jsonb jsonb = JsonbBuilder.create();
-        String name = jsonb.fromJson(json, String.class);
-        agenda.add(new Contacto(name, "Cano", 1, 1));
+    public Response newRegister(HttpServletRequest request){
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader br = request.getReader();
+            String line = "";
+            while ((line = br.readLine()) != null){
+                sb.append(line);
+            }
+            String json = sb.toString();
+            Jsonb jsonb = JsonbBuilder.create();
+            Contacto newContacto = jsonb.fromJson(json, Contacto.class);
+            newContacto.setId(agenda.size());
+            agenda.add(newContacto);
+            return Response.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok().build();
+        }
     }
 }
