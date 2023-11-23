@@ -27,15 +27,15 @@ if vim-cmd vmsvc/getallvms | grep -w "$2"; then
     exit 1
 fi
 
-ID=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
+ID_ORIGEN=$(vim-cmd vmsvc/getallvms | grep -w "$1" | cut -d " " -f 1)
 
 #Comprobar que la máquina origen tiene uno y sólo un snapshot
-if vim-cmd vmsvc/get.snapshot "$ID" | grep -w "childSnapshotList"; then
+if vim-cmd vmsvc/get.snapshot "$ID_ORIGEN" | grep -w "childSnapshotList"; then
     echo "ERROR: La máquina origen tiene más de un snapshot"
     exit 1
 fi
 
-if ! vim-cmd vmsvc/get.snapshot "$ID" | grep -w "id"; then
+if ! vim-cmd vmsvc/get.snapshot "$ID_ORIGEN" | grep -w "id"; then
     echo "ERROR: La máquina origen no tiene ningún snapshot"
     exit 1
 fi
@@ -65,22 +65,18 @@ if ! cp "$DATASTOREPATH/$1/$DISK_NAME" "$DATASTOREPATH/$2/$DISK_NAME"; then
     exit 1
 fi
 
+DISK_NAME_NO_EXT=$(echo "$DISK_NAME" | cut -d "." -f 1)
 # fichero delta
-if ! cp "$DATASTOREPATH/$1/$DISK_NAME-delta.vmdk" "$DATASTOREPATH/$2/$DISK_NAME-delta.vmdk"; then
+if ! cp "$DATASTOREPATH/$1/$DISK_NAME_NO_EXT-delta.vmdk" "$DATASTOREPATH/$2/$DISK_NAME_NO_EXT-delta.vmdk"; then
     echo "ERROR: No se ha podido copiar el fichero delta del snapshot"
     exit 1
 fi
  
-#Sustituir los nombres de ficheros y sus respectivas referencias dentro de 
-#estos por el nombre clon  
-#¡Atención! Esto requiere un pequeño parsing del contenido  
-#para sustituir aquellos campos de los ficheros de configuración que hacen #referencias a los ficheros. 
- 
- 
- 
 #Cambiar la referencia del “parent disk” del fichero de definición del disco 
 #que debe de apuntar al de la máquina origen (en el directorio ..) 
- 
+#Hay que cambiar el camo parentFileNameHint del fichero .vmdk por el nombre del padre en el directorio de la máquina origen
+PARENT_NAME=$DATASTOREPATH/$1/$1.vmdk
+sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME"'/g' $DATASTOREPATH/$2/$DISK_NAME
  
 #Generar un fichero .vmsd (con nombre del clon) en el que se indica que 
 #es una máquina clonada. 
@@ -91,15 +87,42 @@ fi
 #Si no se genera el fichero .vmsd, al destruir el clon también se borra el 
 #disco base del snapshot, lo cual no es deseable ya que pertenece a la máquina  
 #origen 
- 
+touch "$DATASTOREPATH/$2/$2.vmsd"
+echo ".encoding = \"UTF-8\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot.lastUID = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot.current = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+#TO-DO
+
  
 #Una vez que el directorio clon contiene todos los ficheros necesarios 
 #hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
- 
+if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido registrar la máquina clon"
+    #Borrar directorio
+    if ! rm -rf "$DATASTOREPATH/$2"; then
+        echo "ERROR: No se ha podido borrar el directorio"
+    fi
+    exit 1
+fi 
+echo "Máquina clonada correctamente"
  
  
 #Listar todas las máquinas para comprobar que el clon está disponible 
+vim-cmd vmsvc/getallvms
  
- 
- 
-#Para terminar arranca el clon desde el cliente de vSphere 
+#ID de la máquina clon
+ID_CLON=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
+
+#Para terminar arranca el clon desde el cliente de vSphere
+if ! vim-cmd vmsvc/power.on "$ID_CLON"; then
+    echo "ERROR: No se ha podido arrancar la máquina clon"
+    exit 1
+fi
+echo "Máquina clon arrancada correctamente"
+
+#Apagar máquina
+if ! vim-cmd vmsvc/power.off "$ID_CLON"; then
+    echo "ERROR: No se ha podido apagar la máquina clon"
+    exit 1
+fi
+echo "Máquina clon apagada correctamente"
