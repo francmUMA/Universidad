@@ -9,6 +9,7 @@
 
 using namespace std;
 int num_threads = 1;
+mutex *mtx;
 
 //---------------------
 // Class Implementation
@@ -20,12 +21,12 @@ private:
 
 public:
     Histogram(int r) :sz{r}, Hist{new int[r]} { for (int i=0; i<sz; i++) Hist[i]=0; }
-    void Calculate(const vector<int>& m, mutex mutex_list[],int id)
+    void Calculate(const vector<int>& m,int id)
     {
         for (int i=id; i<m.size(); i+=num_threads){
-            mutex_list[i].lock();
+            mtx[m[i]].lock();
             Hist[m[i]]++;
-            mutex_list[i].unlock();
+            mtx[m[i]].unlock();
         }
     }
     void PrintHistogram()
@@ -64,11 +65,10 @@ int main(int argc, char *argv[])
     {
         M.push_back(uniform(mte));
     }
-
+    mtx = (mutex*)malloc(tam*sizeof(mutex));
     // Histogram
     Histogram Hist(range);
     vector<thread> thread_list;
-    mutex mutex_list[M.size()];
     cout << "Introduce el número de hilos: ";
     cin >> num_threads;
     
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     auto t1 = chrono::high_resolution_clock::now();
 
     for (int i = 0; i < num_threads; i++){
-        thread_list.push_back(thread{&Histogram::Calculate, &Hist, M, *mutex_list,i});
+        thread_list.push_back(thread{&Histogram::Calculate, &Hist, M, i});
     }
     for (int i = 0; i < num_threads; i++){
         thread_list[i].join();
