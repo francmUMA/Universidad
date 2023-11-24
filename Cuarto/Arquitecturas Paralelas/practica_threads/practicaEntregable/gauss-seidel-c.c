@@ -27,7 +27,7 @@ void solve()
    while (!fin)
    {
       dif = 0.0;
-      #pragma omp parallel for schedule(dynamic,8) private(tmp, j)
+      #pragma omp parallel for schedule(dynamic) private(tmp, j)
       for (i=1; i<=N; i+=2)
       {
          for (j=1; j<=N; j+=2)
@@ -38,7 +38,7 @@ void solve()
          }
       }
 
-      #pragma omp parallel for schedule(static,8) private(tmp,j)
+      #pragma omp parallel for schedule(dynamic) private(tmp,j)
       for (i=2; i<=N; i+=2)
       {
          for (j=2; j<=N; j+=2)

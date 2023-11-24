@@ -26,8 +26,8 @@ void solve()
 
    while (!fin)
    {
-      dif = 0.0;
-      #pragma omp parallel for schedule(static,8) private(tmp, j)
+      
+      #pragma omp for schedule(dynamic) private(tmp, j) reduction(+:dif)
       for (i=1; i<=N; i+=2)
       {
          for (j=1; j<=N; j+=2)
@@ -38,7 +38,9 @@ void solve()
          }
       }
 
-      #pragma omp parallel for schedule(static,8) private(tmp,j)
+      #pragma omp barrier
+
+      #pragma omp for schedule(dynamic) private(tmp,j) reduction(+:dif)
       for (i=2; i<=N; i+=2)
       {
          for (j=2; j<=N; j+=2)
@@ -48,6 +50,7 @@ void solve()
             dif += fabs(A[i][j]-tmp);
          }
       }
+      #pragma omp barrier
       if (dif < ERR) fin = 1;
    }
 }
@@ -60,6 +63,8 @@ int main()
    init();
 
    stime = omp_get_wtime();
+   dif = 0.0;
+   #pragma omp parallel
    solve();
    etime = omp_get_wtime();
 

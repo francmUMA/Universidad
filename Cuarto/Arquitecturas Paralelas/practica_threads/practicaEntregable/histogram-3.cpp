@@ -24,19 +24,19 @@ public:
     void Calculate(const vector<int>& m,int id)
     {
         int *priv_hist = new int[sz];
-        int *mod_pos = new int[sz / num_threads + 1];
-        int i, j = 0;
+        int i;
         for (i=id; i<m.size(); i+=num_threads){
-            mod_pos[j] = m[i];
             if (priv_hist[m[i]] == 0){
                 priv_hist[m[i]] = 0;
             }
             priv_hist[m[i]]++;
-            j++;
         }
         for (int i = 0; i < sz; i++){
+            if (priv_hist[m[i]] == 0){
+                priv_hist[m[i]] = 0;
+            }
             mtx[i].lock();
-            Hist[mod_pos[i]] += priv_hist[mod_pos[i]];
+            Hist[i] += priv_hist[i];
             mtx[i].unlock();
         }
     }
@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     // Histogram
     Histogram Hist(range);
     vector<thread> thread_list;
-    //cout << "Introduce el número de hilos: ";
-    //cin >> num_threads;
+    cout << "Introduce el número de hilos: ";
+    cin >> num_threads;
     
     //Inicializar array de mutexes
     auto t1 = chrono::high_resolution_clock::now();
