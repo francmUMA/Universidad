@@ -16,7 +16,7 @@ DATASTOREPATH=/vmfs/volumes/datastore1/mv-dest
 DISK_SIZE="1M"
 NUM_NICS=0
 NAME=""
-#TYPE="new"
+TYPE="other"
 
 # Mostrar la ayuda en caso de que no se introduzcan los parámetros necesarios
 if [ ! "$#" -gt "0" ]; then
@@ -36,15 +36,10 @@ else
     exit 1
 fi
 
-# Comprobar si tiene tipo
-# if [ "$3" = "-t" ]; then
-#     if [ "$4" = "new" ] || [ "$4" = "clone" ] || [ "$4" = "linkedclone" ]; then
-#         TYPE="$4"
-#     else
-#         echo "ERROR: El tipo de máquina no es válido"
-#         exit 1
-#     fi
-# fi
+# Compribar si tiene tipo de Sistema Operativo
+ if [ "$3" = "-t" ]; then
+    TYPE="$4"
+ fi
 
 # Comprobar si tiene tamaño de disco
 if [ "$3" = "-d" ]; then
@@ -71,12 +66,18 @@ if vim-cmd vmsvc/getallvms | grep -w "$NAME"; then
     exit 1
 fi
 
-# TO-DO (registrar o crear según el tipo)
-
 # Crear la máquina
 echo "Creando la máquina..."
 vim-cmd vmsvc/createdummyvm "$NAME" "$DATASTOREPATH"
 ID=$(vim-cmd vmsvc/getallvms | grep -w "$NAME" | cut -d " " -f 1)
+
+# Modificar el tipo de Sistema Operativo
+# Hay que buscar el campo guestOS en el archivo .vmx y modificarlo
+if ! sed -i "s/guestOS = \"other\"/guestOS = \"$TYPE\"/g" "$DATASTOREPATH/$NAME/$NAME.vmx"; then
+    echo "Error al modificar el tipo de Sistema Operativo"
+    exit 1
+fi
+
 
 # Modificar el espacio de disco si es necesario
 if [ ! "$DISK_SIZE" = "1M" ]; then

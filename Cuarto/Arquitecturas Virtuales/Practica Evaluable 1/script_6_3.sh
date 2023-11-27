@@ -91,7 +91,16 @@ touch "$DATASTOREPATH/$2/$2.vmsd"
 echo ".encoding = \"UTF-8\"" >> "$DATASTOREPATH/$2/$2.vmsd"
 echo "snapshot.lastUID = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
 echo "snapshot.current = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-#TO-DO
+echo "snapshot0.uid = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.filename = \"$DISK_NAME_NO_EXT.vmdk\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.displayName = \"Snapshot\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.type = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.createTimeHigh = \"0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.createTimeLow = \"0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.numDisks = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.disk0.fileName = \"$DISK_NAME_NO_EXT-delta.vmdk\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.disk0.node = \"scsi0:0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+echo "snapshot0.disk0.numSnapshots = \"0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
 
  
 #Una vez que el directorio clon contiene todos los ficheros necesarios 
