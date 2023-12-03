@@ -1,14 +1,8 @@
 //DEBE COMPILARSE CON mpic++ <nombre.cpp> -o <nombre_ejecutable>
-
-#include "/opt/homebrew/include/mpi.h"
-#include <cstdio>
-#include <cstring>
-#include <string>
-#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <mpi.h>
+#include <mpi.h>
 
 using namespace std;
 
@@ -38,21 +32,28 @@ int main(int argc, char *argv[]){
         MPI_Send(submsg, strlen(submsg), MPI_CHAR, size-1, 0, MPI_COMM_WORLD);
 
         //Recibir los mensajes de los procesos
-        /*string subres;*/
-        /*string res;*/
-        /*for (int i = 1; i < size; i++){*/
-            /*MPI_Recv(&subres, 13, MPI_CHAR, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);*/
-            /*printf("Proceso master recibe de %d: %s\n", i, subres.c_str());*/
-            /*res += subres;*/
-        /*}*/
-        /*printf("Cadena original: %s\n", msg.c_str());*/
-        /*printf("Cadena invertida: %s\n", res.c_str());*/
+        char *res = (char *)malloc(strlen(msg)*sizeof(char));
+        for (int i = 1; i < size-1; i++){
+            char *submsg = (char *)malloc(subsize*sizeof(char));
+            MPI_Recv(submsg, subsize, MPI_CHAR, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            strncpy(res+(i-1)*subsize, submsg, subsize);
+        }
+        char *submsg_end = (char *)malloc((strlen(msg) - (size-2)*subsize)*sizeof(char));
+        MPI_Recv(submsg_end, (strlen(msg) - (size-2)*subsize)*sizeof(char), MPI_CHAR, size-1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        strncpy(res+(size-2)*subsize, submsg_end, strlen(msg) - (size-2)*subsize);
+        printf("El proceso maestro recibe: %s\n", res);
     } else if (rank > 0 && rank < size-1){
         char *submsg = (char *)malloc(subsize*sizeof(char));
-        MPI_Recv(&submsg, subsize, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Recv(submsg, subsize, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         printf("El proceso %d recibe: %s\n", rank, submsg);
 
         //Invertir la subcadena
+        char buffer;
+        for (int i = 0; i < strlen(submsg)/2; i++){
+            buffer = submsg[i];
+            submsg[i] = submsg[strlen(submsg)-i-1];
+            submsg[strlen(submsg)-i-1] = buffer;
+        }
 
         printf("El proceso %d envía: %s\n", rank, submsg);
         MPI_Send(submsg, strlen(submsg), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
@@ -62,6 +63,12 @@ int main(int argc, char *argv[]){
         printf("El proceso %d recibe: %s\n", rank, submsg);
 
         //Invertir la subcadena
+        char buffer;
+        for (int i = 0; i < strlen(submsg)/2; i++){
+            buffer = submsg[i];
+            submsg[i] = submsg[strlen(submsg)-i-1];
+            submsg[strlen(submsg)-i-1] = buffer;
+        }
         
         printf("El proceso %d envía: %s\n", rank, submsg);
         MPI_Send(submsg, strlen(submsg), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
