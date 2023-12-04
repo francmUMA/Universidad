@@ -1,5 +1,7 @@
 package com.example.calculadora;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class Data {
     private String operacion;
     private int operando_1;

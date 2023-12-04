@@ -25,10 +25,11 @@ public class CalculadoraResource {
         Data res = new Data(operando1, operando2);
         res.setOperacion("suma");
         res.setResultado(operando1+operando2);
+
         return Response.ok(res, MediaType.APPLICATION_XML).build();
     }
 
-    @GET
+    @POST
     @Path("/resta")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
