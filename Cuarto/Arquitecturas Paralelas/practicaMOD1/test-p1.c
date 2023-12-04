@@ -39,7 +39,7 @@ int main()
   dtime = gettime();
 
   for(kk=0; kk<NSTEPS; kk++) {
-    #pragma omp parallel for schedule(static,1)
+    #pragma omp parallel for schedule(static,8)
     for(ii=1; ii<NX-1; ii++) {
       ukp1[ii] = uk[ii] + (dt/(dx*dx))*(uk[ii+1]-2*uk[ii]+uk[ii-1]);
     }
