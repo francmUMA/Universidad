@@ -1,35 +1,24 @@
 package com.example.todolist;
 
-import java.util.Date;
-
 public class Task {
     private int id;
     private String description;
-    private Date fechaHoraAgregado;
+    private String fechaHoraAgregado;
     private Status status;
-    private Date fechaHoraCompletado;
+    private String fechaHoraCompletado;
     private boolean eliminado;
 
     public Task(){}
-
-    public Task(String description){
-        this.description = description;
-        this.id = -1;
-        fechaHoraAgregado.getTime();
-        fechaHoraCompletado = null;
-        this.status = Status.INCOMPLETA;
-        this.eliminado = false;
-    }
 
     public int getId() {
         return id;
     }
 
-    public Date getFechaHoraAgregado() {
+    public String getFechaHoraAgregado() {
         return fechaHoraAgregado;
     }
 
-    public Date getFechaHoraCompletado() {
+    public String getFechaHoraCompletado() {
         return fechaHoraCompletado;
     }
 
@@ -57,11 +46,11 @@ public class Task {
         this.eliminado = eliminado;
     }
 
-    public void setFechaHoraAgregado(Date fechaHoraAgregado) {
+    public void setFechaHoraAgregado(String fechaHoraAgregado) {
         this.fechaHoraAgregado = fechaHoraAgregado;
     }
 
-    public void setFechaHoraCompletado(Date fechaHoraCompletado) {
+    public void setFechaHoraCompletado(String fechaHoraCompletado) {
         this.fechaHoraCompletado = fechaHoraCompletado;
     }
 

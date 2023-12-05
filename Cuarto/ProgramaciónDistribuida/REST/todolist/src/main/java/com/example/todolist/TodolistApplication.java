@@ -3,7 +3,7 @@ package com.example.todolist;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
-@ApplicationPath("/api")
-public class HelloApplication extends Application {
+@ApplicationPath("/")
+public class TodolistApplication extends Application {
 
 }

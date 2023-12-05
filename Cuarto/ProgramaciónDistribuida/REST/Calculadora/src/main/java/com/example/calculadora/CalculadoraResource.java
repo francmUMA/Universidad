@@ -7,9 +7,9 @@ import jakarta.ws.rs.core.Response;
 @Path("/")
 public class CalculadoraResource {
 
-    @GET
+    @POST
     @Path("/suma")
-    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response sumaJSON() {
         Data res = new Data(10,12);
