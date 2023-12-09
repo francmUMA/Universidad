@@ -12,10 +12,11 @@ int main(int argc, char *argv[]){
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     //Buffers
-    int sizebuf = 26;
-    char *sendbuf = (char*)malloc(sizebuf);
-    strcpy(sendbuf, "Este es el string de envio");
-    char *recvbuf = (char*)malloc(strlen(sendbuf)/size);
+    char *sendbuf = (char*)malloc(100);
+    strcpy(sendbuf, "Este es el string de envio test aa");
+    int sizebuf = strlen(sendbuf);
+    char *recvbuf = (char*)malloc(sizebuf/size + 1);
+    char *resultbuf = (char*)malloc(strlen(sendbuf));
 
     //Mostrar cadena a enviar
     if (rank == 0){
@@ -23,29 +24,29 @@ int main(int argc, char *argv[]){
     }
 
     //Scatter
-    MPI_Scatter(sendbuf, sizebuf, MPI_CHAR, recvbuf, strlen(sendbuf)/size, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatter(sendbuf, sizebuf / size + 1, MPI_CHAR, recvbuf, sizebuf/size + 1, MPI_CHAR, 0, MPI_COMM_WORLD);
 
     //Mostrar cadena recibida
     printf("Proceso %d: %s\n", rank, recvbuf);
 
-    /*//Revertir cadena*/
-    /*char buffer;*/
-    /*for (int i = 0; i < strlen(recvbuf); i++){*/
-        /*buffer = recvbuf[i];*/
-        /*recvbuf[i] = recvbuf[strlen(recvbuf)-i-1];*/
-        /*recvbuf[strlen(recvbuf)-i-1] = buffer;*/
-    /*}*/
+    //Revertir cadena
+    char buffer;
+    for (int i = 0; i < strlen(recvbuf); i++){
+        buffer = recvbuf[i];
+        recvbuf[i] = recvbuf[strlen(recvbuf)-i-1];
+        recvbuf[strlen(recvbuf)-i-1] = buffer;
+    }
 
-    /*//Mostrar cadena revertida*/
-    /*printf("Proceso %d: %s\n", rank, recvbuf);*/
+    //Mostrar cadena revertida
+    printf("Proceso %d: %s\n", rank, recvbuf);
 
-    /*//Gather*/
-    /*MPI_Gather(recvbuf, sizebuf/size, MPI_CHAR, sendbuf, strlen(sendbuf), MPI_CHAR, 0, MPI_COMM_WORLD);*/
+    //Gather
+    MPI_Gather(recvbuf, sizebuf/size + 1, MPI_CHAR, resultbuf, sizebuf / size + 1, MPI_CHAR, 0, MPI_COMM_WORLD);
 
-    /*//Mostrar cadena final*/
-    /*if (rank == 0){*/
-        /*printf("Proceso %d: %s\n", rank, sendbuf);*/
-    /*}*/
+    //Mostrar cadena final
+    if (rank == 0){
+        printf("Proceso %d: %s\n", rank, resultbuf);
+    }
 
     MPI_Finalize();
     return 0;
