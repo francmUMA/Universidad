@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Identificador del proceso
     int ping_pong_count = 0;
-    while (ping_pong_count < PING_PONG_LIMIT) {
+    for (int i = 0; i < PING_PONG_LIMIT; i+=2) {
         if (rank == 0) {
             //Enviar bola al proceso 1
             printf("0 envía bola a 1\n");

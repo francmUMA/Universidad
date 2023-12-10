@@ -30,18 +30,16 @@ int main(int argc, char *argv[]){
     printf("Proceso %d: %s\n", rank, recvbuf);
 
     //Revertir cadena
-    char buffer;
+    char *aux = (char*)malloc(strlen(recvbuf));
     for (int i = 0; i < strlen(recvbuf); i++){
-        buffer = recvbuf[i];
-        recvbuf[i] = recvbuf[strlen(recvbuf)-i-1];
-        recvbuf[strlen(recvbuf)-i-1] = buffer;
+        aux[i] = recvbuf[strlen(recvbuf)-i-1];
     }
 
     //Mostrar cadena revertida
-    printf("Proceso %d: %s\n", rank, recvbuf);
+    printf("Proceso %d: %s\n", rank, aux);
 
     //Gather
-    MPI_Gather(recvbuf, sizebuf/size + 1, MPI_CHAR, resultbuf, sizebuf / size + 1, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Gather(aux, sizebuf/size + 1, MPI_CHAR, resultbuf, sizebuf / size + 1, MPI_CHAR, 0, MPI_COMM_WORLD);
 
     //Mostrar cadena final
     if (rank == 0){
