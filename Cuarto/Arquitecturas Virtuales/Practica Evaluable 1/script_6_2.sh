@@ -28,7 +28,6 @@ fi
 
 #Copiar recursivamente el directorio de la máquina origen a su destino (clon)
 echo "Clonando la máquina..."
-mkdir "$DATASTOREPATH/$2"
 if ! cp -r "$DATASTOREPATH/$1" "$DATASTOREPATH/$2"; then
     echo "ERROR: No se ha podido clonar la máquina"
     exit 1
@@ -65,12 +64,37 @@ echo "Ficheros renombrados correctamente"
 
 #Modificar archivo .vmx
 echo "Modificando el fichero .vmx..."
+
 #Hay que cambiar el displayName, scsi0:0.fileName y nvram
-if ! sed -i "s/$1/$2/g" "$DATASTOREPATH/$2/$2.vmx"; then
-    echo "ERROR: No se ha podido modificar el fichero .vmx"
+# Modificar el displayName
+if ! sed -i "s/displayName = \"$1\"/displayName = \"$2\"/g" "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido modificar el displayName"
     exit 1
 fi
+
+# Modificar el scsi0:0.fileName
+if ! sed -i "s/scsi0:0.fileName = \"$1.vmdk\"/scsi0:0.fileName = \"$2.vmdk\"/g" "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido modificar el scsi0:0.fileName"
+    exit 1
+fi
+
+# Modificar el nvram
+if ! sed -i "s/nvram = \"$1.nvram\"/nvram = \"$2.nvram\"/g" "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido modificar el nvram"
+    exit 1
+fi
+
 echo "Fichero .vmx modificado correctamente"
+
+#Modificar archivo .vmdk
+echo "Modificando el fichero .vmdk..."
+
+#Hay que cambiar el nombre de extend description
+# Modificar el nombre de extend description
+if ! sed -i "s/$1/$2/g" "$DATASTOREPATH/$2/$2.vmdk"; then
+    echo "ERROR: No se ha podido modificar el nombre de extend description"
+    exit 1
+fi
 
 #Registar la máquina clon (ESTO ES IMPRESCINDIBLE)
 echo "Registrando la máquina..."
@@ -94,10 +118,10 @@ vim-cmd vmsvc/getallvms
 echo "Arrancando la máquina..."
 ID=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
 
-vim-cmd vmsvc/power.on "$ID"
+vim-cmd vmsvc/power.on "$ID" &> /dev/null
 
 # Responder a la pregunta de si se ha movido o copiado
-vim-cmd vmsvc/message "$ID" 2
+vim-cmd vmsvc/message "$ID"
 
 #Apagar el clon
 echo "Apagando la máquina..."
