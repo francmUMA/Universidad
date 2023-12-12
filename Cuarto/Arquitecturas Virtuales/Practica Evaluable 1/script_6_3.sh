@@ -60,12 +60,14 @@ fi
 
 #.vmdk -- Snapshot --> El nombre del disco viene en el campo scsi0:0.fileName del .vmx
 DISK_NAME=$(cat "$DATASTOREPATH/$2/$2.vmx" | grep "scsi0:0.fileName" | cut -d "\"" -f 2)
+echo "DISK_NAME = $DISK_NAME"
 if ! cp "$DATASTOREPATH/$1/$DISK_NAME" "$DATASTOREPATH/$2/$DISK_NAME"; then
     echo "ERROR: No se ha podido copiar el fichero .vmdk"
     exit 1
 fi
 
 DISK_NAME_NO_EXT=$(echo "$DISK_NAME" | cut -d "." -f 1)
+echo "DISK_NAME_NO_EXT = $DISK_NAME_NO_EXT"
 # fichero delta
 if ! cp "$DATASTOREPATH/$1/$DISK_NAME_NO_EXT-delta.vmdk" "$DATASTOREPATH/$2/$DISK_NAME_NO_EXT-delta.vmdk"; then
     echo "ERROR: No se ha podido copiar el fichero delta del snapshot"
@@ -74,9 +76,13 @@ fi
  
 #Cambiar la referencia del “parent disk” del fichero de definición del disco 
 #que debe de apuntar al de la máquina origen (en el directorio ..) 
-#Hay que cambiar el camo parentFileNameHint del fichero .vmdk por el nombre del padre en el directorio de la máquina origen
+#Hay que cambiar el campo parentFileNameHint del fichero .vmdk por el nombre del padre en el directorio de la máquina origen
 PARENT_NAME=$DATASTOREPATH/$1/$1.vmdk
-sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME"'/g' $DATASTOREPATH/$2/$DISK_NAME
+echo "PARENT_NAME = $PARENT_NAME"
+if ! sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME"'/g' $DATASTOREPATH/$2/$DISK_NAME > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el campo parentFileNameHint del fichero .vmdk"
+    exit 1
+fi
  
 #Generar un fichero .vmsd (con nombre del clon) en el que se indica que 
 #es una máquina clonada. 
