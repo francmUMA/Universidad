@@ -92,3 +92,41 @@ WORDPRESS_DB_NAME=wordpress
 
 docker run --name wordpress --rm -d -p 8080:80 -e WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST -e WORDPRESS_DB_USER=$WORDPRESS_DB_USER -e WORDPRESS_DB_PASSWORD=$WORDPRESS_DB_PASSWORD -e WORDPRESS_DB_NAME=$WORDPRESS_DB_NAME -v /wp-data:/var/www/html/wp-content wordpress:5.8.3-php7.4-apache
 
+####### CONFIGURACIÓN DE CLUSTER CON SWARM #######
+# Iniciar swarm en el master
+docker swarm init --default-addr-pool 10.254.0.0/16 --default-addr-pool-mask-length 28 --advertise-addr 10.0.16.45
+
+# Borrar red de overlay y crear otra con más direcciones
+docker network rm ingress
+docker network create --driver overlay --ingress --subnet=10.251.0.0/16 --gateway=10.251.0.1 ingress
+
+# Unirse al swarm como worker
+docker swarm join --token SWMTKN-1-15jp451sfyye8hxyt7x10b0m2i513xeecbrbbh1i6hr47g33ys-4xpk129hfes2bq0dg4rezllc2 10.0.16.45:2377 --advertise-addr 10.0.16.46
+
+# Transformar en reachable el nodo worker
+docker node promote dock-16-46
+
+# IMPORTANTE #
+# La consecuencia inmediata es que con solo dos managers, no hay tolerancia a fallos del manager del
+# cluster ya que no se puede elegir a un superviviente con un solo voto. Con 3 managers necesitamos 2
+# supervivientes (solo se puede averiar 1) para hacer una elección. Con 4 y 5 managers necesitamos 3
+# supervivientes, lo que supone que puedan averiarse 1 y 2 nodos respectivamente.
+# Lo que está determinando el número de managers es la tolerancia a fallos de nodos manager en el
+# cluster. Debido al algoritmo nos encontramos que tener 3 o 4 managers permite una tolerancia a fallos
+# de 1 nodo en ambos casos, mientras que tener 5 o 6 managers tolera el fallo de hasta 2 nodos en
+# ambos casos.
+# Como puede verse, es más rentable tener 3, 5 o 7 nodos desde el punto de vista de la tolerancia a
+# fallos que 4, 6 u 8. En https://docs.docker.com/engine/swarm/admin_guide/ puedes ampliar esto y
+# ver una tabla que muestra la relación entre el número de nodos y la tolerancia a fallos.
+
+# Para eliminar un node del swarm
+# Se rebaja a worker
+# docker node demote dock-16-46
+# Se elimina
+# docker swarm leave
+
+# Se puede rehacer el swarm con otro nodo
+# docker swarm init --default-addr-pool 10.254.0.0/16 --default-addr-pool-mask-length 28 --advertise-addr 10.0.16.45 --force-new-cluster
+
+####### DEFINIR STACK DE APLICACIÓN #######
+# En docker-compose.yml se define el stack de la aplicación

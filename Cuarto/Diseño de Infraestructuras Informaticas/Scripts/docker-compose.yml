@@ -1,0 +1,32 @@
+version: '3.1'
+# Lanza un stack con un container de wordpress
+volumes:
+  wordpress-data:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      device: ":/clusterfs/wordpress"
+      o: addr=10.0.16.44,rw,nolock,soft,intr
+services:
+  wordpress:
+    image: wordpress:5.8.3-php7.4-apache
+    ports: 
+      - 80:80
+    volumes:
+      - wordpress-data:/var/www/html/wp-content
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      - WORDPRESS_DB_HOST=10.0.16.50
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=Vc0910$$
+      - WORDPRESS_DB_NAME=wordpress
+
+    
