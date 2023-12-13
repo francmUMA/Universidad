@@ -15,8 +15,7 @@ iscsiadm --mode discovery --type sendtargets --portal 10.0.16.40 -o new
 # iscsiadm --mode node
 
 # Establecer la sesion con  el servidor
-iscsiadm --mode node --portal=10.0.16.40 \
---targetname iqn.2020-01.es.uma.storage:target16-040 --login
+iscsiadm --mode node --portal=10.0.16.40 --targetname iqn.2020-01.es.uma.storage:target16-040 --login
 
 # Comprobar que se ha establecido la sesion
 #iscsiadm -m session
@@ -46,3 +45,6 @@ mkfs.ocfs2 --node-slots 4 --label "myCFS16040" --cluster-name=mycluster16040 --c
 # Montar el sistema de ficheros en /clusterfs
 mkdir /clusterfs
 mount /clusterfs #Obviamente después de editar el fichero fstab
+
+# Reescan de los dispositivos iSCSI
+iscsiadm -m session --rescan
