@@ -93,20 +93,21 @@ fi
 #Si no se genera el fichero .vmsd, al destruir el clon también se borra el 
 #disco base del snapshot, lo cual no es deseable ya que pertenece a la máquina  
 #origen 
-touch "$DATASTOREPATH/$2/$2.vmsd"
-echo ".encoding = \"UTF-8\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot.lastUID = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot.current = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.uid = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.filename = \"$DISK_NAME_NO_EXT.vmdk\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.displayName = \"Snapshot\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.type = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.createTimeHigh = \"0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.createTimeLow = \"0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.numDisks = \"1\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.disk0.fileName = \"$DISK_NAME_NO_EXT-delta.vmdk\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.disk0.node = \"scsi0:0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
-echo "snapshot0.disk0.numSnapshots = \"0\"" >> "$DATASTOREPATH/$2/$2.vmsd"
+if ! cp "$DATASTOREPATH/$1/$1.vmsd" "$DATASTOREPATH/$2/$2.vmsd"; then
+    echo "ERROR: No se ha podido copiar el fichero .vmsd"
+    exit 1
+fi
+
+# Modificar los datos necesarios
+if ! sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME"'/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el campo parentFileNameHint del fichero .vmsd"
+    exit 1
+fi
+
+if ! sed -i 's/parentFileNameHintLocked=.*/parentFileNameHintLocked=true/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el campo parentFileNameHintLocked del fichero .vmsd"
+    exit 1
+fi
 
  
 #Una vez que el directorio clon contiene todos los ficheros necesarios 
