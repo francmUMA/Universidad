@@ -1,0 +1,8 @@
+FROM php:7-apache
+MAINTAINER Federico Kereki fkereki@gmail.com
+
+COPY search.php /var/www/html/
+
+RUN     apt-get update && \
+        # apt-get -q -y install php7-mysql && \
+        docker-php-ext-install mysqli

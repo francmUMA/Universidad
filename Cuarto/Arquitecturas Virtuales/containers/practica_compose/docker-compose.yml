@@ -1,0 +1,28 @@
+version: "3"
+ 
+services:
+  MYDB:
+    platform: linux/amd64
+    image: worlddb
+    environment:
+      - MYSQL_ROOT_PASSWORD=av
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+   
+  MYWEB:
+    image: worldweb
+    expose:
+      - 80
+    ports:
+      - 80:80
+    links: 
+      - MYDB
+
+  MYphpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+     - 8080:80
+    links: 
+      - MYDB:db
