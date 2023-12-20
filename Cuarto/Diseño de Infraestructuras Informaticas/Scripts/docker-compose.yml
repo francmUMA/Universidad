@@ -24,9 +24,9 @@ services:
       restart_policy:
         condition: any
     environment:
-      - WORDPRESS_DB_NAME=wordpress
-      - WORDPRESS_DB_USER=wordpress
-      - WORDPRESS_DB_PASSWORD=Vc0910$$
-      - WORDPRESS_DB_HOST=10.0.16.50
+      - WORDPRESS_DB_NAME:wordpress
+      - WORDPRESS_DB_USER:wordpress
+      - WORDPRESS_DB_PASSWORD:'Vc0910$$'
+      - WORDPRESS_DB_HOST:10.0.16.50
 
     
