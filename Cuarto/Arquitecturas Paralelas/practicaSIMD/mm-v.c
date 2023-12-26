@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     // Matrix multiplication
     gettimeofday(&t1,NULL);
 
-    #pragma omp simd
+    #pragma omp for simd
     for (i = 0; i < N; i++) 
        for (k = 0; k < N; k++) 
           for (j = 0; j < N; j++) 
