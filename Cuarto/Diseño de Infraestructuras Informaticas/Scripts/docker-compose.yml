@@ -4,16 +4,16 @@ volumes:
   wordpress-data:
     driver: local
     driver_opts:
-      type: "nfs"
-      device: ":/clusterfs/wordpress"
-      o: addr=10.0.16.44,rw,nolock,soft,intr
+      type: none
+      device: /clusterfs/wordpress
+      o: bind
 services:
   wordpress:
     image: wordpress:5.8.3-php7.4-apache
     ports: 
       - 80:80
     volumes:
-      - wordpress-data:/var/www/html/wp-content
+      - wordpress-data:/usr/share/wordpress/wp-content
     deploy:
       resources:
         limits:

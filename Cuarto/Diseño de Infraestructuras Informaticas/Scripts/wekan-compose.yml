@@ -1,0 +1,52 @@
+version: "3.1"
+# Lanza un stack con dos containers (Wekan+MongoDB) y una red privada que los
+# interconecta
+volumes:
+  wekan-db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /clusterfs/docker/wekan-1/wekan-db
+  wekan-db-dump:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /clusterfs/docker/wekan-1/wekan-db-dump
+networks:
+  wekan-internal:
+    driver: overlay
+services:
+  mongodb:
+    image: mongo:4.2.2
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+    networks:
+      - wekan-internal
+    volumes:
+      - wekan-db:/data/db
+      - wekan-db-dump:/dump
+  wekan:
+    image: wekanteam/wekan:v3.77
+    ports:
+      - 9080:8080
+    networks:
+      - wekan-internal
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/wekan
+      - ROOT_URL=http://10.0.31.199:9080/
+    depends_on:
+      - mongodb
