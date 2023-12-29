@@ -22,7 +22,8 @@ TYPE="other"
 if [ ! "$#" -gt "0" ]; then
     echo "Para poder ejecutar el script es necesario introducir algunos parámetros"
     echo "sh script_6_1.sh -name <nombre_maquina> -t <tipo_maquina> -d <disk_size> -nics <num_NICs>"
-    echo "  -t: tipo de máquina (new, clone, linkedclone)"
+    echo "  -name: nombre de la máquina"
+    echo "  -t: tipo de Sistema Operativo. Example: other, other (default), rhel6-64..."
     echo "  -d: tamaño del disco duro. Example: 6G, 10M ..."
     echo "  -nics: número de tarjetas de red"
     exit 0
@@ -89,7 +90,7 @@ fi
 if [ "$NUM_NICS" -ne "0" ]; then
     echo "Modificando el número de tarjetas de red..."
     for i in $(seq 1 "$NUM_NICS"); do
-        vim-cmd vmsvc/devices.createnic "$ID" "$i" "vmxnet2" "Priv-VLAN1"
+        vim-cmd vmsvc/devices.createnic "$ID" "$i" "vmxnet3" "Priv-VLAN1w" > /dev/null
     done
 fi
 
@@ -107,8 +108,3 @@ fi
 echo "Apagando máquina"
 vim-cmd vmsvc/power.off "$ID" > /dev/null
 exit 0
-
-#¿Hay que añadir al fichero de configuración (.vmx) algún(os) campo(s) que es(son) 
-#imprescindible(S) para arrancar la máquina?
-#Sugerencia: intenta arrancar la máquina una vez creada y busca en el fichero 
-# wmware.log por qué ha fallado el arranque

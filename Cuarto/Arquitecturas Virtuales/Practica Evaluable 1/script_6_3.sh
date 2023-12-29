@@ -16,13 +16,13 @@ if [ ! "$#" -gt "1" ]; then
 fi 
 
 #Comprobar que existe la máquina origen a clonar
-if ! vim-cmd vmsvc/getallvms | grep -w "$1"; then
+if ! vim-cmd vmsvc/getallvms | grep -w "$1" > /dev/null; then
     echo "ERROR: No existe ninguna máquina con el nombre de origen"
     exit 1
 fi
 
 #Comprobar que no existe la maquina clon
-if vim-cmd vmsvc/getallvms | grep -w "$2"; then
+if vim-cmd vmsvc/getallvms | grep -w "$2" > /dev/null; then
     echo "ERROR: Ya existe una máquina con el nombre de destino"
     exit 1
 fi
@@ -30,12 +30,12 @@ fi
 ID_ORIGEN=$(vim-cmd vmsvc/getallvms | grep -w "$1" | cut -d " " -f 1)
 
 #Comprobar que la máquina origen tiene uno y sólo un snapshot
-if vim-cmd vmsvc/get.snapshot "$ID_ORIGEN" | grep -w "childSnapshotList"; then
+if vim-cmd vmsvc/get.snapshot "$ID_ORIGEN" | grep -w "childSnapshotList" > /dev/null; then
     echo "ERROR: La máquina origen tiene más de un snapshot"
     exit 1
 fi
 
-if ! vim-cmd vmsvc/get.snapshot "$ID_ORIGEN" | grep -w "id"; then
+if ! vim-cmd vmsvc/get.snapshot "$ID_ORIGEN" | grep -w "id" > /dev/null; then
     echo "ERROR: La máquina origen no tiene ningún snapshot"
     exit 1
 fi
@@ -78,8 +78,9 @@ fi
 #que debe de apuntar al de la máquina origen (en el directorio ..) 
 #Hay que cambiar el campo parentFileNameHint del fichero .vmdk por el nombre del padre en el directorio de la máquina origen
 PARENT_NAME=$DATASTOREPATH/$1/$1.vmdk
-echo "PARENT_NAME = $PARENT_NAME"
-if ! sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME"'/g' $DATASTOREPATH/$2/$DISK_NAME > /dev/null; then
+PARENT_NAME_ESCAPED=$(echo "$PARENT_NAME" | sed 's/[\/&]/\\&/g')
+
+if ! sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME_ESCAPED"'/g' $DATASTOREPATH/$2/$DISK_NAME > /dev/null; then
     echo "ERROR: No se ha podido cambiar el campo parentFileNameHint del fichero .vmdk"
     exit 1
 fi
@@ -98,47 +99,55 @@ if ! cp "$DATASTOREPATH/$1/$1.vmsd" "$DATASTOREPATH/$2/$2.vmsd"; then
     exit 1
 fi
 
-# Modificar los datos necesarios
-if ! sed -i 's/parentFileNameHint=.*/parentFileNameHint='"$PARENT_NAME"'/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
-    echo "ERROR: No se ha podido cambiar el campo parentFileNameHint del fichero .vmsd"
+#Modificar fichero .vmsd
+#Snapshot filename
+SNAPSHOT_FILENAME=$DATASTOREPATH/$1/$(ls $DATASTOREPATH/$1 | grep vmsn)
+SNAPSHOT_FILENAME_ESCAPED=$(echo "$SNAPSHOT_FILENAME" | sed 's/[\/&]/\\&/g')
+if ! sed -i 's/snapshot0.filename = \"*\"/snapshot0.filename = \"$SNAPSHOT_FILENAME_ESCAPED\"/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el campo snapshot0.filename del fichero .vmsd"
     exit 1
 fi
 
-if ! sed -i 's/parentFileNameHintLocked=.*/parentFileNameHintLocked=true/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
-    echo "ERROR: No se ha podido cambiar el campo parentFileNameHintLocked del fichero .vmsd"
+#snapshot0.disk0.fileName
+if ! sed -i 's/snapshot0.disk0.fileName = \"$1.vmdk\"/snapshot0.disk0.fileName = \"$PARENT_NAME_ESCAPED\"/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el campo snapshot0.disk0.fileName del fichero .vmsd"
     exit 1
 fi
 
- 
-#Una vez que el directorio clon contiene todos los ficheros necesarios 
-#hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
-if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
-    echo "ERROR: No se ha podido registrar la máquina clon"
-    #Borrar directorio
-    if ! rm -rf "$DATASTOREPATH/$2"; then
-        echo "ERROR: No se ha podido borrar el directorio"
-    fi
-    exit 1
-fi 
-echo "Máquina clonada correctamente"
- 
- 
-#Listar todas las máquinas para comprobar que el clon está disponible 
-vim-cmd vmsvc/getallvms
- 
-#ID de la máquina clon
-ID_CLON=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
 
-#Para terminar arranca el clon desde el cliente de vSphere
-if ! vim-cmd vmsvc/power.on "$ID_CLON"; then
-    echo "ERROR: No se ha podido arrancar la máquina clon"
-    exit 1
-fi
-echo "Máquina clon arrancada correctamente"
+ 
+# #Una vez que el directorio clon contiene todos los ficheros necesarios 
+# #hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
+# if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
+#     echo "ERROR: No se ha podido registrar la máquina clon"
+#     #Borrar directorio
+#     if ! rm -rf "$DATASTOREPATH/$2"; then
+#         echo "ERROR: No se ha podido borrar el directorio"
+#     fi
+#     exit 1
+# fi 
+# echo "Máquina clonada correctamente"
+ 
+ 
+# #Listar todas las máquinas para comprobar que el clon está disponible 
+# vim-cmd vmsvc/getallvms
+ 
+# #ID de la máquina clon
+# ID_CLON=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
 
-#Apagar máquina
-if ! vim-cmd vmsvc/power.off "$ID_CLON"; then
-    echo "ERROR: No se ha podido apagar la máquina clon"
-    exit 1
-fi
-echo "Máquina clon apagada correctamente"
+# #Para terminar arranca el clon desde el cliente de vSphere
+# vim-cmd vmsvc/power.on "$ID_CLON" &
+
+# # Hay que obtener el ID de la pregunta de la máquina
+# sleep 1         #Añadir delay
+# QUESTION_ID=$(vim-cmd vmsvc/message "$ID_CLON" | grep "Virtual machine message" | cut -d " " -f 4 | cut -d ":" -f 0)
+
+# # Hay que responder a la pregunta de la máquina  "I Moved It"
+# vim-cmd vmsvc/message "$ID_CLON" "$QUESTION_ID" 1
+
+# #Apagar máquina
+# if ! vim-cmd vmsvc/power.off "$ID_CLON"; then
+#     echo "ERROR: No se ha podido apagar la máquina clon"
+#     exit 1
+# fi
+# echo "Máquina clon apagada correctamente"

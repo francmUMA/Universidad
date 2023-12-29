@@ -118,10 +118,14 @@ vim-cmd vmsvc/getallvms
 echo "Arrancando la máquina..."
 ID=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
 
-vim-cmd vmsvc/power.on "$ID" &> /dev/null
+vim-cmd vmsvc/power.on "$ID" &
 
-# Responder a la pregunta de si se ha movido o copiado
-vim-cmd vmsvc/message "$ID"
+# Hay que obtener el ID de la pregunta de la máquina
+sleep 1         #Añadir delay
+QUESTION_ID=$(vim-cmd vmsvc/message "$ID" | grep "Virtual machine message" | cut -d " " -f 4 | cut -d ":" -f 0)
+
+# Hay que responder a la pregunta de la máquina  "I Copied It"
+vim-cmd vmsvc/message "$ID" "$QUESTION_ID" 2
 
 #Apagar el clon
 echo "Apagando la máquina..."
