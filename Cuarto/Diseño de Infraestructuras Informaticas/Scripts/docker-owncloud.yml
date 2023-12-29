@@ -1,5 +1,4 @@
 version: "3"
-
 volumes:
   owncloud_data:
     driver: local
@@ -7,30 +6,19 @@ volumes:
       type: none
       o: bind
       device: /clusterfs/owncloud
-  redis:
-    driver: local
-
 services:
   owncloud:
     image: owncloud/server:10.13
     container_name: owncloud_server
     restart: always
     ports:
-      - 80:80
-    depends_on:
-      - redis
+      - 8080:80
     environment:
-      - OWNCLOUD_DOMAIN=localhost:80
       - OWNCLOUD_DB_TYPE=mysql
       - OWNCLOUD_DB_NAME=owncloud
       - OWNCLOUD_DB_USERNAME=owncloud
       - OWNCLOUD_DB_PASSWORD=Vc0910$$
       - OWNCLOUD_DB_HOST=10.0.16.50
-      - OWNCLOUD_ADMIN_USERNAME=owncloud
-      - OWNCLOUD_ADMIN_PASSWORD=Vc0910$$
-      - OWNCLOUD_MYSQL_UTF8MB4=true
-      - OWNCLOUD_REDIS_ENABLED=true
-      - OWNCLOUD_REDIS_HOST=redis
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
@@ -38,16 +26,4 @@ services:
       retries: 5
     volumes:
       - owncloud_data:/mnt/data
-  redis:
-      image: redis:6
-      container_name: owncloud_redis
-      restart: always
-      command: ["--databases", "1"]
-      healthcheck:
-        test: ["CMD", "redis-cli", "ping"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
-      volumes:
-        - redis:/data
   
