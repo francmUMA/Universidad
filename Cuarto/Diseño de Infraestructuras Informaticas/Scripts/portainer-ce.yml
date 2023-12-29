@@ -3,21 +3,23 @@ volumes:
   data:
     driver: local
     driver_opts:
-      type: nfs
-      o: addr=10.0.16.44,rw,nolock,soft,intr
-      device: “:/clusterfs/docker”
+      type: local
+      o: bind
+      device: /clusterfs/docker/portainer-ce
 networks:
   portainer:
     driver: overlay
+    attachable: true
 services:
   server:
     image: docker.io/portainer/portainer-ce:2.11.0
     depends_on:
-      - “agent”
+      - agent
     environment:
       AGENT_CLUSTER_ADDR: tasks.agent
       AGENT_SECRET: 90009000
     ports:
+      - 9443:9443
       - 9000:9000
       - 8000:8000
     networks:

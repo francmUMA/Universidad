@@ -17,7 +17,6 @@ volumes:
 networks:
   wekan-internal:
     driver: overlay
-    attachable: true
 services:
   mongodb:
     image: mongo:4.2.2
