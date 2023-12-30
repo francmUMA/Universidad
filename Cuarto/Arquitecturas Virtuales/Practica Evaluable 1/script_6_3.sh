@@ -128,6 +128,18 @@ if ! echo "numSentinels = \"1\"" >> $DATASTOREPATH/$2/$2.vmsd; then
     echo "ERROR: No se ha podido añadir el campo numSentinels al fichero .vmsd"
     exit 1
 fi
+
+#añadir campo snapshot0.clone0 al vmsd del padre
+if ! echo "snapshot0.clone0 = \"$DATASTOREPATH/$2/$2.vmx\"" >> $DATASTOREPATH/$1/$1.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo snapshot0.clone0 al fichero .vmsd del padre"
+    exit 1
+fi
+
+#snapshot0.numClones
+if ! echo "snapshot0.numClones = \"1\"" >> $DATASTOREPATH/$1/$1.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo snapshot0.numClones al fichero .vmsd del padre"
+    exit 1
+fi
  
 #Una vez que el directorio clon contiene todos los ficheros necesarios 
 #hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
