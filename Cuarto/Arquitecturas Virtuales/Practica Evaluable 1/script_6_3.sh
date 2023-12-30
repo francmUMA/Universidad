@@ -60,14 +60,12 @@ fi
 
 #.vmdk -- Snapshot --> El nombre del disco viene en el campo scsi0:0.fileName del .vmx
 DISK_NAME=$(cat "$DATASTOREPATH/$2/$2.vmx" | grep "scsi0:0.fileName" | cut -d "\"" -f 2)
-echo "DISK_NAME = $DISK_NAME"
 if ! cp "$DATASTOREPATH/$1/$DISK_NAME" "$DATASTOREPATH/$2/$DISK_NAME"; then
     echo "ERROR: No se ha podido copiar el fichero .vmdk"
     exit 1
 fi
 
 DISK_NAME_NO_EXT=$(echo "$DISK_NAME" | cut -d "." -f 1)
-echo "DISK_NAME_NO_EXT = $DISK_NAME_NO_EXT"
 # fichero delta
 if ! cp "$DATASTOREPATH/$1/$DISK_NAME_NO_EXT-delta.vmdk" "$DATASTOREPATH/$2/$DISK_NAME_NO_EXT-delta.vmdk"; then
     echo "ERROR: No se ha podido copiar el fichero delta del snapshot"
@@ -94,60 +92,75 @@ fi
 #Si no se genera el fichero .vmsd, al destruir el clon también se borra el 
 #disco base del snapshot, lo cual no es deseable ya que pertenece a la máquina  
 #origen 
-if ! cp "$DATASTOREPATH/$1/$1.vmsd" "$DATASTOREPATH/$2/$2.vmsd"; then
-    echo "ERROR: No se ha podido copiar el fichero .vmsd"
+
+#Crear fichero .vmsd
+if ! touch "$DATASTOREPATH/$2/$2.vmsd"; then
+    echo "ERROR: No se ha podido crear el fichero .vmsd"
     exit 1
 fi
 
-#Modificar fichero .vmsd
-#Snapshot filename
-SNAPSHOT_FILENAME=$DATASTOREPATH/$1/$(ls $DATASTOREPATH/$1 | grep vmsn)
-SNAPSHOT_FILENAME_ESCAPED=$(echo "$SNAPSHOT_FILENAME" | sed 's/[\/&]/\\&/g')
-if ! sed -i 's/snapshot0.filename = \"*\"/snapshot0.filename = \"$SNAPSHOT_FILENAME_ESCAPED\"/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
-    echo "ERROR: No se ha podido cambiar el campo snapshot0.filename del fichero .vmsd"
+#Encoding
+if ! echo ".encoding = \"UTF-8\"" >> $DATASTOREPATH/$2/$2.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo .encoding al fichero .vmsd"
     exit 1
 fi
 
-#snapshot0.disk0.fileName
-if ! sed -i 's/snapshot0.disk0.fileName = \"$1.vmdk\"/snapshot0.disk0.fileName = \"$PARENT_NAME_ESCAPED\"/g' $DATASTOREPATH/$2/$2.vmsd > /dev/null; then
-    echo "ERROR: No se ha podido cambiar el campo snapshot0.disk0.fileName del fichero .vmsd"
+#Añadir el campo cloneOf0
+if ! echo "cloneOf0 = \"$DATASTOREPATH/$1/$1.vmx\"" >> $DATASTOREPATH/$2/$2.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo cloneOf al fichero .vmsd"
     exit 1
 fi
 
+#numCloneOf
+if ! echo "numCloneOf = \"1\"" >> $DATASTOREPATH/$2/$2.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo numCloneOf al fichero .vmsd"
+    exit 1
+fi
 
+#sentinel0
+if ! echo "sentinel0 = \"$DATASTOREPATH/$2/$DISK_NAME\"" >> $DATASTOREPATH/$2/$2.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo sentinel0 al fichero .vmsd"
+    exit 1
+fi
+
+#numSentinels
+if ! echo "numSentinels = \"1\"" >> $DATASTOREPATH/$2/$2.vmsd; then
+    echo "ERROR: No se ha podido añadir el campo numSentinels al fichero .vmsd"
+    exit 1
+fi
  
-# #Una vez que el directorio clon contiene todos los ficheros necesarios 
-# #hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
-# if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
-#     echo "ERROR: No se ha podido registrar la máquina clon"
-#     #Borrar directorio
-#     if ! rm -rf "$DATASTOREPATH/$2"; then
-#         echo "ERROR: No se ha podido borrar el directorio"
-#     fi
-#     exit 1
-# fi 
-# echo "Máquina clonada correctamente"
+#Una vez que el directorio clon contiene todos los ficheros necesarios 
+#hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
+if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
+    echo "ERROR: No se ha podido registrar la máquina clon"
+    #Borrar directorio
+    if ! rm -rf "$DATASTOREPATH/$2"; then
+        echo "ERROR: No se ha podido borrar el directorio"
+    fi
+    exit 1
+fi 
+echo "Máquina clonada correctamente"
  
  
-# #Listar todas las máquinas para comprobar que el clon está disponible 
-# vim-cmd vmsvc/getallvms
+#Listar todas las máquinas para comprobar que el clon está disponible 
+vim-cmd vmsvc/getallvms
  
-# #ID de la máquina clon
-# ID_CLON=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
+#ID de la máquina clon
+ID_CLON=$(vim-cmd vmsvc/getallvms | grep -w "$2" | cut -d " " -f 1)
 
-# #Para terminar arranca el clon desde el cliente de vSphere
-# vim-cmd vmsvc/power.on "$ID_CLON" &
+#Para terminar arranca el clon desde el cliente de vSphere
+vim-cmd vmsvc/power.on "$ID_CLON" &
 
-# # Hay que obtener el ID de la pregunta de la máquina
-# sleep 1         #Añadir delay
-# QUESTION_ID=$(vim-cmd vmsvc/message "$ID_CLON" | grep "Virtual machine message" | cut -d " " -f 4 | cut -d ":" -f 0)
+# Hay que obtener el ID de la pregunta de la máquina
+sleep 1         #Añadir delay
+QUESTION_ID=$(vim-cmd vmsvc/message "$ID_CLON" | grep "Virtual machine message" | cut -d " " -f 4 | cut -d ":" -f 0)
 
-# # Hay que responder a la pregunta de la máquina  "I Moved It"
-# vim-cmd vmsvc/message "$ID_CLON" "$QUESTION_ID" 1
+# Hay que responder a la pregunta de la máquina  "I Moved It"
+vim-cmd vmsvc/message "$ID_CLON" "$QUESTION_ID" 1
 
-# #Apagar máquina
-# if ! vim-cmd vmsvc/power.off "$ID_CLON"; then
-#     echo "ERROR: No se ha podido apagar la máquina clon"
-#     exit 1
-# fi
-# echo "Máquina clon apagada correctamente"
+#Apagar máquina
+if ! vim-cmd vmsvc/power.off "$ID_CLON"; then
+    echo "ERROR: No se ha podido apagar la máquina clon"
+    exit 1
+fi
+echo "Máquina clon apagada correctamente"
