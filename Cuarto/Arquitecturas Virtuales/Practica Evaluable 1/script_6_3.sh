@@ -93,6 +93,40 @@ fi
 #disco base del snapshot, lo cual no es deseable ya que pertenece a la máquina  
 #origen 
 
+#Modificar vmx clon
+#Nombre
+SUFFIX=$(echo "$DISK_NAME" | cut -d "-" -f 2)
+NEW_DISK_NAME="$2-$SUFFIX"
+NEW_DISK_NAME_NO_EXT=$(echo "$NEW_DISK_NAME" | cut -d "." -f 1)
+if ! sed -i 's/displayName = .*/displayName = "'"$2"'"/g' $DATASTOREPATH/$2/$2.vmx > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el nombre de la máquina clon"
+    exit 1
+fi
+
+#scsi0:0.fileName
+if ! sed -i 's/scsi0:0.fileName = .*/scsi0:0.fileName = "'"$NEW_DISK_NAME"'"/g' $DATASTOREPATH/$2/$2.vmx > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el nombre del disco de la máquina clon"
+    exit 1
+fi
+
+#nvram
+if ! sed -i 's/nvram = .*/nvram = "'"$2"'.nvram"/g' $DATASTOREPATH/$2/$2.vmx > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el nombre del fichero nvram de la máquina clon"
+    exit 1
+fi
+
+#renombrar disco y delta
+if ! mv "$DATASTOREPATH/$2/$DISK_NAME" "$DATASTOREPATH/$2/$NEW_DISK_NAME"; then
+    echo "ERROR: No se ha podido renombrar el disco de la máquina clon"
+    exit 1
+fi
+
+if ! mv "$DATASTOREPATH/$2/$DISK_NAME_NO_EXT-delta.vmdk" "$DATASTOREPATH/$2/$NEW_DISK_NAME_NO_EXT-delta.vmdk"; then
+    echo "ERROR: No se ha podido renombrar el delta del disco de la máquina clon"
+    exit 1
+fi
+
+
 #Crear fichero .vmsd
 if ! touch "$DATASTOREPATH/$2/$2.vmsd"; then
     echo "ERROR: No se ha podido crear el fichero .vmsd"
@@ -118,7 +152,7 @@ if ! echo "numCloneOf = \"1\"" >> $DATASTOREPATH/$2/$2.vmsd; then
 fi
 
 #sentinel0
-if ! echo "sentinel0 = \"$DATASTOREPATH/$2/$DISK_NAME\"" >> $DATASTOREPATH/$2/$2.vmsd; then
+if ! echo "sentinel0 = \"$DATASTOREPATH/$2/$NEW_DISK_NAME\"" >> $DATASTOREPATH/$2/$2.vmsd; then
     echo "ERROR: No se ha podido añadir el campo sentinel0 al fichero .vmsd"
     exit 1
 fi
@@ -140,7 +174,13 @@ if ! echo "snapshot0.numClones = \"1\"" >> $DATASTOREPATH/$1/$1.vmsd; then
     echo "ERROR: No se ha podido añadir el campo snapshot0.numClones al fichero .vmsd del padre"
     exit 1
 fi
- 
+
+# Modificar el vmfssparse del disco de la máquina clon
+if ! sed -i 's/RW 2048 VMFSSPARSE "'$DISK_NAME_NO_EXT'-delta.vmdk"/RW 2048 VMFSSPARSE "'$NEW_DISK_NAME_NO_EXT'-delta.vmdk"/' ../mv-dest/test_linked/test_linked-000001.vmdk  > /dev/null; then
+    echo "ERROR: No se ha podido cambiar el nombre del disco de la máquina clon"
+    exit 1
+fi
+
 #Una vez que el directorio clon contiene todos los ficheros necesarios 
 #hay que registrar la máquina clon (ESTO ES IMPRESCINDIBLE) 
 if ! vim-cmd solo/registervm "$DATASTOREPATH/$2/$2.vmx"; then
