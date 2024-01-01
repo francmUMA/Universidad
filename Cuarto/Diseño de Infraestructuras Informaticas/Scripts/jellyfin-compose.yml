@@ -1,0 +1,21 @@
+version: '3.5'
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    # container_name: jellyfin
+    # user: uid:gid
+    # network_mode: 'host'
+    ports:
+      - 8000:80
+    volumes:
+      - /clusterfs/jellyfin/config:/config
+      - /clusterfs/jellyfin/cache:/cache
+      - /clusterfs/jellyfin/photos:/media
+      - /clusterfs/jellyfin/shows:/media2:ro
+    restart: 'unless-stopped'
+    # Optional - alternative address used for autodiscovery
+    # environment:
+    #   - JELLYFIN_PublishedServerUrl=http://localhost
+    # # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
