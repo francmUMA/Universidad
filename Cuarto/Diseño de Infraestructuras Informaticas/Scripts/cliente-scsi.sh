@@ -29,7 +29,7 @@ iscsiadm --mode node --portal=10.0.16.40 --targetname iqn.2020-01.es.uma.storage
 ## OCFS2 ##
 # Cambiar el nombre del cluster en /etc/conf.d/o2cb
 # Añadir configuracion a cada nodo ---- MUY IMPORTANTE QUE SEA EL MISMO ORDEN EN AMBOS NODOS
-o2cb add-cluster mycluster16040
+o2cb add-cluster mycluster16040-
 o2cb add-node mycluster16040 nfs-16-42 --ip 10.0.16.42
 o2cb add-node mycluster16040 nfs-16-43 --ip 10.0.16.43
 
