@@ -13,20 +13,8 @@ while true
 do
     if ! ping -c 1 "$IP_FLOTANTE" > /dev/null
     then
-        # Se cambia la ip de la máquina por la flotante
-        ifconfig ens160 down
-        ifconfig ens160 "$IP_FLOTANTE" netmask "$NETMASK"
-        ifconfig ens160 up
-
-        # Cuando vuelva a detectarse la máquina destino, se desactiva la ip
-        while ! ping -c 1 "$IP_DESTINATION" > /dev/null
-        do
-            sleep 1
-        done
-
-        # Se reinicia el interfaz de red
-        ifconfig ens160 down
-        ifconfig ens160 up
+       
     fi
     sleep 1
+    echo "Comprobando el estado del servidor vecino"
 done
