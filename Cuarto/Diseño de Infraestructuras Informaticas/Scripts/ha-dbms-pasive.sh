@@ -5,16 +5,28 @@
 
 IP_FLOTANTE=$1
 IP_DESTINATION=$2
-NETMASK=255.255.255.0
 
 # Consultas periódicas a la máquina destino
 # Si no hay respuesta, se activa el mysql
 while true
 do
-    if ! ping -c 1 "$IP_FLOTANTE" > /dev/null
+    echo "Comprobando el estado del servidor vecino"
+    if ! ping -c 1 "$IP_DESTINATION" > /dev/null
     then
-       
+        echo "Activando IP flotante"
+        ip addr add "$IP_FLOTANTE"/20 dev ens32
+        echo "IP flotante activada"
+
+        # Esperar a que se active el servidor vecino
+        while ! ping -c 1 "$IP_DESTINATION" > /dev/null
+        do
+            sleep 1
+        done
+
+        # Desactivar ip flotante
+        echo "Desactivando IP flotante"
+        ip addr del "$IP_FLOTANTE"/20 dev ens32
+        echo "IP flotante desactivada"
     fi
     sleep 1
-    echo "Comprobando el estado del servidor vecino"
 done
